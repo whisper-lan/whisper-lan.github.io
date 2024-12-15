@@ -24,9 +24,9 @@ const messages = {
     },
     status: {
       recommended: '推荐',
-      developing: '开发中',
-      comingSoon: '即将上线',
-      iosInDev: 'iOS 版本正在开发中'
+      developing: 'ipa',
+      comingSoon: '暂无计划',
+      iosInDev: '可从github下载ipa'
     },
     download: {
       starting: '下载已开始，请稍候...',
@@ -70,10 +70,10 @@ const messages = {
       ios: 'iOS'
     },
     status: {
-      recommended: ' current',
-      developing: ' later',
-      comingSoon: 'Coming Soon',
-      iosInDev: 'iOS version is under development'
+      recommended: 'current',
+      developing: 'ipa',
+      comingSoon: 'experimental',
+      iosInDev: 'download from github'
     },
     download: {
       starting: 'Download starting, please wait...',
