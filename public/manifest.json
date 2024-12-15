@@ -1,0 +1,21 @@
+{
+  "name": "Whisper - 局域网文件传输工具",
+  "short_name": "Whisper",
+  "description": "快速、安全、简单的局域网文件传输工具",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+} 
