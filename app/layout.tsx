@@ -4,6 +4,7 @@ import "./globals.css";
 import Analytics from './components/Analytics';
 import AdSense from './components/AdSense';
 import StructuredData from './components/StructuredData';
+import { SITE_CONFIG } from '@/lib/constants';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,10 +17,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://your-domain.com'),
+  metadataBase: new URL(SITE_CONFIG.baseUrl),
   title: {
-    default: 'Whisper - 快速安全的局域网文件传输工具',
-    template: '%s | Whisper'
+    default: `${SITE_CONFIG.title} - ${SITE_CONFIG.description}`,
+    template: `%s | ${SITE_CONFIG.title}`
   },
   description: '一款快速、安全、简单的局域网文件传输工具，支持Windows、MacOS、Linux、Android等多平台',
   keywords: ['文件传输', '局域网传输', '跨平台传输', 'LAN传输', '文件共享'],
@@ -34,8 +35,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Whisper - 快速安全的局域网文件传输工具',
     description: '一款快速、安全、简单的局域网文件传输工具，支持Windows、MacOS、Linux、Android等多平台',
-    url: 'https://your-domain.com',
-    siteName: 'Whisper',
+    url: SITE_CONFIG.baseUrl,
+    siteName: SITE_CONFIG.title,
     images: [
       {
         url: '/og-image.jpg',
@@ -81,10 +82,10 @@ export const metadata: Metadata = {
   },
   category: '工具软件',
   alternates: {
-    canonical: 'https://your-domain.com',
+    canonical: SITE_CONFIG.baseUrl,
     languages: {
-      'zh-CN': 'https://your-domain.com/zh-CN',
-      'en': 'https://your-domain.com/en'
+      'zh-CN': `${SITE_CONFIG.baseUrl}/zh-CN`,
+      'en': `${SITE_CONFIG.baseUrl}/en`
     }
   },
   robots: {
@@ -117,7 +118,7 @@ export default function RootLayout({
           name="robots" 
           content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" 
         />
-        <link rel="canonical" href="https://your-domain.com" />
+        <link rel="canonical" href={SITE_CONFIG.baseUrl} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useLanguage } from '@/hooks/useLanguage';
+import { SITE_CONFIG } from "@/lib/constants";
 
 // 语言配置
 const messages = {
@@ -130,10 +131,10 @@ const useDeviceDetect = () => {
 // 下载处理函数
 const handleDownload = (platform: PlatformType, version: string) => {
   const downloadLinks = {
-    windows: `https://your-domain.com/downloads/flash-transfer-${version}-win.exe`,
-    mac: `https://your-domain.com/downloads/flash-transfer-${version}-mac.dmg`,
-    linux: `https://your-domain.com/downloads/flash-transfer-${version}-linux.AppImage`,
-    android: `https://your-domain.com/downloads/flash-transfer-${version}.apk`,
+    windows: `${SITE_CONFIG.baseUrl}/downloads/flash-transfer-${version}-win.exe`,
+    mac: `${SITE_CONFIG.baseUrl}/downloads/flash-transfer-${version}-mac.dmg`,
+    linux: `${SITE_CONFIG.baseUrl}/downloads/flash-transfer-${version}-linux.AppImage`,
+    android: `${SITE_CONFIG.baseUrl}/downloads/flash-transfer-${version}.apk`,
     ios: '', // iOS 暂未上线
     unknown: ''
   };

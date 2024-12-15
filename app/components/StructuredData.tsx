@@ -1,8 +1,10 @@
+import { SITE_CONFIG } from '@/lib/constants';
+
 export default function StructuredData() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Whisper",
+    "name": SITE_CONFIG.title,
     "operatingSystem": "Windows, MacOS, Linux, Android",
     "applicationCategory": "UtilitiesApplication",
     "offers": {
@@ -16,7 +18,7 @@ export default function StructuredData() {
       "ratingCount": "1250"
     },
     "description": "快速、安全、简单的局域网文件传输工具",
-    "downloadUrl": "https://your-domain.com/download",
+    "downloadUrl": `${SITE_CONFIG.baseUrl}/download`,
     "softwareVersion": "1.0.0",
     "fileSize": "25MB",
     "author": {
