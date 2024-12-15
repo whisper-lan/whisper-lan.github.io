@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useLanguage } from '@/hooks/useLanguage';
@@ -126,20 +127,6 @@ const useDeviceDetect = () => {
   }, []);
 
   return deviceType;
-};
-
-// 下载处理函数
-const handleDownload = (platform: PlatformType, version: string) => {
-  const downloadLinks = {
-    windows: `${SITE_CONFIG.baseUrl}/downloads/flash-transfer-${version}-win.exe`,
-    mac: `${SITE_CONFIG.baseUrl}/downloads/flash-transfer-${version}-mac.dmg`,
-    linux: `${SITE_CONFIG.baseUrl}/downloads/flash-transfer-${version}-linux.AppImage`,
-    android: `${SITE_CONFIG.baseUrl}/downloads/flash-transfer-${version}.apk`,
-    ios: '', // iOS 暂未上线
-    unknown: ''
-  };
-
-  return downloadLinks[platform];
 };
 
 // 平台图标组件

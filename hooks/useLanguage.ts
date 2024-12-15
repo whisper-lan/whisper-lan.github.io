@@ -1,41 +1,27 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
-type Language = 'zh-CN' | 'en';
-
-interface LanguageState {
-  language: Language;
-  setLanguage: (language: Language) => void;
-}
-
-// 获取系统语言
-const getSystemLanguage = (): Language => {
-  // 优先使用存储的语言设置
-  const savedLang = localStorage.getItem('app-language') as Language;
-  if (savedLang && ['zh-CN', 'en'].includes(savedLang)) {
-    return savedLang;
+const getDefaultLanguage = () => {
+  if (typeof window === 'undefined') {
+    return 'zh-CN'; // 服务端默认语言
   }
   
-  // 否则使用系统语言
-  const systemLang = navigator.language;
-//   const systemLang = window.navigator.language;
-  return systemLang.startsWith('zh') ? 'zh-CN' : 'en';
+  try {
+    const savedLanguage = localStorage.getItem('language');
+    return savedLanguage || 'zh-CN';
+  } catch {
+    return 'zh-CN';
+  }
 };
 
-export const useLanguage = create<LanguageState>()(
-  persist(
-    (set) => ({
-      language: getSystemLanguage(), // 直接使用 getSystemLanguage
-      setLanguage: (language) => {
-        console.log('setLanguage', language);
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('app-language', language);
-        }
-        set({ language });
-      }
-    }),
-    {
-      name: 'app-language'
+export const useLanguage = create<{
+  language: 'en' | 'zh-CN';
+  setLanguage: (lang: 'en' | 'zh-CN') => void;
+}>((set) => ({
+  language: getDefaultLanguage() as 'en' | 'zh-CN',
+  setLanguage: (lang) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('language', lang);
     }
-  )
-);
+    set({ language: lang });
+  },
+}));
