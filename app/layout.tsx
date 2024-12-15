@@ -19,22 +19,27 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.baseUrl),
   title: {
-    default: `${SITE_CONFIG.title} - ${SITE_CONFIG.description}`,
+    default: `${SITE_CONFIG.title} - ${SITE_CONFIG.desc}`,
     template: `%s | ${SITE_CONFIG.title}`
   },
-  description: '一款快速、安全、简单的局域网文件传输工具，支持Windows、MacOS、Linux、Android等多平台',
-  keywords: ['文件传输', '局域网传输', '跨平台传输', 'LAN传输', '文件共享'],
-  authors: [{ name: 'Whisper Team' }],
-  creator: 'Whisper Team',
-  publisher: 'Whisper Team',
+  description: SITE_CONFIG.description,
+  keywords: [
+    // 中文关键词
+    '文件传输', '局域网传输', '跨平台传输','无线传输',
+    // 英文关键词
+    'file transfer', 'LAN transfer', 'wireless transfer', 'local network transfer'
+  ],
+  authors: [{ name: 'lawnvi' }],
+  creator: 'lawnvi',
+  publisher: 'lawnvi',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: 'Whisper - 快速安全的局域网文件传输工具',
-    description: '一款快速、安全、简单的局域网文件传输工具，支持Windows、MacOS、Linux、Android等多平台',
+    title: 'Whisper - Fast & Secure LAN File Transfer Tool',
+    description: 'A fast, secure and simple LAN file transfer tool supporting Windows, MacOS, Linux, Android and more platforms',
     url: SITE_CONFIG.baseUrl,
     siteName: SITE_CONFIG.title,
     images: [
@@ -42,16 +47,17 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Whisper - 局域网文件传输工具',
+        alt: 'Whisper - LAN File Transfer Tool',
       }
     ],
     locale: 'zh_CN',
+    alternateLocale: ['en_US'],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Whisper - 快速安全的局域网文件传输工具',
-    description: '一款快速、安全、简单的局域网文件传输工具，支持Windows、MacOS、Linux、Android等多平台',
+    title: 'Whisper - Fast & Secure LAN File Transfer Tool',
+    description: 'A fast, secure and simple LAN file transfer tool supporting Windows, MacOS, Linux, Android and more platforms',
     images: ['/og-image.jpg'],
   },
   manifest: '/manifest.json',
@@ -80,12 +86,13 @@ export const metadata: Metadata = {
   verification: {
     google: 'your-google-site-verification',
   },
-  category: '工具软件',
+  category: 'Software Tools',
   alternates: {
     canonical: SITE_CONFIG.baseUrl,
     languages: {
-      'zh-CN': `${SITE_CONFIG.baseUrl}/zh-CN`,
-      'en': `${SITE_CONFIG.baseUrl}/en`
+      'zh-CN': `${SITE_CONFIG.baseUrl}`,
+      'en-US': `${SITE_CONFIG.baseUrl}`,
+      'en-GB': `${SITE_CONFIG.baseUrl}`,
     }
   },
   robots: {
@@ -119,6 +126,10 @@ export default function RootLayout({
           content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" 
         />
         <link rel="canonical" href={SITE_CONFIG.baseUrl} />
+        <link rel="alternate" hrefLang="en-US" href={`${SITE_CONFIG.baseUrl}`} />
+        <link rel="alternate" hrefLang="en-GB" href={`${SITE_CONFIG.baseUrl}`} />
+        <link rel="alternate" hrefLang="zh-CN" href={`${SITE_CONFIG.baseUrl}`} />
+        <link rel="alternate" hrefLang="x-default" href={SITE_CONFIG.baseUrl} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

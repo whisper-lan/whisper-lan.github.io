@@ -17,13 +17,13 @@ export default function StructuredData() {
       "ratingValue": "4.8",
       "ratingCount": "1250"
     },
-    "description": "快速、安全、简单的局域网文件传输工具",
+    "description": "快速、实用、简单的局域网文件传输工具",
     "downloadUrl": `${SITE_CONFIG.baseUrl}/download`,
     "softwareVersion": "1.0.0",
     "fileSize": "25MB",
     "author": {
       "@type": "Organization",
-      "name": "Whisper Team"
+      "name": "lawnvi"
     }
   };
 
