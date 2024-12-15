@@ -1,13 +1,9 @@
 import { create } from 'zustand';
 
 const getDefaultLanguage = () => {
-  if (typeof window === 'undefined') {
-    return 'zh-CN'; // 服务端默认语言
-  }
-  
   try {
     const savedLanguage = localStorage.getItem('language');
-    return savedLanguage || 'zh-CN';
+    return savedLanguage || navigator.language || 'zh-CN';
   } catch {
     return 'zh-CN';
   }
@@ -19,8 +15,10 @@ export const useLanguage = create<{
 }>((set) => ({
   language: getDefaultLanguage() as 'en' | 'zh-CN',
   setLanguage: (lang) => {
-    if (typeof window !== 'undefined') {
+    try {
       localStorage.setItem('language', lang);
+    } catch {
+      console.error('Failed to set language in localStorage');
     }
     set({ language: lang });
   },
