@@ -6,3 +6,9 @@ export const SITE_CONFIG = {
   description: '对话式局域网文件传输软件, 可转发安卓通知消息 | A simple LAN file transfer app with chat interface, support forwarding Android notification messages | Linux, Windows, MacOS, Android',
   baseUrl: `https://${process.env.NEXT_PUBLIC_SITE_DOMAIN || 'whisper.127014.xyz'}`,
 } as const;
+
+
+export const AD_CONFIG = {
+  gaId: process.env.NEXT_PUBLIC_GA_ID || 'G-5FLBMPVCLJ',
+  clientId: process.env.NEXT_PUBLIC_ADSENSE_ID || 'ca-pub-1270141270141270',
+}

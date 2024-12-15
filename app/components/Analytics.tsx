@@ -1,12 +1,13 @@
 'use client';
 
+import { AD_CONFIG } from '@/lib/constants';
 import Script from 'next/script';
 
 export default function Analytics() {
   return (
     <>
       <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${AD_CONFIG.gaId}`}
         strategy="afterInteractive"
       />
       <Script id="google-analytics" strategy="afterInteractive">
@@ -14,7 +15,7 @@ export default function Analytics() {
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+          gtag('config', '${AD_CONFIG.gaId}');
         `}
       </Script>
     </>

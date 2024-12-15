@@ -1,12 +1,13 @@
 'use client';
 
+import { AD_CONFIG } from '@/lib/constants';
 import Script from 'next/script';
 
 export default function AdSense() {
   return (
     <Script
       async
-      src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
+      src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${AD_CONFIG.clientId}`}
       strategy="lazyOnload"
       crossOrigin="anonymous"
     />
