@@ -1,12 +1,18 @@
 import { create } from 'zustand';
 
 const getDefaultLanguage = () => {
-  let savedLanguage = 'en';
-  savedLanguage = localStorage.getItem('language') || 'en';
-  if (savedLanguage === 'zh-CN') {
-    savedLanguage = 'zh-CN';
+  try {
+    if (!window.matchMedia('undefined')) {
+      let savedLanguage = window.localStorage.getItem('language') || 'en';
+      if (savedLanguage === 'zh-CN') {
+        savedLanguage = 'zh-CN';
+      }
+      return savedLanguage;
+    }
+  } catch (error) {
+    console.error('无法访问localStorage:', error);
   }
-  return savedLanguage;
+  return 'en';
 };
 
 export const useLanguage = create<{
