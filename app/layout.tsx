@@ -78,11 +78,11 @@ export const metadata: Metadata = {
       }
     ]
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
+  // viewport: {
+  //   width: 'device-width',
+  //   initialScale: 1,
+  //   maximumScale: 1,
+  // },
   verification: {
     google: 'your-google-site-verification',
   },
@@ -125,23 +125,20 @@ export default function RootLayout({
           name="robots"
           content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
         />
-        <meta
-          name="google-adsense-account"
-          content={AD_CONFIG.clientId}
-        />
         <link rel="canonical" href={SITE_CONFIG.baseUrl} />
         <link rel="alternate" hrefLang="en-US" href={`${SITE_CONFIG.baseUrl}`} />
         <link rel="alternate" hrefLang="en-GB" href={`${SITE_CONFIG.baseUrl}`} />
         <link rel="alternate" hrefLang="zh-CN" href={`${SITE_CONFIG.baseUrl}`} />
         <link rel="alternate" hrefLang="x-default" href={SITE_CONFIG.baseUrl} />
+        <Analytics />
+        <AdSense />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <StructuredData />
         {children}
-        <Analytics />
-        <AdSense />
+
       </body>
     </html>
   );

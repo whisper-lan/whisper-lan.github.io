@@ -5,11 +5,6 @@ import Script from 'next/script';
 
 export default function AdSense() {
   return (
-    <Script
-      async
-      src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${AD_CONFIG.clientId}`}
-      strategy="lazyOnload"
-      crossOrigin="anonymous"
-    />
+    <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${AD_CONFIG.clientId}`} crossOrigin="anonymous"></script>
   );
 } 
