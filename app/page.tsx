@@ -10,7 +10,7 @@ import { SITE_CONFIG } from "@/lib/constants";
 const messages = {
   'zh-CN': {
     title: 'whisper',
-    description: '快速、简单、对话式的局域网一对一文件传输应用',
+    description: '快速、简单、对话式的局域网文件传输应用, 支持多设备, 转发安卓设备通知 启动一个FTP服务(alpha)',
     buttons: {
       download: '立即下载',
       learnMore: '了解更多'
@@ -118,7 +118,7 @@ const messages = {
           content: '终于找到一个好用的局域网传输工具了!之前用过很多类似的软件,要么界面复杂,要么需要配置,这个应用完全解决了我的需求。特别是跨平台支持做得很好,在手机和电脑之间传文件变得特别容易。'
         },
         {
-          content: '作为一个经常需要在不同设备间传输文件的人来说,这个工具帮了大忙。通知同步功能很实用,再也不用担心错过重要消息。希望后续能加入更多功能,比如多设备同时传输。'
+          content: '作为一个经常需要在不同设备间传输文件的人来说,这个工具帮了大忙。通知同步功能很实用,两部手机再也不用担心没看到消息了。希望后续能加入更多功能,比如多设备同时传输。'
         },
         {
           content: '非常喜欢这款软件的聊天式界面,让文件传输变得像聊天一样自然。剪贴板同步功能对工作效率提升很大,经常用来分享代码片段。'
@@ -134,7 +134,7 @@ const messages = {
   },
   'en': {
     title: 'whisper',
-    description: 'Fast, Simple, Chat-style LAN file transfer',
+    description: 'Fast, Simple, Chat-style LAN file transfer. support multi-device transfer, Android notification sync, start a FTP server (alpha)',
     buttons: {
       download: 'Download',
       learnMore: 'Learn More'
@@ -239,7 +239,7 @@ const messages = {
           content: 'The interface is clean and intuitive. I love how I can just drag and drop files to transfer. The speed is impressive for LAN file sharing, and it has become my go-to tool for local network transfers.'
         },
         {
-          content: 'Finally found a great LAN transfer tool! I\'ve tried many similar apps before, but this one stands out with its simplicity and efficiency. The cross-platform support is excellent, making file transfer between devices a breeze.'
+          content: 'Finally found a great LAN transfer tool! I have tried many similar apps before, but this one stands out with its simplicity and efficiency. The cross-platform support is excellent, making file transfer between devices a breeze.'
         },
         {
           content: 'As someone who frequently transfers files between devices, this tool has been a game-changer. The notification sync feature is particularly useful. Looking forward to seeing more features like multi-device transfer in future updates.'
@@ -248,7 +248,7 @@ const messages = {
           content: 'Love the chat-style interface, it makes file transfer feel natural and intuitive. The clipboard sync feature has greatly improved my workflow, especially when sharing code snippets.'
         },
         {
-          content: 'Easy to install and use right away, no configuration needed. As someone who isn\'t very tech-savvy, I really appreciate the user-friendly approach. Perfect for sharing study materials!'
+          content: 'Easy to install and use right away, no configuration needed. As someone who is not very tech-savvy, I really appreciate the user-friendly approach. Perfect for sharing study materials!'
         }, {
           content: 'Finally, found a good tool for local network file transfer'
         }
@@ -432,7 +432,7 @@ const TestimonialsSection = () => {
           >
             <div className="bg-white/50 dark:bg-gray-800/50 p-8 rounded-2xl shadow-lg">
               <p className="text-lg text-gray-700 dark:text-gray-300">
-                "{t.testimonials.items[currentIndex].content}"
+                {t.testimonials.items[currentIndex].content}
               </p>
             </div>
           </motion.div>
