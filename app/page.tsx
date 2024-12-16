@@ -130,6 +130,26 @@ const messages = {
           content: '终于可以不用文件传输助手了'
         }
       ]
+    },
+    footer: {
+      about: {
+        title: '关于我们',
+        content: 'Whisper 是一个开源的局域网文件传输工具，致力于为用户提供简单、快速、可靠的文件传输体验。我们的目标是让文件共享变得像聊天一样简单自然。'
+      },
+      privacy: {
+        title: '隐私政策',
+        content: '我们重视您的隐私。Whisper 不会收集任何个人信息，所有数据传输仅在局域网内进行。我们不会存储或上传您的任何文件和信息。'
+      },
+      contact: {
+        title: '联系我们',
+        email: 'support@whisper.com',
+        github: 'GitHub Issues'
+      },
+      links: {
+        sourceCode: '源代码',
+        report: '问题反馈',
+        sponsor: '赞助支持'
+      }
     }
   },
   'en': {
@@ -253,6 +273,26 @@ const messages = {
           content: 'Finally, found a good tool for local network file transfer'
         }
       ]
+    },
+    footer: {
+      about: {
+        title: 'About Us',
+        content: 'Whisper is an open-source LAN file transfer tool dedicated to providing users with a simple, fast, and reliable file transfer experience. Our goal is to make file sharing as simple and natural as chatting.'
+      },
+      privacy: {
+        title: 'Privacy Policy',
+        content: 'We value your privacy. Whisper does not collect any personal information, and all data transfers occur only within the local network. We do not store or upload any of your files or information.'
+      },
+      contact: {
+        title: 'Contact Us',
+        email: 'support@whisper.com',
+        github: 'GitHub Issues'
+      },
+      links: {
+        sourceCode: 'Source Code',
+        report: 'Report Issues',
+        sponsor: 'Sponsor'
+      }
     }
   }
 };
@@ -439,6 +479,76 @@ const TestimonialsSection = () => {
         </AnimatePresence>
       </div>
     </section>
+  );
+};
+
+// 添加页脚组件
+const Footer = () => {
+  const { language } = useLanguage();
+  const t = messages[language];
+
+  return (
+    <footer className="bg-gray-50 dark:bg-gray-900 py-12 mt-20">
+      <div className="container mx-auto px-4">
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {/* 关于我们 */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4">{t.footer.about.title}</h3>
+            <p className="text-gray-600 dark:text-gray-300">
+              {t.footer.about.content}
+            </p>
+          </div>
+
+          {/* 隐私政策 */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4">{t.footer.privacy.title}</h3>
+            <p className="text-gray-600 dark:text-gray-300">
+              {t.footer.privacy.content}
+            </p>
+          </div>
+
+          {/* 联系方式 */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4">{t.footer.contact.title}</h3>
+            <div className="space-y-2">
+              <p className="text-gray-600 dark:text-gray-300">
+                {/* Email: {t.footer.contact.email} */}
+              </p>
+              <div className="flex space-x-4">
+                <a
+                  href={`${GITHUB_REPO.repoUrl}/issues`}
+                  target="_blank"
+                  className="text-blue-600 hover:underline"
+                >
+                  {t.footer.links.report}
+                </a>
+                <a
+                  href={GITHUB_REPO.repoUrl}
+                  target="_blank"
+                  className="text-blue-600 hover:underline"
+                >
+                  {t.footer.links.sourceCode}
+                </a>
+                <a
+                  href={`${GITHUB_REPO.repoUrl}/sponsors`}
+                  target="_blank"
+                  className="text-blue-600 hover:underline"
+                >
+                  {t.footer.links.sponsor}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 版权信息 */}
+        <div className="text-center mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+          <p className="text-gray-600 dark:text-gray-300">
+            © {new Date().getFullYear()} whisper. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
   );
 };
 
@@ -890,6 +1000,8 @@ export default function Home() {
         {/* Testimonials Section */}
         <TestimonialsSection />
 
+        {/* Footer */}
+        <Footer />
       </div>
     </AnimatePresence>
   );
