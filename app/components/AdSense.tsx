@@ -1,7 +1,6 @@
 'use client';
 
 import { AD_CONFIG } from '@/lib/constants';
-import Script from 'next/script';
 
 export default function AdSense() {
   return (

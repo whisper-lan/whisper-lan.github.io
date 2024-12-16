@@ -4,7 +4,7 @@ import "./globals.css";
 import Analytics from './components/Analytics';
 import AdSense from './components/AdSense';
 import StructuredData from './components/StructuredData';
-import { AD_CONFIG, SITE_CONFIG } from '@/lib/constants';
+import { SITE_CONFIG } from '@/lib/constants';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -114,7 +114,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="en">
       <head>
         <meta
           httpEquiv="X-Robots-Tag"

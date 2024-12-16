@@ -1,17 +1,17 @@
 import { create } from 'zustand';
 
 const getDefaultLanguage = () => {
-  try {
-    if (!window.matchMedia('undefined')) {
-      let savedLanguage = window.localStorage.getItem('language') || 'en';
-      if (savedLanguage === 'zh-CN') {
-        savedLanguage = 'zh-CN';
-      }
-      return savedLanguage;
-    }
-  } catch (error) {
-    console.error('无法访问localStorage:', error);
-  }
+  // try {
+  //   if (!window.matchMedia('undefined').matches) {
+  //     let savedLanguage = localStorage.getItem('language') || 'en';
+  //     if (savedLanguage === 'zh-CN') {
+  //       savedLanguage = 'zh-CN';
+  //     }
+  //     return savedLanguage;
+  //   }
+  // } catch (error) {
+  //   console.error('无法访问localStorage:', error);
+  // }
   return 'en';
 };
 
