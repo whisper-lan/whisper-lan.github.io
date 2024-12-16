@@ -10,5 +10,5 @@ export const SITE_CONFIG = {
 
 export const AD_CONFIG = {
   gaId: process.env.NEXT_PUBLIC_GA_ID || 'G-5FLBMPVCLJ',
-  clientId: process.env.NEXT_PUBLIC_ADSENSE_ID || 'ca-pub-1270141270141270',
+  clientId: process.env.NEXT_PUBLIC_ADSENSE_ID || 'ca-pub-2913838456593044',
 }

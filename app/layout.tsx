@@ -4,7 +4,7 @@ import "./globals.css";
 import Analytics from './components/Analytics';
 import AdSense from './components/AdSense';
 import StructuredData from './components/StructuredData';
-import { SITE_CONFIG } from '@/lib/constants';
+import { AD_CONFIG, SITE_CONFIG } from '@/lib/constants';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   description: SITE_CONFIG.description,
   keywords: [
     // 中文关键词
-    '文件传输', '局域网传输', '跨平台传输','无线传输',
+    '文件传输', '局域网传输', '跨平台传输', '无线传输',
     // 英文关键词
     'file transfer', 'LAN transfer', 'wireless transfer', 'local network transfer'
   ],
@@ -116,14 +116,18 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <head>
-        <meta 
-          httpEquiv="X-Robots-Tag" 
-          content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" 
+        <meta
+          httpEquiv="X-Robots-Tag"
+          content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
           key="robots"
         />
-        <meta 
-          name="robots" 
-          content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" 
+        <meta
+          name="robots"
+          content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+        />
+        <meta
+          name="google-adsense-account"
+          content={AD_CONFIG.clientId}
         />
         <link rel="canonical" href={SITE_CONFIG.baseUrl} />
         <link rel="alternate" hrefLang="en-US" href={`${SITE_CONFIG.baseUrl}`} />
