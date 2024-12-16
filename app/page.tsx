@@ -109,22 +109,25 @@ const messages = {
       ]
     },
     testimonials: {
-      title: '用户评价',
+      title: '用户反馈',
       items: [
         {
-          content: '界面简洁，使用方便，传输速度很快！',
-          author: '张先生',
-          role: '软件工程师'
+          content: '界面设计非常简洁清爽,使用起来特别方便。最喜欢的是可以直接拖拽文件传输,完全不需要复杂的设置。传输速度也很快,对于局域网内的文件共享来说是个很好的选择。'
         },
         {
-          content: '终于找到一个好用的局域网传输工具了',
-          author: '李女士',
-          role: '设计师'
+          content: '终于找到一个好用的局域网传输工具了!之前用过很多类似的软件,要么界面复杂,要么需要配置,这个应用完全解决了我的需求。特别是跨平台支持做得很好,在手机和电脑之间传文件变得特别容易。'
         },
         {
-          content: '跨平台支持很棒，在各种设备间传输文件变得很容易',
-          author: '王先生',
-          role: '产品经理'
+          content: '作为一个经常需要在不同设备间传输文件的人来说,这个工具帮了大忙。通知同步功能很实用,再也不用担心错过重要消息。希望后续能加入更多功能,比如多设备同时传输。'
+        },
+        {
+          content: '非常喜欢这款软件的聊天式界面,让文件传输变得像聊天一样自然。剪贴板同步功能对工作效率提升很大,经常用来分享代码片段。'
+        },
+        {
+          content: '安装简单,打开就能用,完全不需要配置。对于我这种不太懂技术的人来说特别友好。最近都在用它传输课件和学习资料,很方便。'
+        },
+        {
+          content: '终于可以不用文件传输助手了'
         }
       ]
     }
@@ -230,22 +233,24 @@ const messages = {
       ]
     },
     testimonials: {
-      title: 'Testimonials',
+      title: 'User Feedback',
       items: [
         {
-          content: 'Clean interface, easy to use, and fast transfer speed!',
-          author: 'John Doe',
-          role: 'Software Engineer'
+          content: 'The interface is clean and intuitive. I love how I can just drag and drop files to transfer. The speed is impressive for LAN file sharing, and it has become my go-to tool for local network transfers.'
         },
         {
-          content: 'Finally found a great LAN transfer tool',
-          author: 'Jane Smith',
-          role: 'Designer'
+          content: 'Finally found a great LAN transfer tool! I\'ve tried many similar apps before, but this one stands out with its simplicity and efficiency. The cross-platform support is excellent, making file transfer between devices a breeze.'
         },
         {
-          content: 'Cross-platform support is excellent, makes file transfer between devices easy',
-          author: 'Mike Johnson',
-          role: 'Product Manager'
+          content: 'As someone who frequently transfers files between devices, this tool has been a game-changer. The notification sync feature is particularly useful. Looking forward to seeing more features like multi-device transfer in future updates.'
+        },
+        {
+          content: 'Love the chat-style interface, it makes file transfer feel natural and intuitive. The clipboard sync feature has greatly improved my workflow, especially when sharing code snippets.'
+        },
+        {
+          content: 'Easy to install and use right away, no configuration needed. As someone who isn\'t very tech-savvy, I really appreciate the user-friendly approach. Perfect for sharing study materials!'
+        }, {
+          content: 'Finally, found a good tool for local network file transfer'
         }
       ]
     }
@@ -402,20 +407,36 @@ const TutorialSection = () => {
 const TestimonialsSection = () => {
   const { language } = useLanguage();
   const t = messages[language];
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % t.testimonials.items.length);
+    }, 5000); // 每5秒切换一次
+
+    return () => clearInterval(timer);
+  }, [t.testimonials.items.length]);
 
   return (
     <section className="container mx-auto px-4 py-20">
       <h2 className="text-3xl font-bold text-center mb-12">{t.testimonials.title}</h2>
-      <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        {t.testimonials.items.map((item, index) => (
-          <div key={index} className="bg-white/50 dark:bg-gray-800/50 p-6 rounded-xl">
-            <p className="text-lg mb-4">{item.content}</p>
-            <div>
-              <p className="font-semibold">{item.author}</p>
-              <p className="text-gray-600 dark:text-gray-400">{item.role}</p>
+      <div className="max-w-4xl mx-auto">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="relative"
+          >
+            <div className="bg-white/50 dark:bg-gray-800/50 p-8 rounded-2xl shadow-lg">
+              <p className="text-lg text-gray-700 dark:text-gray-300">
+                "{t.testimonials.items[currentIndex].content}"
+              </p>
             </div>
-          </div>
-        ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );
