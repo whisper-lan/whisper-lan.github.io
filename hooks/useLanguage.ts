@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 
 const getDefaultLanguage = () => {
-  try {
-    const savedLanguage = localStorage.getItem('language');
-    return savedLanguage || navigator.language || 'zh-CN';
-  } catch {
-    return 'zh-CN';
+  let savedLanguage = 'en';
+  savedLanguage = localStorage.getItem('language') || 'en';
+  if (savedLanguage === 'zh-CN') {
+    savedLanguage = 'zh-CN';
   }
+  return savedLanguage;
 };
 
 export const useLanguage = create<{
