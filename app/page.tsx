@@ -552,6 +552,23 @@ const Footer = () => {
   );
 };
 
+// 在 Download Section 之前添加一个函数来重新排序平台
+const reorderPlatforms = (platforms: typeof downloads, currentPlatform: PlatformType) => {
+  // 找到推荐平台的索引
+  const recommendedIndex = platforms.findIndex(p => p.recommended);
+  if (recommendedIndex === -1) return platforms;
+
+  // 计算中间位置
+  const middleIndex = Math.floor(platforms.length / 2);
+
+  // 创建新数组并重新排序
+  const reordered = [...platforms];
+  // 将推荐平台与中间位置的平台交换
+  [reordered[recommendedIndex], reordered[middleIndex]] = [reordered[middleIndex], reordered[recommendedIndex]];
+
+  return reordered;
+};
+
 export default function Home() {
   const targetRef = useRef(null);
   const deviceType = useDeviceDetect();
@@ -915,7 +932,7 @@ export default function Home() {
         <motion.section id="download" className="container mx-auto px-4 py-20">
           <div className="max-w-4xl mx-auto text-center">
             <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {downloads.map((platform, index) => (
+              {reorderPlatforms(downloads, deviceType).map((platform, index) => (
                 <motion.button
                   key={index}
                   onClick={() => handleDownloadClick(platform.platform)}
