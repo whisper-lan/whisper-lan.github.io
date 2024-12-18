@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform, AnimatePresence, MotionValue } from "framer-motion";
 import { useLanguage } from '@/hooks/useLanguage';
 import { SITE_CONFIG } from "@/lib/constants";
 
@@ -553,9 +553,9 @@ const Footer = () => {
 };
 
 // 在 Download Section 之前添加一个函数来重新排序平台
-const reorderPlatforms = (platforms: typeof downloads, currentPlatform: PlatformType) => {
+const reorderPlatforms = (platforms: any[], currentPlatform: PlatformType) => {
   // 找到推荐平台的索引
-  const recommendedIndex = platforms.findIndex(p => p.recommended);
+  const recommendedIndex = platforms.findIndex((p: { recommended: any; }) => p.recommended);
   if (recommendedIndex === -1) return platforms;
 
   // 计算中间位置
@@ -932,7 +932,7 @@ export default function Home() {
         <motion.section id="download" className="container mx-auto px-4 py-20">
           <div className="max-w-4xl mx-auto text-center">
             <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {reorderPlatforms(downloads, deviceType).map((platform, index) => (
+              {reorderPlatforms(downloads, deviceType).map((platform: { platform: PlatformType; available: any; recommended: any; icon: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | MotionValue<number> | MotionValue<string> | null | undefined; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; size: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; comingSoon: any; disabledText: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }, index: Key | null | undefined) => (
                 <motion.button
                   key={index}
                   onClick={() => handleDownloadClick(platform.platform)}
@@ -949,7 +949,7 @@ export default function Home() {
                   } : {}}
                   transition={{
                     duration: 0.5,
-                    delay: index * 0.1,
+                    delay: index as number * 0.1,
                     ease: "easeOut"
                   }}
                   viewport={{ once: true, margin: "-50px" }}
