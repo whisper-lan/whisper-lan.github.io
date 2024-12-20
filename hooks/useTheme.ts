@@ -6,11 +6,15 @@ type ThemeStore = {
 };
 
 export const useTheme = create<ThemeStore>((set) => ({
-    theme: typeof window !== 'undefined' ?
-        (localStorage.getItem('theme') as 'light' | 'dark' || 'light') :
-        'light',
+    theme: typeof window !== 'undefined'
+        ? (document.documentElement.classList.contains('dark') ? 'dark' : 'light')
+        : 'light',
     setTheme: (theme) => {
-        localStorage.setItem('theme', theme);
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
         set({ theme });
     },
 })); 

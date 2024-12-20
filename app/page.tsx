@@ -68,7 +68,7 @@ const messages = {
         },
         {
           q: '传输速度如何？',
-          a: '传输速度取决于局域网络带宽，通常可充分利用网��带宽，传输速度非常快。'
+          a: '传输速度取决于局域网络带宽，通常可充分利用网带宽，传输速度非常快。'
         },
         {
           q: '数据是否安全？',
@@ -113,7 +113,7 @@ const messages = {
       title: '用户反馈',
       items: [
         {
-          content: '界面设计非常简洁清爽,使用起来特别方便。最喜欢的是可以直接拖拽文件传输,完全不需要复杂的设���。传输速度也很快,对于局域网内的文件共享来说是个很好的选择。'
+          content: '界面设计非常简洁清爽,使用起来特别方便。最喜欢的是可以直接拖拽文件传输,完全不需要复杂的设。传输速度也很快,对于局域网内的文件共享来说是个很好的选择。'
         },
         {
           content: '终于找到一个好用的局域网传输工具了!之前用过很多类似的软件,要么界面复杂,要么需要配置,这个应用完全解决了我的需求。特别是跨平台支持做得很好,在手机和电脑之间传文件变得特别容易。'
@@ -135,7 +135,7 @@ const messages = {
     footer: {
       about: {
         title: '关于我们',
-        content: 'Whisper 是一个开源的局域网文件传输工具，致力于为用户���供简单、快速、可靠的文件传输体验。我们的目标是让文件共享变得像聊天一样简单自然。'
+        content: 'Whisper 是一个开源的局域网文件传输工具，致力于为用户供简单、快速、可靠的文件传输体验。我们的目标是让文件共享变得像聊天一样简单自然。'
       },
       privacy: {
         title: '隐私政策',
@@ -453,7 +453,7 @@ const TestimonialsSection = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % t.testimonials.items.length);
-    }, 5000); // 每5秒切换一次
+    }, 5000); // 每5��切换一次
 
     return () => clearInterval(timer);
   }, [t.testimonials.items.length]);
@@ -736,7 +736,7 @@ export default function Home() {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  // 处理快速下载按钮点击
+  // 处理快���下载按钮点击
   const handleQuickDownload = () => {
     if (isMobile) {
       // 动端跳转到下载区域
@@ -764,7 +764,7 @@ export default function Home() {
           <select
             value={language}
             onChange={(e) => useLanguage.getState().setLanguage(e.target.value as 'en' | 'zh-CN')}
-            className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1"
+            className="bg-card text-card-foreground border-border rounded-lg px-3 py-1"
           >
             <option value="zh-CN">中文</option>
             <option value="en">English</option>
@@ -773,7 +773,7 @@ export default function Home() {
           {/* 主题切换按钮 */}
           <button
             onClick={() => useTheme.getState().setTheme(useTheme.getState().theme === 'light' ? 'dark' : 'light')}
-            className="p-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
+            className="p-2 rounded-lg bg-card text-card-foreground border border-border hover:bg-accent hover:text-accent-foreground transition-colors"
           >
             {useTheme.getState().theme === 'light' ? (
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

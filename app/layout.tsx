@@ -136,14 +136,10 @@ export default function RootLayout({
         <AdSense />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {/* <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-        > */}
-        <StructuredData />
-        {children}
-        {/* </ThemeProvider> */}
+        <ThemeProvider>
+          <StructuredData />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
