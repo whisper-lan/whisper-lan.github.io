@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
 Sitemap: https://127014.xyz/sitemap.xml
+
+User-agent: *
+Disallow: /
+Host: 2.127014.xyz
