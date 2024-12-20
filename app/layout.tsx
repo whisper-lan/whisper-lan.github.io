@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     // 中文关键词
     '文件传输', '局域网传输', '跨平台传输', '无线传输', '传文件',
     // 英文关键词
-    'file transfer', 'LAN transfer', 'wireless transfer', 'local network transfer'
+    'file transfer', 'LAN transfer', 'wireless transfer', 'local transfer'
   ],
   authors: [{ name: 'lawnvi' }],
   creator: 'lawnvi',

@@ -3,7 +3,7 @@ export const SITE_CONFIG = {
   domain: process.env.NEXT_PUBLIC_SITE_DOMAIN || '127014.xyz',
   title: 'Whisper',
   desc: 'A simple LAN file transfer APP',
-  description: 'Simple, Fast, Free LAN file transfer tool, support multi-device, Android notification sync, support FTP server (alpha)',
+  description: 'Whisper - Simple, Free and Fast LAN file transfer software. Multi-device support, Android notifications on other device, start a FTP server.',
   baseUrl: `https://${process.env.NEXT_PUBLIC_SITE_DOMAIN || '127014.xyz'}`,
 } as const;
 
