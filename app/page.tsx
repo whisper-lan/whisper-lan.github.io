@@ -5,6 +5,7 @@ import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEf
 import { motion, useScroll, useTransform, AnimatePresence, MotionValue } from "framer-motion";
 import { useLanguage } from '@/hooks/useLanguage';
 import { SITE_CONFIG } from "@/lib/constants";
+import { useTheme } from '@/hooks/useTheme';
 
 // 语言配置
 const messages = {
@@ -67,7 +68,7 @@ const messages = {
         },
         {
           q: '传输速度如何？',
-          a: '传输速度取决于局域网络带宽，通常可充分利用网络带宽，传输速度非常快。'
+          a: '传输速度取决于局域网络带宽，通常可充分利用网��带宽，传输速度非常快。'
         },
         {
           q: '数据是否安全？',
@@ -112,7 +113,7 @@ const messages = {
       title: '用户反馈',
       items: [
         {
-          content: '界面设计非常简洁清爽,使用起来特别方便。最喜欢的是可以直接拖拽文件传输,完全不需要复杂的设置。传输速度也很快,对于局域网内的文件共享来说是个很好的选择。'
+          content: '界面设计非常简洁清爽,使用起来特别方便。最喜欢的是可以直接拖拽文件传输,完全不需要复杂的设���。传输速度也很快,对于局域网内的文件共享来说是个很好的选择。'
         },
         {
           content: '终于找到一个好用的局域网传输工具了!之前用过很多类似的软件,要么界面复杂,要么需要配置,这个应用完全解决了我的需求。特别是跨平台支持做得很好,在手机和电脑之间传文件变得特别容易。'
@@ -134,7 +135,7 @@ const messages = {
     footer: {
       about: {
         title: '关于我们',
-        content: 'Whisper 是一个开源的局域网文件传输工具，致力于为用户提供简单、快速、可靠的文件传输体验。我们的目标是让文件共享变得像聊天一样简单自然。'
+        content: 'Whisper 是一个开源的局域网文件传输工具，致力于为用户���供简单、快速、可靠的文件传输体验。我们的目标是让文件共享变得像聊天一样简单自然。'
       },
       privacy: {
         title: '隐私政策',
@@ -698,26 +699,31 @@ export default function Home() {
   const handleDownloadClick = async (platform: PlatformType) => {
     const platformInfo = downloadInfo[platform];
     if (!platformInfo.url) {
-      showMessage(`${platform}平台版本暂未发布`);
+      showMessage(t('download.notAvailable').replace('{platform}', t(`platforms.${platform}`)));
       return;
     }
 
     setDownloading(true);
     try {
+      // 根据语言决定是否使用 CDN 加速
+      const downloadUrl = language === 'zh-CN'
+        ? `https://gh.api.99988866.xyz/${platformInfo.url}`
+        : platformInfo.url;
+
       // 创建一个隐藏的 iframe 来处理下载
       const iframe = document.createElement('iframe');
       iframe.style.display = 'none';
-      iframe.src = platformInfo.url;
+      iframe.src = downloadUrl;
       document.body.appendChild(iframe);
 
-      showMessage('下载已开始，请稍候...');
+      showMessage(t('download.starting'));
 
       setTimeout(() => {
         document.body.removeChild(iframe);
       }, 3000);
     } catch (error) {
       console.error('Download failed:', error);
-      showMessage('下载失败，请稍后重试');
+      showMessage(t('download.failed'));
     } finally {
       setDownloading(false);
     }
@@ -733,7 +739,7 @@ export default function Home() {
   // 处理快速下载按钮点击
   const handleQuickDownload = () => {
     if (isMobile) {
-      // 移动端跳转到下载区域
+      // 动端跳转到下载区域
       const downloadSection = document.getElementById('download');
       if (downloadSection) {
         downloadSection.scrollIntoView({ behavior: 'smooth' });
@@ -753,7 +759,8 @@ export default function Home() {
     <AnimatePresence>
       <div className="min-h-screen bg-background" ref={targetRef}>
         {/* 添加语言切换按钮 */}
-        <div className="fixed top-4 right-4 z-50">
+        <div className="fixed top-4 right-4 z-50 flex gap-2">
+          {/* 语言切换按钮 */}
           <select
             value={language}
             onChange={(e) => useLanguage.getState().setLanguage(e.target.value as 'en' | 'zh-CN')}
@@ -762,6 +769,22 @@ export default function Home() {
             <option value="zh-CN">中文</option>
             <option value="en">English</option>
           </select>
+
+          {/* 主题切换按钮 */}
+          <button
+            onClick={() => useTheme.getState().setTheme(useTheme.getState().theme === 'light' ? 'dark' : 'light')}
+            className="p-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700"
+          >
+            {useTheme.getState().theme === 'light' ? (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            )}
+          </button>
         </div>
 
         <section className="relative container mx-auto px-4 py-20 overflow-hidden">

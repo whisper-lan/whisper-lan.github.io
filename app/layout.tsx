@@ -5,6 +5,7 @@ import Analytics from './components/Analytics';
 import AdSense from './components/AdSense';
 import StructuredData from './components/StructuredData';
 import { SITE_CONFIG } from '@/lib/constants';
+import { ThemeProvider } from './components/ThemeProvider';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -115,7 +116,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta
           httpEquiv="X-Robots-Tag"
@@ -134,12 +135,15 @@ export default function RootLayout({
         <Analytics />
         <AdSense />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        {/* <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+        > */}
         <StructuredData />
         {children}
-
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );
