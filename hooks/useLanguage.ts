@@ -1,17 +1,10 @@
 import { create } from 'zustand';
 
 const getDefaultLanguage = () => {
-  // try {
-  //   if (!window.matchMedia('undefined').matches) {
-  //     let savedLanguage = localStorage.getItem('language') || 'en';
-  //     if (savedLanguage === 'zh-CN') {
-  //       savedLanguage = 'zh-CN';
-  //     }
-  //     return savedLanguage;
-  //   }
-  // } catch (error) {
-  //   console.error('无法访问localStorage:', error);
-  // }
+  const pathname = window.location.pathname;
+  if (pathname.startsWith('/zh')) {
+    return 'zh-CN';
+  }
   return 'en';
 };
 
@@ -21,11 +14,8 @@ export const useLanguage = create<{
 }>((set) => ({
   language: getDefaultLanguage() as 'en' | 'zh-CN',
   setLanguage: (lang) => {
-    try {
-      localStorage.setItem('language', lang);
-    } catch {
-      console.error('Failed to set language in localStorage');
-    }
+    const newPath = lang === 'zh-CN' ? '/zh' : '/en';
+    window.location.href = newPath;
     set({ language: lang });
   },
 }));
