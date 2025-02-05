@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 
 const getDefaultLanguage = () => {
+  if (typeof window === 'undefined') {
+    return 'en'; // 服务器端默认返回英文
+  }
+
   const pathname = window.location.pathname;
   if (pathname.startsWith('/zh')) {
     return 'zh-CN';

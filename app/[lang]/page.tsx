@@ -9,7 +9,16 @@ export async function generateStaticParams() {
     return languages.map((lang) => ({ lang }));
 }
 
-export default function LocalePage({ params }: { params: { lang: string } }) {
+type Props = {
+    params: Promise<{
+        lang: string
+    }>
+}
+
+export default async function LocalePage(
+    props: Props
+) {
+    const params = await props.params;
     // 验证语言参数
     if (!languages.includes(params.lang)) {
         notFound();
