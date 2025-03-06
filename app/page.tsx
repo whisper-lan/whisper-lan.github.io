@@ -412,7 +412,7 @@ const FAQSection = () => {
       <div className="max-w-3xl mx-auto space-y-6">
         {t.faq.items.map((item, index) => (
           <div key={index} className="bg-white/50 dark:bg-gray-800/50 p-6 rounded-xl">
-            <h3 className="text-lg font-semibold mb-2">{item.q}</h3>
+            <p className="text-lg font-semibold mb-2">{item.q}</p>
             <p className="text-gray-600 dark:text-gray-300">{item.a}</p>
           </div>
         ))}
@@ -435,7 +435,7 @@ const TutorialSection = () => {
             <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">
               {index + 1}
             </div>
-            <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+            <p className="text-xl font-semibold mb-2">{step.title}</p>
             <p className="text-gray-600 dark:text-gray-300">{step.desc}</p>
           </div>
         ))}
@@ -930,7 +930,7 @@ export default function Home() {
                         {feature.icon}
                       </motion.div>
                     </motion.span>
-                    <h3 className="text-xl font-semibold">{t(`features.items.${feature.key}.title`)}</h3>
+                    <p className="text-xl font-semibold">{t(`features.items.${feature.key}.title`)}</p>
                   </span>
                   <motion.p
                     className="text-gray-600 dark:text-gray-300 mt-4"
@@ -984,7 +984,7 @@ export default function Home() {
                     transition={{ duration: 0.3 }}
                   />
                   {platform.icon}
-                  <h3 className="text-lg font-semibold mt-4">{platform.name}</h3>
+                  <p className="text-lg font-semibold mt-4">{platform.name}</p>
                   <p className="text-sm text-gray-500">
                     {platform.size}
                   </p>
