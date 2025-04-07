@@ -706,9 +706,7 @@ export default function Home() {
     setDownloading(true);
     try {
       // 根据语言决定是否使用 CDN 加速
-      const downloadUrl = language === 'zh-CN'
-        ? `https://gh.api.99988866.xyz/${platformInfo.url}`
-        : platformInfo.url;
+      const downloadUrl = platformInfo.url;
 
       // 创建一个隐藏的 iframe 来处理下载
       const iframe = document.createElement('iframe');
