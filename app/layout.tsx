@@ -6,6 +6,7 @@ import AdSense from './components/AdSense';
 import StructuredData from './components/StructuredData';
 import { SITE_CONFIG } from '@/lib/constants';
 import { ThemeProvider } from './components/ThemeProvider';
+import type { Viewport } from 'next';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,11 +18,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.baseUrl),
   title: {
     default: `${SITE_CONFIG.title} - ${SITE_CONFIG.desc}`,
-    template: `%s | ${SITE_CONFIG.title}`
+    template: '%s'
   },
   description: SITE_CONFIG.description,
   keywords: [
@@ -80,21 +86,16 @@ export const metadata: Metadata = {
       }
     ]
   },
-  // viewport: {
-  //   width: 'device-width',
-  //   initialScale: 1,
-  //   maximumScale: 1,
-  // },
   verification: {
-    google: 'your-google-site-verification',
+    google: 'YOUR_GOOGLE_SITE_VERIFICATION_CODE_HERE',
   },
   category: 'Software Tools',
   alternates: {
     canonical: SITE_CONFIG.baseUrl,
     languages: {
-      'zh-CN': `${SITE_CONFIG.baseUrl}`,
-      'en-US': `${SITE_CONFIG.baseUrl}`,
-      'en-GB': `${SITE_CONFIG.baseUrl}`,
+      'x-default': `${SITE_CONFIG.baseUrl}/`,
+      'zh-CN': `${SITE_CONFIG.baseUrl}/zh`,
+      'en-US': `${SITE_CONFIG.baseUrl}/en`,
     }
   },
   robots: {
@@ -112,26 +113,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: { lang?: string };
 }>) {
+  const currentLang = params?.lang && ['en', 'zh'].includes(params.lang) ? params.lang : 'zh';
+
   return (
-    <html suppressHydrationWarning>
+    <html lang={currentLang} suppressHydrationWarning>
       <head>
-        <meta
-          httpEquiv="X-Robots-Tag"
-          content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-          key="robots"
-        />
-        <meta
-          name="robots"
-          content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-        />
-        <link rel="canonical" href={SITE_CONFIG.baseUrl} />
-        <link rel="alternate" hrefLang="en-US" href={`${SITE_CONFIG.baseUrl}`} />
-        <link rel="alternate" hrefLang="en-GB" href={`${SITE_CONFIG.baseUrl}`} />
-        <link rel="alternate" hrefLang="zh-CN" href={`${SITE_CONFIG.baseUrl}`} />
-        <link rel="alternate" hrefLang="x-default" href={SITE_CONFIG.baseUrl} />
         <Analytics />
         <AdSense />
       </head>
