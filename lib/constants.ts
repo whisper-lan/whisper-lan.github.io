@@ -5,6 +5,9 @@ export const SITE_CONFIG = {
   desc: 'A simple LAN file transfer APP',
   description: 'Whisper - Simple, Free and Fast LAN file transfer software. Multi-device support, Android notifications on other device, start a FTP server.',
   baseUrl: `https://${process.env.NEXT_PUBLIC_SITE_DOMAIN || 'local-whisper.help'}`,
+  links: {
+    github: 'https://github.com/lawnvi/whisper'
+  }
 } as const;
 
 

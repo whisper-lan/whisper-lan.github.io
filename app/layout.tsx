@@ -111,13 +111,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-  params,
+  params: paramsPromise,
 }: Readonly<{
   children: React.ReactNode;
-  params: { lang?: string };
+  params: Promise<{ lang?: string }>;
 }>) {
+  const params = await paramsPromise;
   const currentLang = params?.lang && ['en', 'zh'].includes(params.lang) ? params.lang : 'zh';
 
   return (

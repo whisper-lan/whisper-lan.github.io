@@ -34,7 +34,7 @@ type ResolvedParams = { lang: string };
 
 // Props can receive either resolved params or a promise of resolved params
 type Props = {
-    params: Promise<ResolvedParams> | ResolvedParams;
+    params: Promise<ResolvedParams>;
 }
 
 export async function generateMetadata({ params: paramsProp }: Props): Promise<Metadata> {
@@ -88,10 +88,10 @@ export async function generateMetadata({ params: paramsProp }: Props): Promise<M
 }
 
 export default async function LocalePage(
-    props: Props
+    { params: paramsProp }: Props // Destructure and rename params to paramsProp
 ) {
     // Await params at the beginning
-    const params = await props.params;
+    const params = await paramsProp;
 
     if (!supportedLanguages.includes(params.lang)) {
         notFound();
@@ -100,7 +100,7 @@ export default async function LocalePage(
     // 将 lang 参数传递给 Home 组件
     return (
         <div>
-            <Home lang={params.lang} />
+            <Home />
         </div>
     );
 }

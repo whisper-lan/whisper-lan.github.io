@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const languageUrls = supportedLanguages.map((lang) => ({
         url: `${baseUrl}/${lang}`,
         lastModified: new Date(), // 或者更精确的修改日期, 例如从CMS或git历史获取
-        changeFrequency: 'weekly' as 'weekly', // 类型断言以匹配 MetadataRoute.Sitemap
+        changeFrequency: 'weekly' as const, // 类型断言以匹配 MetadataRoute.Sitemap
         priority: 0.8,
     }));
 
@@ -19,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const rootUrl = {
         url: baseUrl, // 或者 `${baseUrl}/` 确保斜杠一致性
         lastModified: new Date(),
-        changeFrequency: 'monthly' as 'monthly',
+        changeFrequency: 'monthly' as const,
         priority: 1.0,
         // 如果根页面有特定语言内容，并且希望在此处明确 hreflang (虽然通常在页面 metadata 中处理更佳)
         // alternates: {
