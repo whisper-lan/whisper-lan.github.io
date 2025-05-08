@@ -8,16 +8,22 @@ import { SITE_CONFIG } from '@/lib/constants';
 // 实际项目中，你可能需要将 messages 移到共享位置
 const messagesForMetadata = {
     'zh': { // Assuming URL /zh maps to zh-CN content
-        title: 'Whisper - 快速、简单、对话式的局域网文件传输', // 从 app/page.tsx 的 messages.zh-CN.title
-        description: '快速、简单、对话式的局域网文件传输应用, 支持多设备, 转发安卓设备通知 启动一个FTP服务(alpha)',
+        title: 'Whisper - 对话式局域网文件与文本传输，简单快速',
+        description: '使用 Whisper 的简洁聊天界面，在您的本地网络 (LAN) 内安全地发送文件和消息。无需互联网，即可在设备间进行快速共享。您理想的离线文件传输与本地通讯工具何必是文件传输助手。',
         ogLocale: 'zh_CN',
-        keywords: ['whisper', '文件传输', '局域网传输', '跨平台传输', '无线传输', '传文件', '本地文件互传'] // 中文关键词示例
+        keywords: [
+            'Whisper', '局域网文件传输', '本地网络共享', '离线文件传输',
+            '聊天传文件', '文本传输', 'WiFi传文件', '无网络传文件', '安全本地共享',
+            '电脑互传文件', '手机传电脑局域网'
+        ]
     },
     'en': {
-        title: 'Whisper - Fast, Simple, Chat-style LAN File Transfer', // 从 app/page.tsx 的 messages.en.title
-        description: 'Fast, Simple, Chat-style LAN file transfer. support multi-device transfer, Android notification sync, start a FTP server (alpha)',
+        title: 'Whisper: Chat-Style LAN File & Text Transfer',
+        description: 'Send files & texts on your LAN via chat. Fast, simple sharing, no internet needed. Ideal offline file transfer & local messenger.',
         ogLocale: 'en_US',
-        keywords: ['whisper', 'file transfer', 'LAN transfer', 'wireless transfer', 'local transfer', 'offline file transfer'] // 英文关键词示例
+        keywords: [
+            'Whisper', 'Chat-Style Transfer', 'LAN file transfer', 'offline sharing', 'P2P chat', 'local messenger', 'WiFi direct'
+        ]
     }
 };
 
