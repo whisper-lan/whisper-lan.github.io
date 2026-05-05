@@ -4,8 +4,8 @@ Whisper Web is the product introduction site for [Whisper](https://github.com/la
 
 It highlights the current `0.0.29` app capabilities:
 
-- LAN text and file transfer
-- Resumable large-file transfers
+- LAN-only text and file transfer
+- Resumable large-file transfers over the local network
 - Android notification forwarding
 - Desktop system audio sharing
 - Desktop keyboard and mouse sharing

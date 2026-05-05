@@ -45,6 +45,10 @@ const messages = {
           title: '聊天式传输',
           description: '像聊天一样发送文本、剪贴板内容和文件，桌面端支持拖拽发送'
         },
+        resume: {
+          title: '大文件续传',
+          description: '大文件传输中断后可继续发送，仍然只走局域网，适合照片、视频和安装包'
+        },
         notification: {
           title: '通知同步',
           description: '支持转发安卓设备通知消息，让您不错过任何重要信息'
@@ -196,6 +200,10 @@ const messages = {
         chat: {
           title: 'Chat-style Transfer',
           description: 'Send text, clipboard snippets, and files in a chat-style timeline with desktop drag-and-drop'
+        },
+        resume: {
+          title: 'Resumable Transfers',
+          description: 'Resume interrupted large-file transfers over your LAN for photos, videos, and installers'
         },
         notification: {
           title: 'Notification Sync',
@@ -885,7 +893,7 @@ export default function Home() {
               {t('features.title')}
             </motion.h2>
             <motion.div
-              className="grid gap-8 md:grid-cols-6"
+              className="grid gap-8 md:grid-cols-3"
               initial="hidden"
               animate="show"
               variants={{
@@ -900,7 +908,7 @@ export default function Home() {
               {introFeatures.map((feature, index) => (
                 <motion.div
                   key={index}
-                  className={`rounded-3xl border border-sky-100 bg-white/80 p-6 shadow-xl shadow-sky-950/5 backdrop-blur-sm transition-all duration-500 hover:border-cyan-200 hover:shadow-2xl hover:shadow-sky-950/10 dark:border-slate-700 dark:bg-slate-900/75 dark:hover:border-sky-600 md:col-span-2 ${introFeatures.length === 5 && index === 3 ? 'md:col-start-2' : ''}`}
+                  className="rounded-3xl border border-sky-100 bg-white/80 p-6 shadow-xl shadow-sky-950/5 backdrop-blur-sm transition-all duration-500 hover:border-cyan-200 hover:shadow-2xl hover:shadow-sky-950/10 dark:border-slate-700 dark:bg-slate-900/75 dark:hover:border-sky-600"
                   variants={{
                     hidden: {
                       opacity: 0,
@@ -1066,6 +1074,12 @@ const introFeatures = [
     key: 'chat',
     icon: <svg className="h-6 w-6 text-sky-600 dark:text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>
+  },
+  {
+    key: 'resume',
+    icon: <svg className="h-6 w-6 text-sky-600 dark:text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 12a8 8 0 0113.657-5.657M20 4v6h-6M20 12a8 8 0 01-13.657 5.657M4 20v-6h6" />
     </svg>
   },
   {
