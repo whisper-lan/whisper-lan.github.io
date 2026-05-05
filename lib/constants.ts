@@ -2,8 +2,8 @@
 export const SITE_CONFIG = {
   domain: process.env.NEXT_PUBLIC_SITE_DOMAIN || 'local-whisper.help',
   title: 'Whisper',
-  desc: 'Chat-based LAN File & Text Transfer - Offline & Simple',
-  description: 'Whisper: Securely send files and messages over your local network (LAN) with a simple chat interface. No internet needed for fast, simple. Your ideal offline file transfer and local messenger solution. (中文：Whisper Web: 通过简洁的聊天界面在您的本地网络 (LAN) 内安全地发送文件和消息。无需互联网即可在设备之间进行快速、私密的P2P共享。您理想的离线文件传输和本地通讯解决方案。)',
+  desc: 'LAN file transfer, audio sharing, and keyboard/mouse sharing',
+  description: 'Whisper is a local-first, chat-style LAN collaboration app for sending text and files, forwarding Android notifications, sharing desktop system audio, and controlling another desktop with keyboard and mouse across macOS, Windows, Linux, and Android. 中文：Whisper 是局域网优先的跨平台设备协作工具，支持文本文件传输、Android 通知、系统声音共享和桌面键鼠共享。',
   baseUrl: `https://${process.env.NEXT_PUBLIC_SITE_DOMAIN || 'local-whisper.help'}`,
   links: {
     github: 'https://github.com/lawnvi/whisper'

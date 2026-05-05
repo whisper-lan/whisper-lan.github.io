@@ -46,8 +46,8 @@ export const metadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    title: 'Whisper - Fast & Secure LAN File Transfer Tool',
-    description: 'A fast, secure and simple LAN file transfer tool supporting Windows, MacOS, Linux, Android and more platforms',
+    title: 'Whisper - LAN device collaboration for files, audio, and input',
+    description: 'Send files and text, forward Android notifications, share desktop audio, and control nearby desktops with keyboard and mouse on your LAN.',
     url: SITE_CONFIG.baseUrl,
     siteName: SITE_CONFIG.title,
     images: [
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Whisper - LAN File Transfer Tool',
+        alt: 'Whisper - LAN device collaboration app',
       }
     ],
     locale: 'zh_CN',
@@ -64,8 +64,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Whisper - Fast & Secure LAN File Transfer Tool',
-    description: 'A fast, secure and simple LAN file transfer tool supporting Windows, MacOS, Linux, Android and more platforms',
+    title: 'Whisper - LAN device collaboration for files, audio, and input',
+    description: 'Send files and text, forward Android notifications, share desktop audio, and control nearby desktops with keyboard and mouse on your LAN.',
     images: ['/og-image.jpg'],
   },
   manifest: '/manifest.json',

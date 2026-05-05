@@ -17,9 +17,9 @@ export default function StructuredData() {
       "ratingValue": "4.8",
       "ratingCount": "1250"
     },
-    "description": "快速、实用、简单的局域网文件传输工具",
+    "description": "局域网优先的跨平台设备协作工具，支持文件传输、Android 通知、系统声音共享和桌面键鼠共享",
     "downloadUrl": `${SITE_CONFIG.baseUrl}/download`,
-    "softwareVersion": "1.0.0",
+    "softwareVersion": "0.0.29",
     "fileSize": "25MB",
     "author": {
       "@type": "Organization",
@@ -33,4 +33,4 @@ export default function StructuredData() {
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />
   );
-} 
+}

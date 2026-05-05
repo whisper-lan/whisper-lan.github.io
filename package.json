@@ -1,6 +1,6 @@
 {
   "name": "whisper-web",
-  "version": "0.1.0",
+  "version": "0.0.29",
   "private": true,
   "description": "A local network file and text transfer software using a chat-like interface. Easily share files and messages across devices on your LAN without needing an internet connection.",
   "keywords": [
