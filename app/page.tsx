@@ -151,7 +151,7 @@ const messages = {
       },
       privacy: {
         title: '隐私政策',
-        content: '我们重视您的隐私。Whisper 不会收集任何个人信息，所有数据传输仅在局域网内进行。我们不会存储或上传您的任何文件和信息。'
+        content: 'Whisper 不提供公共云端中转，文件、文本、通知和音频只会在您明确连接的局域网设备之间传输。应用会在您授权后访问完成这些功能所需的数据。'
       },
       contact: {
         title: '联系我们',
@@ -306,7 +306,7 @@ const messages = {
       },
       privacy: {
         title: 'Privacy Policy',
-        content: 'We value your privacy. Whisper does not collect any personal information, and all data transfers occur only within the local network. We do not store or upload any of your files or information.'
+        content: 'Whisper does not provide a public cloud relay. Files, text, notifications, and audio are transferred only between LAN devices you explicitly connect. The app accesses the data needed for those features after you grant permission.'
       },
       contact: {
         title: 'Contact Us',

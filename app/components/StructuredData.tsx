@@ -12,15 +12,8 @@ export default function StructuredData() {
       "price": "0",
       "priceCurrency": "USD"
     },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "1250"
-    },
     "description": "局域网优先的跨平台设备协作工具，支持文件传输、Android 通知、系统声音共享和桌面键鼠共享",
-    "downloadUrl": `${SITE_CONFIG.baseUrl}/download`,
-    "softwareVersion": "0.0.29",
-    "fileSize": "25MB",
+    "downloadUrl": SITE_CONFIG.links.releases,
     "author": {
       "@type": "Organization",
       "name": "lawnvi"

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Analytics from './components/Analytics';
-import AdSense from './components/AdSense';
 import StructuredData from './components/StructuredData';
 import { SITE_CONFIG } from '@/lib/constants';
 import { ThemeProvider } from './components/ThemeProvider';
@@ -86,9 +84,6 @@ export const metadata: Metadata = {
       }
     ]
   },
-  verification: {
-    google: 'YOUR_GOOGLE_SITE_VERIFICATION_CODE_HERE',
-  },
   category: 'Software Tools',
   alternates: {
     canonical: SITE_CONFIG.baseUrl,
@@ -123,10 +118,6 @@ export default async function RootLayout({
 
   return (
     <html lang={currentLang} suppressHydrationWarning>
-      <head>
-        <Analytics />
-        <AdSense />
-      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ThemeProvider>
           <StructuredData />
