@@ -9,12 +9,34 @@ export default {
   darkMode: "class",
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-space-grotesk)", "var(--font-geist-sans)", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
+      },
       colors: {
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",
         background: "var(--background)",
         foreground: "var(--foreground)",
+        paper: "var(--paper)",
+        panel: {
+          DEFAULT: "var(--panel)",
+          alt: "var(--panel-2)",
+        },
+        line: {
+          DEFAULT: "var(--line)",
+          strong: "var(--line-strong)",
+        },
+        ink: "var(--ink)",
+        signal: {
+          DEFAULT: "var(--signal)",
+          bright: "var(--signal-bright)",
+          soft: "var(--signal-soft)",
+          line: "var(--signal-line)",
+        },
+        live: "var(--live)",
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "var(--primary-foreground)",
