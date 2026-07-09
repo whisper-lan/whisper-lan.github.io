@@ -103,10 +103,7 @@ export default async function LocalePage(
         notFound();
     }
 
-    // 将 lang 参数传递给 Home 组件
-    return (
-        <div>
-            <Home />
-        </div>
-    );
+    const initialLanguage = params.lang === 'zh' ? 'zh-CN' : 'en';
+
+    return <Home initialLanguage={initialLanguage} />;
 }

@@ -40,6 +40,12 @@ const messages = {
       },
     },
     spotlight: {
+      chat: {
+        eyebrow: '传输 · 聊天式时间线',
+        title: '像聊天一样，收发一切',
+        desc: '文本、剪贴板和文件都落在同一条时间线里，桌面端可以直接拖进拖出，传过什么一目了然。',
+        points: ['文本 / 剪贴板 / 文件，一处收发', '桌面端拖拽即可传输', '大文件断线自动续传'],
+      },
       audio: {
         eyebrow: '音频 · 多设备组播放',
         title: '一个声源，一屋子扬声器',
@@ -152,6 +158,12 @@ const messages = {
       },
     },
     spotlight: {
+      chat: {
+        eyebrow: 'TRANSFER · CHAT TIMELINE',
+        title: 'Send anything, like a chat.',
+        desc: 'Text, clipboard, and files land in one shared timeline. Drag in and out on the desktop, with every transfer kept in plain view.',
+        points: ['Text / clipboard / files in one place', 'Drag-and-drop on the desktop', 'Large files resume after a drop'],
+      },
       audio: {
         eyebrow: 'AUDIO · MULTI-DEVICE GROUP',
         title: 'One source, a room of speakers.',
@@ -239,6 +251,7 @@ const messages = {
 // config / types
 // ---------------------------------------------------------------------------
 type PlatformType = 'windows' | 'mac' | 'linux' | 'android' | 'ios' | 'unknown';
+type Language = 'en' | 'zh-CN';
 
 const GITHUB_REPO = {
   releaseApi: 'https://api.github.com/repos/lawnvi/whisper/releases/latest',
@@ -417,6 +430,59 @@ function TopologyDiagram() {
   );
 }
 
+// chat-style transfer: text, clipboard, and files appear in one familiar thread
+function ChatTransferDiagram() {
+  const reduce = useReducedMotion();
+  const bubbles = [
+    { x: 62, y: 54, w: 148, h: 38, align: 'left', tag: 'TEXT', title: 'Meeting notes', sub: '' },
+    { x: 238, y: 104, w: 160, h: 46, align: 'right', tag: 'FILE', title: 'whisper-setup.exe', sub: '84 MB · delivered' },
+    { x: 78, y: 168, w: 158, h: 38, align: 'left', tag: 'CLIPBOARD', title: 'ssh://local-device', sub: '' },
+  ];
+  return (
+    <DiagramFrame label="CHAT TRANSFER" meta="TEXT · FILE · CLIPBOARD" viewBox="0 0 460 240">
+      <g className="mono" fontSize="9" letterSpacing="1.2">
+        <text x="42" y="30" fill="var(--ink)">MACBOOK</text>
+        <text x="418" y="30" textAnchor="end" fill="var(--ink)">PHONE</text>
+        <line x1="104" y1="26" x2="356" y2="26" stroke="var(--line-strong)" strokeWidth={1.2} strokeDasharray="3 6" />
+        {!reduce && (
+          <motion.g initial={{ x: 116, y: 26 }} animate={{ x: [116, 344], y: 26 }} transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', repeatType: 'reverse' }}>
+            <circle r="3.5" fill="var(--signal)" />
+            <circle r="8" fill="var(--signal)" opacity="0.12" />
+          </motion.g>
+        )}
+      </g>
+
+      {bubbles.map((bubble, i) => (
+        <motion.g
+          key={bubble.title}
+          initial={reduce ? false : { opacity: 0, y: 8 }}
+          animate={reduce ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: i * 0.14, ease: 'easeOut' }}
+        >
+          <rect x={bubble.x} y={bubble.y} width={bubble.w} height={bubble.h} rx="9" fill={bubble.align === 'right' ? 'var(--signal-soft)' : 'var(--panel)'} stroke={bubble.align === 'right' ? 'var(--signal-line)' : 'var(--line-strong)'} strokeWidth={1.1} />
+          <text x={bubble.x + 12} y={bubble.y + 15} className="mono" fontSize="7" letterSpacing="1.3" fill="var(--signal)">{bubble.tag}</text>
+          <text x={bubble.x + 12} y={bubble.y + 29} fontSize="9.5" fontWeight="600" fill="var(--ink)">{bubble.title}</text>
+          {bubble.sub && <text x={bubble.x + 12} y={bubble.y + bubble.h - 7} className="mono" fontSize="6.6" fill="var(--muted)">{bubble.sub}</text>}
+          {bubble.tag === 'FILE' && (
+            <g transform={`translate(${bubble.x + bubble.w - 29}, ${bubble.y + 11})`} stroke="var(--signal)" strokeWidth={1.15} fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 2h12l6 6v22H6z" />
+              <path d="M18 2v7h6M10 17h10M10 23h12" />
+            </g>
+          )}
+        </motion.g>
+      ))}
+
+      <g>
+        <rect x="62" y="218" width="336" height="18" rx="9" fill="var(--panel)" stroke="var(--line)" strokeWidth={1.1} />
+        <text x="76" y="230" className="mono" fontSize="7" fill="var(--muted)">drop files or paste text</text>
+        <g transform="translate(374 220)" stroke="var(--signal)" strokeWidth={1.35} fill="none" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M0 7h16M9 0l7 7-7 7" />
+        </g>
+      </g>
+    </DiagramFrame>
+  );
+}
+
 // audio group: one source fans out to a group of speakers with channel roles
 function AudioMatrixDiagram() {
   const reduce = useReducedMotion();
@@ -508,12 +574,15 @@ function KMDiagram() {
 // ---------------------------------------------------------------------------
 // page
 // ---------------------------------------------------------------------------
-export default function Home() {
+export default function Home({ initialLanguage = 'zh-CN' }: { initialLanguage?: Language }) {
   const deviceType = useDeviceDetect();
   const isMobile = useIsMobile();
   const { language, setLanguage } = useLanguage();
   const { theme, setTheme } = useTheme();
-  const t = messages[language];
+  const [languageReady, setLanguageReady] = useState(false);
+  const [themeReady, setThemeReady] = useState(false);
+  const activeLanguage = languageReady ? language : initialLanguage;
+  const t = messages[activeLanguage];
 
   const [downloading, setDownloading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -533,6 +602,11 @@ export default function Home() {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
   };
+
+  useEffect(() => {
+    setLanguageReady(true);
+    setThemeReady(true);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -605,6 +679,7 @@ export default function Home() {
   };
 
   const specbar = [t.specbar.lanOnly, t.specbar.noCloud, t.specbar.platforms, t.specbar.oss, t.specbar.port];
+  const themeForIcon = themeReady ? theme : 'light';
 
   return (
     <div className="min-h-screen">
@@ -623,8 +698,8 @@ export default function Home() {
           </nav>
           <div className="flex items-center gap-1.5">
             <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value as 'en' | 'zh-CN')}
+              value={activeLanguage}
+              onChange={(e) => setLanguage(e.target.value as Language)}
               className="mono h-8 cursor-pointer rounded-md border border-line bg-panel px-2 text-xs text-ink outline-none transition-colors hover:border-signal"
               aria-label="Language"
             >
@@ -636,7 +711,7 @@ export default function Home() {
               className="grid h-8 w-8 place-items-center rounded-md border border-line bg-panel text-ink transition-colors hover:border-signal hover:text-signal"
               aria-label="Toggle theme"
             >
-              {theme === 'light' ? (
+              {themeForIcon === 'light' ? (
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.7} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 0 0 12 21a9.003 9.003 0 0 0 8.354-5.646Z" /></svg>
               ) : (
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.7} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.36 6.36-.7-.7M6.34 6.34l-.7-.7m12.72 0-.7.7M6.34 17.66l-.7.7M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" /></svg>
@@ -651,13 +726,13 @@ export default function Home() {
         <section className="grid items-center gap-12 pb-10 pt-14 sm:pb-12 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr]">
           <Reveal>
             <p className="eyebrow mb-5">{t.hero.eyebrow}</p>
-            <h1 className="font-display text-[2.6rem] font-bold leading-[1.04] text-ink sm:text-6xl">{t.hero.title}</h1>
-            <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">{t.hero.desc}</p>
+            <h1 className="font-display text-[2.6rem] font-bold leading-[1.04] text-ink [text-wrap:balance] sm:text-6xl">{t.hero.title}</h1>
+            <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground [text-wrap:pretty] sm:text-lg">{t.hero.desc}</p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <button
                 onClick={handleHeroDownload}
                 disabled={downloading}
-                className="group inline-flex h-12 items-center gap-2 rounded-md bg-signal px-6 font-medium text-white transition-colors hover:bg-signal-bright disabled:opacity-70"
+                className="group inline-flex h-12 items-center gap-2 rounded-xl bg-signal px-6 font-medium text-white transition-colors hover:bg-signal-bright disabled:opacity-70"
               >
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M4 19h16" /></svg>
                 {heroDownloadLabel}
@@ -665,7 +740,7 @@ export default function Home() {
               <a
                 href={GITHUB_REPO.repoUrl}
                 target="_blank"
-                className="inline-flex h-12 items-center gap-2 rounded-md border border-line-strong bg-panel px-6 font-medium text-ink transition-colors hover:border-signal hover:text-signal"
+                className="inline-flex h-12 items-center gap-2 rounded-xl border border-line-strong bg-panel px-6 font-medium text-ink transition-colors hover:border-signal hover:text-signal"
               >
                 {t.hero.source}
               </a>
@@ -690,7 +765,7 @@ export default function Home() {
         </div>
 
         {/* features */}
-        <section id="features" className="py-20 sm:py-28">
+        <section id="features" className="py-16 sm:py-24">
           <Reveal className="mb-12 max-w-2xl">
             <p className="eyebrow mb-3">CAPABILITIES</p>
             <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">{t.features.title}</h2>
@@ -717,8 +792,24 @@ export default function Home() {
           </div>
         </section>
 
-        {/* spotlight: the two most visual capabilities, with schematic diagrams */}
-        <section className="space-y-20 pb-4 sm:space-y-28">
+        {/* spotlight: the flagship capabilities, each with a schematic diagram */}
+        <section className="space-y-16 pb-2 sm:space-y-24">
+          {/* chat — diagram left, text right */}
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+            <Reveal className="lg:order-2">
+              <p className="eyebrow mb-3">{t.spotlight.chat.eyebrow}</p>
+              <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">{t.spotlight.chat.title}</h2>
+              <p className="mt-4 max-w-lg leading-7 text-muted-foreground">{t.spotlight.chat.desc}</p>
+              <ul className="mt-6 space-y-2.5">
+                {t.spotlight.chat.points.map((p, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm text-ink">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal" />{p}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+            <Reveal delay={0.1} className="lg:order-1"><ChatTransferDiagram /></Reveal>
+          </div>
           {/* audio — text left, diagram right */}
           <div className="grid items-center gap-10 lg:grid-cols-2">
             <Reveal>
@@ -754,7 +845,7 @@ export default function Home() {
         </section>
 
         {/* how it works — a genuine sequence, so numbered */}
-        <section className="py-20 sm:py-28">
+        <section className="py-16 sm:py-24">
           <Reveal className="mb-12 max-w-2xl">
             <p className="eyebrow mb-3">SETUP</p>
             <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">{t.how.title}</h2>
@@ -777,7 +868,7 @@ export default function Home() {
         </section>
 
         {/* platforms & builds — unified matrix: each row carries its own download */}
-        <section id="platforms" className="py-20 sm:py-28">
+        <section id="platforms" className="py-16 sm:py-24">
           <Reveal className="mb-12 max-w-2xl">
             <p className="eyebrow mb-3">PLATFORMS &amp; BUILDS</p>
             <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">{t.specs.title}</h2>
@@ -855,7 +946,7 @@ export default function Home() {
         </section>
 
         {/* faq */}
-        <section id="faq" className="py-20 sm:py-28">
+        <section id="faq" className="py-16 sm:py-24">
           <Reveal className="mb-10 max-w-2xl">
             <p className="eyebrow mb-3">FAQ</p>
             <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">{t.faq.title}</h2>
