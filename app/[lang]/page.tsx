@@ -1,109 +1,105 @@
-import { notFound } from 'next/navigation';
-import Home from '../page';
-import { Metadata } from 'next';
-import { SITE_CONFIG } from '@/lib/constants';
+import { notFound } from "next/navigation";
 
-// 从 app/page.tsx (Home 组件) 或共享的 i18n 文件导入 messages
-// 这里为了示例，我们假设可以直接引用或有一个获取翻译的函数
-// 实际项目中，你可能需要将 messages 移到共享位置
-const messagesForMetadata = {
-    'zh': { // Assuming URL /zh maps to zh-CN content
-        title: 'Whisper - 局域网设备协作，文件、声音与键鼠共享',
-        description: 'Whisper 是局域网优先的跨平台设备协作工具，支持文本与文件传输、Android 通知转发、桌面系统声音共享和键鼠共享。',
-        ogLocale: 'zh_CN',
-        keywords: [
-            'Whisper', '局域网文件传输', '本地网络共享', '离线文件传输',
-            '聊天传文件', '文本传输', 'WiFi传文件', '无网络传文件', '本地共享',
-            '电脑互传文件', '手机传电脑局域网', '键鼠共享', '系统声音共享'
-        ]
-    },
-    'en': {
-        title: 'Whisper: LAN collaboration for files, audio, and input',
-        description: 'Send files and text, forward Android notifications, share desktop audio, and control nearby desktops with keyboard and mouse on your LAN.',
-        ogLocale: 'en_US',
-        keywords: [
-            'Whisper', 'Chat-Style Transfer', 'LAN file transfer', 'offline sharing', 'P2P chat', 'keyboard mouse sharing', 'desktop audio sharing'
-        ]
-    }
+import { SiteFooter } from "@/app/components/site-footer";
+import { SiteHeader } from "@/app/components/site-header";
+import { getMessages, isLocale } from "@/lib/i18n";
+import type { Locale, Messages } from "@/lib/i18n";
+import { getReleaseCatalog } from "@/lib/release/github";
+import type { ReleaseCatalog } from "@/lib/release/types";
+
+type LandingSkeletonProps = {
+  locale: Locale;
+  messages: Messages;
+  catalog: ReleaseCatalog;
 };
 
-// 定义支持的语言 (与 generateStaticParams 和 layout 逻辑保持一致)
-const supportedLanguages = ['en', 'zh'];
+function LandingSkeleton({ locale, messages, catalog }: LandingSkeletonProps) {
+  return (
+    <div className="min-h-screen bg-paper text-ink">
+      <SiteHeader locale={locale} messages={messages} />
+      <main>
+        <section className="content-shell flex min-h-[62vh] flex-col justify-center py-16" aria-labelledby="hero-title">
+          <p className="eyebrow">{messages.hero.eyebrow}</p>
+          <h1 id="hero-title" className="mt-4 font-display text-5xl font-bold sm:text-7xl">
+            {messages.brand.name}
+          </h1>
+          <p className="mt-5 max-w-2xl font-display text-2xl font-medium sm:text-3xl">
+            {messages.hero.title}
+          </p>
+          <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
+            {messages.hero.description}
+          </p>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+            {messages.hero.security}
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a
+              href="#downloads"
+              className="inline-flex min-h-12 items-center rounded-md bg-signal px-5 font-medium text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+            >
+              {messages.hero.chooseBuild}
+            </a>
+            <a
+              href="https://github.com/lawnvi/whisper"
+              className="inline-flex min-h-12 items-center rounded-md border border-line-strong bg-panel px-5 font-medium text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+            >
+              {messages.hero.viewSource}
+            </a>
+          </div>
+        </section>
 
-// 验证语言参数
-export async function generateStaticParams() {
-    return supportedLanguages.map((lang) => ({ lang }));
+        <section id="downloads" className="border-y border-line bg-panel-alt py-14" aria-labelledby="downloads-title">
+          <div className="content-shell">
+            <p className="eyebrow">{messages.release.eyebrow}</p>
+            <h2 id="downloads-title" className="mt-3 font-display text-3xl font-semibold">
+              {messages.release.title}
+            </h2>
+            {catalog.status === "ready" ? (
+              <div className="mt-5">
+                <p role="status" className="text-sm text-muted-foreground">
+                  {messages.release.ready}: {catalog.channel === "stable" ? messages.release.stable : messages.release.preview} v{catalog.version}
+                  {` · ${catalog.assets.length} ${messages.release.assets}`}
+                </p>
+                <a
+                  href={catalog.releaseUrl}
+                  className="mt-4 inline-flex min-h-11 items-center rounded-md text-signal underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+                >
+                  {messages.release.visitRelease}
+                </a>
+              </div>
+            ) : (
+              <div className="mt-5">
+                <p role="status" className="text-sm text-muted-foreground">
+                  {messages.release.unavailable}
+                </p>
+                <a
+                  href={catalog.releasesUrl}
+                  className="mt-4 inline-flex min-h-11 items-center rounded-md text-signal underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+                >
+                  {messages.release.visitReleases}
+                </a>
+              </div>
+            )}
+          </div>
+        </section>
+      </main>
+      <SiteFooter locale={locale} messages={messages} />
+    </div>
+  );
 }
 
-// Type for resolved params
-type ResolvedParams = { lang: string };
+type LocalePageProps = {
+  params: Promise<{ lang: string }>;
+};
 
-// Props can receive either resolved params or a promise of resolved params
-type Props = {
-    params: Promise<ResolvedParams>;
-}
+export default async function LocalePage({ params }: LocalePageProps) {
+  const { lang } = await params;
+  if (!isLocale(lang)) {
+    notFound();
+  }
+  const locale = lang;
+  const messages = getMessages(locale);
+  const catalog = await getReleaseCatalog();
 
-export async function generateMetadata({ params: paramsProp }: Props): Promise<Metadata> {
-    // Await params at the beginning. If it's already resolved, await won't harm.
-    const params = await paramsProp;
-
-    const lang = supportedLanguages.includes(params.lang) ? params.lang : 'en';
-    const localeMessages = messagesForMetadata[lang as keyof typeof messagesForMetadata] || messagesForMetadata.en;
-
-    const pageUrl = `${SITE_CONFIG.baseUrl}/${lang}`;
-    const ogImageUrl = `${SITE_CONFIG.baseUrl}/og-image.jpg`; // 假设 og-image 在 public 目录下
-
-    return {
-        title: localeMessages.title,
-        description: localeMessages.description,
-        keywords: localeMessages.keywords,
-        alternates: {
-            canonical: pageUrl,
-            languages: {
-                'x-default': `${SITE_CONFIG.baseUrl}/`, // Or your primary language version e.g., /zh
-                'en': `${SITE_CONFIG.baseUrl}/en`,
-                'zh': `${SITE_CONFIG.baseUrl}/zh`,
-                // Add other languages if any
-            },
-        },
-        openGraph: {
-            title: localeMessages.title,
-            description: localeMessages.description,
-            url: pageUrl,
-            siteName: SITE_CONFIG.title, // Or localized site name
-            images: [
-                {
-                    url: ogImageUrl,
-                    width: 1200,
-                    height: 630,
-                    alt: localeMessages.title, // Alt text for OG image
-                }
-            ],
-            locale: localeMessages.ogLocale,
-            alternateLocale: lang === 'en' ? ['zh_CN'] : ['en_US'], // Example
-            type: 'website',
-        },
-        twitter: {
-            card: 'summary_large_image',
-            title: localeMessages.title,
-            description: localeMessages.description,
-            images: [ogImageUrl],
-        },
-        // manifest, icons can be inherited from root layout or customized here
-    };
-}
-
-export default async function LocalePage(
-    { params: paramsProp }: Props // Destructure and rename params to paramsProp
-) {
-    // Await params at the beginning
-    const params = await paramsProp;
-
-    if (!supportedLanguages.includes(params.lang)) {
-        notFound();
-    }
-
-    const initialLanguage = params.lang === 'zh' ? 'zh-CN' : 'en';
-
-    return <Home initialLanguage={initialLanguage} />;
+  return <LandingSkeleton locale={locale} messages={messages} catalog={catalog} />;
 }
