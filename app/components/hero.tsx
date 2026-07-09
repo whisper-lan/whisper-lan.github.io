@@ -18,14 +18,26 @@ export function Hero({ locale, messages, catalog }: HeroProps) {
   return (
     <section className="hero" aria-labelledby="hero-title" lang={localeToHtmlLang(locale)}>
       <div className="hero__media">
-        <Image
-          src="/product/file-share.png"
-          alt={messages.hero.productAlt}
-          fill
-          priority
-          sizes="100vw"
-          className="hero__image"
-        />
+        <div className="hero__desktop-frame">
+          <Image
+            src="/product/file-share.png"
+            alt={messages.hero.productAlt}
+            fill
+            priority
+            sizes="(max-width: 767px) 200vw, 100vw"
+            className="hero__image hero__image--desktop"
+          />
+        </div>
+        <div className="hero__phone-frame" aria-hidden="true">
+          <Image
+            src="/product/file-share.png"
+            alt=""
+            fill
+            priority
+            sizes="(max-width: 767px) 200vw, 1px"
+            className="hero__image hero__image--phone"
+          />
+        </div>
       </div>
       <div className="hero__content content-shell">
         <div className="hero__copy">

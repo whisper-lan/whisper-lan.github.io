@@ -11,9 +11,10 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? [["line"], ["html", { open: "never" }]] : "line",
-  snapshotPathTemplate: "{testDir}/__screenshots__/{arg}-{projectName}{ext}",
+  snapshotPathTemplate: "{testDir}/__screenshots__/{platform}/{arg}-{projectName}{ext}",
   use: {
     baseURL,
+    launchOptions: { args: ["--disable-gpu"] },
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
     video: "retain-on-failure",

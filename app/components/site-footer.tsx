@@ -8,6 +8,9 @@ type SiteFooterProps = {
   messages: Messages;
 };
 
+const footerLinkClass =
+  "inline-flex min-h-11 min-w-11 items-center justify-center rounded-md px-2 text-muted-foreground transition-colors hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal";
+
 export function SiteFooter({ locale, messages }: SiteFooterProps) {
   return (
     <footer className="border-t border-line bg-panel-alt">
@@ -27,13 +30,13 @@ export function SiteFooter({ locale, messages }: SiteFooterProps) {
           </p>
         </div>
         <nav className="flex flex-wrap gap-x-5 gap-y-2 text-sm" aria-label={messages.navigation.ariaLabel}>
-          <a className="min-h-11 content-center text-muted-foreground hover:text-ink" href={SITE_CONFIG.links.github}>
+          <a className={footerLinkClass} href={SITE_CONFIG.links.github}>
             {messages.footer.source}
           </a>
-          <a className="min-h-11 content-center text-muted-foreground hover:text-ink" href={`${SITE_CONFIG.links.github}/issues`}>
+          <a className={footerLinkClass} href={`${SITE_CONFIG.links.github}/issues`}>
             {messages.footer.issues}
           </a>
-          <a className="min-h-11 content-center text-muted-foreground hover:text-ink" href={`${SITE_CONFIG.links.github}/blob/main/LICENSE`}>
+          <a className={footerLinkClass} href={`${SITE_CONFIG.links.github}/blob/main/LICENSE`}>
             {messages.footer.license}
           </a>
         </nav>

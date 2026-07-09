@@ -74,7 +74,9 @@ describe("landing product narrative", () => {
     const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
 
     expect(css).toContain("--radius: 8px");
-    expect(css).toContain("object-position: 54% center");
+    expect(css).toContain("grid-template-columns: minmax(0, 2fr) minmax(8rem, 1fr)");
+    expect(css).toContain("object-position: left top");
+    expect(css).toContain("object-position: right top");
     expect(css).toContain("calc(100svh - 8rem)");
     expect(css).toContain("prefers-reduced-motion");
     expect(css).not.toMatch(/(?:linear|radial)-gradient|backdrop-filter|filter:\s*blur/i);

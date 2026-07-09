@@ -9,9 +9,11 @@ import robots from "../app/robots";
 import sitemap from "../app/sitemap";
 import StructuredData from "../app/components/StructuredData";
 import { SITE_CONFIG } from "../lib/constants";
+import { getMessages } from "../lib/i18n";
 import { buildLocalizedMetadata } from "../lib/metadata";
 import type { ReadyReleaseCatalog, ReleaseCatalog } from "../lib/release/types";
 import nextConfig from "../next.config";
+import playwrightConfig from "../playwright.config";
 
 const repositoryRoot = dirname(fileURLToPath(new URL("../package.json", import.meta.url)));
 
@@ -58,6 +60,12 @@ describe("localized metadata", () => {
       expect(serialized).toContain(`/${locale}/twitter-image`);
       expect(serialized).toContain("/manifest.webmanifest");
       expect(serialized).not.toContain("og-image.jpg");
+      expect(metadata.openGraph).toMatchObject({
+        images: [{ alt: getMessages(locale).hero.productAlt }],
+      });
+      expect(metadata.twitter).toMatchObject({
+        images: [{ alt: getMessages(locale).hero.productAlt }],
+      });
     }
   });
 
@@ -145,8 +153,17 @@ describe("metadata routes and assets", () => {
   });
 
   it("has distinct social image handlers backed by the real product assets", () => {
-    expect(existsSync(join(repositoryRoot, "app/[lang]/opengraph-image.tsx"))).toBe(true);
-    expect(existsSync(join(repositoryRoot, "app/[lang]/twitter-image.tsx"))).toBe(true);
+    for (const path of [
+      "app/[lang]/opengraph-image/route.tsx",
+      "app/[lang]/twitter-image/route.tsx",
+    ]) {
+      expect(existsSync(join(repositoryRoot, path)), path).toBe(true);
+      expect(readFileSync(join(repositoryRoot, path), "utf8")).not.toMatch(
+        /export\s+const\s+alt\s*=/,
+      );
+    }
+    expect(existsSync(join(repositoryRoot, "app/[lang]/opengraph-image.tsx"))).toBe(false);
+    expect(existsSync(join(repositoryRoot, "app/[lang]/twitter-image.tsx"))).toBe(false);
     const source = readFileSync(join(repositoryRoot, "lib/social-image.tsx"), "utf8");
     expect(source).toContain("public/product/app-icon.png");
     expect(source).toContain("public/product/file-share.png");
@@ -178,6 +195,31 @@ describe("site delivery configuration", () => {
     const readme = readFileSync(join(repositoryRoot, "README.md"), "utf8");
     expect(readme).toContain("npm run check");
     expect(readme).toContain("npm run test:e2e");
+    expect(readme).toContain("npx playwright install chromium");
+    expect(readme).toContain("Playwright 1.61.1");
+    expect(readme).toMatch(/macOS[^\n]*snapshot|snapshot[^\n]*macOS/i);
     expect(readme).not.toMatch(/\b0\.0\.(?:29|42)\b/);
+  });
+
+  it("keeps live release assertions independent from fixture asset counts", () => {
+    const source = readFileSync(join(repositoryRoot, "tests/e2e/landing.spec.ts"), "utf8");
+    expect(source).not.toMatch(/directAssets\.count\(\)\)\.toBe\(10\)/);
+    expect(source).toContain('getAttribute("download")');
+    expect(source).toContain("toBeNull()");
+  });
+
+  it("keeps macOS and Linux visual baselines distinct and executable", () => {
+    expect(playwrightConfig.snapshotPathTemplate).toContain("{platform}");
+    expect(playwrightConfig.use?.launchOptions?.args).toContain("--disable-gpu");
+    const source = readFileSync(join(repositoryRoot, "tests/e2e/landing.spec.ts"), "utf8");
+    expect(source).toContain('["darwin", "linux"]');
+    expect(source).not.toContain('process.platform !== "darwin"');
+
+    const workflow = readFileSync(join(repositoryRoot, ".github/workflows/ci.yml"), "utf8");
+    const runner = readFileSync(join(repositoryRoot, "script/test-e2e-linux.sh"), "utf8");
+    expect(runner).toContain("--env CI=1");
+    for (const content of [workflow, runner, readFileSync(join(repositoryRoot, "README.md"), "utf8")]) {
+      expect(content).toContain("mcr.microsoft.com/playwright:v1.61.1-noble");
+    }
   });
 });
