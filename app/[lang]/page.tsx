@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { Capabilities } from "@/app/components/capabilities";
+import { DownloadSection } from "@/app/components/downloads/download-section";
 import { Faq } from "@/app/components/faq";
 import { Hero } from "@/app/components/hero";
 import { PlatformSupport } from "@/app/components/platform-support";
@@ -24,41 +25,7 @@ function LandingSkeleton({ locale, messages, catalog }: LandingSkeletonProps) {
       <SiteHeader locale={locale} messages={messages} />
       <main>
         <Hero locale={locale} messages={messages} catalog={catalog} />
-
-        <section id="downloads" className="download-teaser" aria-labelledby="downloads-title">
-          <div className="content-shell">
-            <p className="section-kicker">{messages.release.eyebrow}</p>
-            <h2 id="downloads-title">
-              {messages.release.title}
-            </h2>
-            {catalog.status === "ready" ? (
-              <div className="download-teaser__details">
-                <p role="status">
-                  {messages.release.ready}: {catalog.channel === "stable" ? messages.release.stable : messages.release.preview} v{catalog.version}
-                  {` · ${catalog.assets.length} ${messages.release.assets}`}
-                </p>
-                <a
-                  href={catalog.releaseUrl}
-                  className="text-link"
-                >
-                  {messages.release.visitRelease}
-                </a>
-              </div>
-            ) : (
-              <div className="download-teaser__details">
-                <p role="status">
-                  {messages.release.unavailable}
-                </p>
-                <a
-                  href={catalog.releasesUrl}
-                  className="text-link"
-                >
-                  {messages.release.visitReleases}
-                </a>
-              </div>
-            )}
-          </div>
-        </section>
+        <DownloadSection catalog={catalog} locale={locale} messages={messages} />
         <ProductGallery locale={locale} messages={messages} />
         <Capabilities locale={locale} messages={messages} />
         <PlatformSupport locale={locale} messages={messages} />

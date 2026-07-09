@@ -83,7 +83,7 @@ describe("locale server boundaries", () => {
     expect(html).toContain('aria-label="正在读取主题"');
   });
 
-  it("limits client boundaries to the theme provider and theme toggle", () => {
+  it("limits client boundaries to the expected interactive islands", () => {
     const appRoot = join(repositoryRoot, "app");
     const clientFiles = sourceFiles(appRoot)
       .filter((path) => /^["']use client["'];?/m.test(readFileSync(path, "utf8")))
@@ -92,6 +92,7 @@ describe("locale server boundaries", () => {
 
     expect(clientFiles).toEqual([
       "app/components/ThemeProvider.tsx",
+      "app/components/downloads/copy-digest.tsx",
       "app/components/theme-toggle.tsx",
     ]);
   });
