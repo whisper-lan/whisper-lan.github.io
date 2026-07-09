@@ -1,0 +1,13 @@
+{
+  "sha": "5432c2e0f53ae0dc28bf969f96d37f29341dd9be",
+  "html_url": "https://github.com/lawnvi/whisper/commit/5432c2e0f53ae0dc28bf969f96d37f29341dd9be",
+  "commit": {
+    "verification": {
+      "verified": false,
+      "reason": "unsigned",
+      "signature": null,
+      "payload": null,
+      "verified_at": null
+    }
+  }
+}

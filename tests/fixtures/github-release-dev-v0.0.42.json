@@ -1,0 +1,113 @@
+{
+  "id": 351053719,
+  "html_url": "https://github.com/lawnvi/whisper/releases/tag/dev-v0.0.42",
+  "tag_name": "dev-v0.0.42",
+  "target_commitish": "main",
+  "name": "dev-v0.0.42",
+  "draft": false,
+  "prerelease": false,
+  "created_at": "2026-07-08T16:16:06Z",
+  "published_at": "2026-07-08T16:27:45Z",
+  "assets": [
+    {
+      "id": 470453884,
+      "name": "whisper-0.0.42-android-arm64-v8a.apk",
+      "size": 14011120,
+      "digest": "sha256:1bb551b4d9f42bf64905df8f234f480ec53ab336004ab5f9cbcbcf5653f8f471",
+      "browser_download_url": "https://github.com/lawnvi/whisper/releases/download/dev-v0.0.42/whisper-0.0.42-android-arm64-v8a.apk",
+      "content_type": "application/vnd.android.package-archive",
+      "created_at": "2026-07-08T16:34:19Z",
+      "updated_at": "2026-07-08T16:34:21Z"
+    },
+    {
+      "id": 470453889,
+      "name": "whisper-0.0.42-android-armeabi-v7a.apk",
+      "size": 13551024,
+      "digest": "sha256:ec441e92b24eee4dfc7fef5a10e7a6374703a4455c00232e897c2c22b96da0da",
+      "browser_download_url": "https://github.com/lawnvi/whisper/releases/download/dev-v0.0.42/whisper-0.0.42-android-armeabi-v7a.apk",
+      "content_type": "application/vnd.android.package-archive",
+      "created_at": "2026-07-08T16:34:19Z",
+      "updated_at": "2026-07-08T16:34:21Z"
+    },
+    {
+      "id": 470453886,
+      "name": "whisper-0.0.42-android-universal.apk",
+      "size": 34106102,
+      "digest": "sha256:87c96f78092925d16130d9e0d9d9a1d147dd34d713b5daa878ba8b6e47a88b0b",
+      "browser_download_url": "https://github.com/lawnvi/whisper/releases/download/dev-v0.0.42/whisper-0.0.42-android-universal.apk",
+      "content_type": "application/vnd.android.package-archive",
+      "created_at": "2026-07-08T16:34:19Z",
+      "updated_at": "2026-07-08T16:34:22Z"
+    },
+    {
+      "id": 470453883,
+      "name": "whisper-0.0.42-android-x86_64.apk",
+      "size": 14278528,
+      "digest": "sha256:4f7c03cc6e73fcfd79b6ec19eaabfd228eb5e463d697a5e99243a53df8aafa35",
+      "browser_download_url": "https://github.com/lawnvi/whisper/releases/download/dev-v0.0.42/whisper-0.0.42-android-x86_64.apk",
+      "content_type": "application/vnd.android.package-archive",
+      "created_at": "2026-07-08T16:34:19Z",
+      "updated_at": "2026-07-08T16:34:21Z"
+    },
+    {
+      "id": 470452596,
+      "name": "whisper-0.0.42-ios-unsigned.ipa",
+      "size": 13453883,
+      "digest": "sha256:9b9cf51441c285f4848736b0e65f259dc04ce98b2d5bce30a53517a13ebb9ad7",
+      "browser_download_url": "https://github.com/lawnvi/whisper/releases/download/dev-v0.0.42/whisper-0.0.42-ios-unsigned.ipa",
+      "content_type": "application/octet-stream",
+      "created_at": "2026-07-08T16:32:32Z",
+      "updated_at": "2026-07-08T16:32:35Z"
+    },
+    {
+      "id": 470453888,
+      "name": "whisper-0.0.42-linux-amd64.deb",
+      "size": 13272074,
+      "digest": "sha256:6814358459c25e00c06fae3f1bd994e0ff198c28f42bf42f773030ea6958d4d3",
+      "browser_download_url": "https://github.com/lawnvi/whisper/releases/download/dev-v0.0.42/whisper-0.0.42-linux-amd64.deb",
+      "content_type": "application/x-debian-package",
+      "created_at": "2026-07-08T16:34:19Z",
+      "updated_at": "2026-07-08T16:34:21Z"
+    },
+    {
+      "id": 470453887,
+      "name": "whisper-0.0.42-linux-x86_64.AppImage",
+      "size": 16360640,
+      "digest": "sha256:7ab89a4901fd6de59a92a45d2ee96f2e12cd439f1f770defbad18aecc2fc6747",
+      "browser_download_url": "https://github.com/lawnvi/whisper/releases/download/dev-v0.0.42/whisper-0.0.42-linux-x86_64.AppImage",
+      "content_type": "application/octet-stream",
+      "created_at": "2026-07-08T16:34:19Z",
+      "updated_at": "2026-07-08T16:34:21Z"
+    },
+    {
+      "id": 470453882,
+      "name": "whisper-0.0.42-linux-x86_64.rpm",
+      "size": 16010783,
+      "digest": "sha256:ac66ce68cb0177d27ea67c3c837010982f50836d141417e5f89573891b921a68",
+      "browser_download_url": "https://github.com/lawnvi/whisper/releases/download/dev-v0.0.42/whisper-0.0.42-linux-x86_64.rpm",
+      "content_type": "application/x-redhat-package-manager",
+      "created_at": "2026-07-08T16:34:19Z",
+      "updated_at": "2026-07-08T16:34:21Z"
+    },
+    {
+      "id": 470452595,
+      "name": "whisper-0.0.42-macos-x86_64.dmg",
+      "size": 27148364,
+      "digest": "sha256:1553460ce4bc9c514c41e236862b1a62b5c90302808a5223b853a1357d69e267",
+      "browser_download_url": "https://github.com/lawnvi/whisper/releases/download/dev-v0.0.42/whisper-0.0.42-macos-x86_64.dmg",
+      "content_type": "application/x-apple-diskimage",
+      "created_at": "2026-07-08T16:32:32Z",
+      "updated_at": "2026-07-08T16:32:35Z"
+    },
+    {
+      "id": 470449015,
+      "name": "whisper-0.0.42-windows-x86_64.exe",
+      "size": 18747239,
+      "digest": "sha256:e645060b6d5c2a40878e9edd3cbbfe20f4e55f5567fe3febd322a1e402ccd122",
+      "browser_download_url": "https://github.com/lawnvi/whisper/releases/download/dev-v0.0.42/whisper-0.0.42-windows-x86_64.exe",
+      "content_type": "application/x-msdos-program",
+      "created_at": "2026-07-08T16:27:46Z",
+      "updated_at": "2026-07-08T16:27:47Z"
+    }
+  ]
+}
