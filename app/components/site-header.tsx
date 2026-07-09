@@ -16,7 +16,7 @@ const localeLinkClass =
 
 export function SiteHeader({ locale, messages }: SiteHeaderProps) {
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-line bg-paper">
       <div className="content-shell flex min-h-16 items-center justify-between gap-4">
         <Link
           href={`/${locale}`}
