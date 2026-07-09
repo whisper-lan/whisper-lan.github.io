@@ -8,6 +8,7 @@ import type { Locale } from "../../lib/i18n";
 const locales: Locale[] = ["zh", "en"];
 const themes = ["light", "dark"] as const;
 const visualProjects = new Set(["chromium-390", "chromium-1440"]);
+const mobileSceneProjects = new Set(["chromium-320", "chromium-390"]);
 const visualBaselinePlatforms = new Set<NodeJS.Platform>(["darwin", "linux"]);
 const interactiveSelector =
   'a[href], button:not([disabled]), summary, input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -146,13 +147,13 @@ async function renderedPixelStats(page: Page, clip: { x: number; y: number; widt
 
 async function expectMobileProductScene(page: Page) {
   const viewport = page.viewportSize();
-  expect(viewport?.width).toBe(390);
-  const hero = await box(page.locator(".hero"));
+  expect([320, 390]).toContain(viewport?.width);
+  const media = await box(page.locator(".hero__media"));
   const stats = await renderedPixelStats(page, {
-    x: 0,
-    y: hero.y,
-    width: viewport!.width,
-    height: Math.min(320, hero.height * 0.48),
+    x: media.x,
+    y: media.y,
+    width: media.width,
+    height: media.height,
   });
 
   expect(stats.activeRowRatio).toBeGreaterThan(0.45);
@@ -261,7 +262,7 @@ for (const locale of locales) {
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
     ).toBe(true);
-    if (locale === "zh" && testInfo.project.name === "chromium-390") {
+    if (locale === "zh" && mobileSceneProjects.has(testInfo.project.name)) {
       await expectMobileProductScene(page);
     }
     expect(consoleErrors).toEqual([]);
@@ -269,6 +270,13 @@ for (const locale of locales) {
 
   test(`${locale} controls and WCAG checks pass in light and dark themes`, async ({ page }) => {
     const messages = getMessages(locale);
+    const consoleErrors: string[] = [];
+    page.on("console", (message) => {
+      if (message.type() === "error") {
+        consoleErrors.push(message.text());
+      }
+    });
+    page.on("pageerror", (error) => consoleErrors.push(error.message));
     await page.addInitScript(() => {
       window.localStorage.setItem("theme", "light");
     });
@@ -282,6 +290,7 @@ for (const locale of locales) {
         await page.getByRole("button", { name: messages.theme.switchToDark }).click();
       }
     }
+    expect(consoleErrors).toEqual([]);
   });
 
   for (const theme of themes) {
@@ -365,6 +374,13 @@ test("metadata and public routes are deployable", async ({ page, request }, test
       const bytes = await image.body();
       expect(bytes.byteLength, path).toBeGreaterThan(10 * 1024);
       expect(pngDimensions(bytes), path).toEqual({ width: 1200, height: 630 });
+      const cacheControl = image.headers()["cache-control"] ?? "";
+      expect(cacheControl, path).not.toMatch(/immutable/i);
+      expect(cacheControl, path).toMatch(/(?:^|,\s*)max-age=0(?:,|$)/i);
+      const sharedMaxAge = Number(cacheControl.match(/(?:^|,\s*)s-maxage=(\d+)/i)?.[1]);
+      expect(sharedMaxAge, path).toBeGreaterThan(0);
+      expect(sharedMaxAge, path).toBeLessThanOrEqual(86_400);
+      expect(cacheControl, path).toMatch(/stale-while-revalidate=\d+/i);
     }
   }
 

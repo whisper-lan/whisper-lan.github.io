@@ -9,6 +9,9 @@ import type { Locale } from "./i18n";
 
 type SocialImageKind = "openGraph" | "twitter";
 
+const socialImageCacheControl =
+  "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800";
+
 async function pngDataUrl(path: string): Promise<string> {
   const bytes = await readFile(join(process.cwd(), path));
   return `data:image/png;base64,${bytes.toString("base64")}`;
@@ -72,6 +75,10 @@ export async function createSocialImage(
         </div>
       </div>
     ),
-    { width: 1200, height: 630 },
+    {
+      width: 1200,
+      height: 630,
+      headers: { "Cache-Control": socialImageCacheControl },
+    },
   );
 }

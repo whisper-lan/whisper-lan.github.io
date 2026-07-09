@@ -218,6 +218,7 @@ describe("site delivery configuration", () => {
     const workflow = readFileSync(join(repositoryRoot, ".github/workflows/ci.yml"), "utf8");
     const runner = readFileSync(join(repositoryRoot, "script/test-e2e-linux.sh"), "utf8");
     expect(runner).toContain("--env CI=1");
+    expect(workflow).toContain("options: --ipc=host");
     for (const content of [workflow, runner, readFileSync(join(repositoryRoot, "README.md"), "utf8")]) {
       expect(content).toContain("mcr.microsoft.com/playwright:v1.61.1-noble");
     }
