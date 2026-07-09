@@ -4,11 +4,11 @@ import { notFound } from "next/navigation";
 
 import { ThemeProvider } from "@/app/components/ThemeProvider";
 import {
-  getMessages,
   isLocale,
   locales,
   localeToHtmlLang,
 } from "@/lib/i18n";
+import { buildLocalizedMetadata } from "@/lib/metadata";
 
 import "../globals.css";
 
@@ -47,11 +47,7 @@ export async function generateMetadata({ params }: LocaleLayoutProps): Promise<M
   if (!isLocale(lang)) {
     notFound();
   }
-  const messages = getMessages(lang);
-  return {
-    title: messages.metadata.title,
-    description: messages.metadata.description,
-  };
+  return buildLocalizedMetadata(lang);
 }
 
 export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {

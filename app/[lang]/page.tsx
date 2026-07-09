@@ -8,6 +8,7 @@ import { PlatformSupport } from "@/app/components/platform-support";
 import { ProductGallery } from "@/app/components/product-gallery";
 import { SiteFooter } from "@/app/components/site-footer";
 import { SiteHeader } from "@/app/components/site-header";
+import StructuredData from "@/app/components/StructuredData";
 import { getMessages, isLocale } from "@/lib/i18n";
 import type { Locale, Messages } from "@/lib/i18n";
 import { getReleaseCatalog } from "@/lib/release/github";
@@ -22,6 +23,7 @@ type LandingSkeletonProps = {
 function LandingSkeleton({ locale, messages, catalog }: LandingSkeletonProps) {
   return (
     <div className="min-h-screen bg-paper text-ink">
+      <StructuredData locale={locale} catalog={catalog} />
       <SiteHeader locale={locale} messages={messages} />
       <main>
         <Hero locale={locale} messages={messages} catalog={catalog} />

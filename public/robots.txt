@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://local-whisper.help/sitemap.xml
