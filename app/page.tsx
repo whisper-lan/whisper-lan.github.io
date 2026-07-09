@@ -246,12 +246,12 @@ const GITHUB_REPO = {
   repoReleaseUrl: 'https://github.com/lawnvi/whisper/releases',
 };
 
-const PLATFORM_FILE_SUFFIX = {
-  windows: '.exe',
-  mac: '.dmg',
-  linux: '.deb',
-  android: 'app-release.apk',
-  ios: '.ipa.bak',
+const PLATFORM_FILE_SUFFIXES = {
+  windows: ['.exe'],
+  mac: ['.dmg'],
+  linux: ['.deb'],
+  android: ['android-universal.apk', 'app-release.apk'],
+  ios: ['.ipa.bak'],
 } as const;
 
 // order of the support-matrix rows in messages → platform keys
@@ -543,8 +543,8 @@ export default function Home() {
         const next = emptyDownloadInfo();
         (data.assets || []).forEach((asset: any) => {
           const name = String(asset.name).toLowerCase();
-          (Object.entries(PLATFORM_FILE_SUFFIX) as [PlatformType, string][]).forEach(([plat, suffix]) => {
-            if (name.endsWith(suffix)) {
+          (Object.entries(PLATFORM_FILE_SUFFIXES) as [PlatformType, readonly string[]][]).forEach(([plat, suffixes]) => {
+            if (suffixes.some((suffix) => name.endsWith(suffix))) {
               next[plat] = { url: asset.browser_download_url, size: formatSize(asset.size), version: data.tag_name };
             }
           });
