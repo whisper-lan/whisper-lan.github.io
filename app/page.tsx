@@ -685,7 +685,7 @@ export default function Home({ initialLanguage = 'zh-CN' }: { initialLanguage?: 
     <div className="min-h-screen">
       {/* top bar */}
       <header className="sticky top-0 z-40 border-b border-line backdrop-blur-md" style={{ backgroundColor: 'var(--paper-blur)' }}>
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
+        <div className="content-shell flex items-center justify-between py-3.5">
           <a href="#top" className="flex items-baseline gap-2">
             <span className="font-display text-lg font-bold tracking-tight text-ink">whisper</span>
             <span className="mono hidden text-[0.65rem] tracking-[0.2em] text-muted-foreground sm:inline">/ LAN</span>
@@ -721,7 +721,7 @@ export default function Home({ initialLanguage = 'zh-CN' }: { initialLanguage?: 
         </div>
       </header>
 
-      <main id="top" className="mx-auto max-w-6xl px-5">
+      <main id="top" className="content-shell">
         {/* hero */}
         <section className="grid items-center gap-12 pb-10 pt-14 sm:pb-12 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr]">
           <Reveal>
@@ -967,7 +967,7 @@ export default function Home({ initialLanguage = 'zh-CN' }: { initialLanguage?: 
 
       {/* footer */}
       <footer className="border-t border-line bg-panel-alt">
-        <div className="mx-auto max-w-6xl px-5 py-14">
+        <div className="content-shell py-14">
           <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
             <div>
               <span className="font-display text-lg font-bold text-ink">whisper</span>

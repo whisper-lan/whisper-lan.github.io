@@ -108,6 +108,30 @@
 }
 
 @layer components {
+  .content-shell {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .content-shell {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .content-shell {
+      padding-inline: 2rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .content-shell {
+      width: min(92vw, 112rem);
+    }
+  }
+
   /* monospace technical label (ports, versions, tags, eyebrows) */
   .mono {
     font-family: var(--font-geist-mono), ui-monospace, monospace;
