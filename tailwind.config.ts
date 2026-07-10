@@ -37,7 +37,6 @@ export default {
           line: "var(--signal-line)",
         },
         live: "var(--live)",
-        preview: "var(--preview)",
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "var(--primary-foreground)",

@@ -1,49 +1,29 @@
-import { SITE_CONFIG } from "@/lib/constants";
-import { getMessages } from "@/lib/i18n";
-import type { Locale } from "@/lib/i18n";
-import type { ReleaseCatalog } from "@/lib/release/types";
+import { SITE_CONFIG } from '@/lib/constants';
 
-type StructuredDataProps = {
-  locale: Locale;
-  catalog: ReleaseCatalog;
-};
-
-export default function StructuredData({ locale, catalog }: StructuredDataProps) {
-  const messages = getMessages(locale);
-  const isReady = catalog.status === "ready";
+export default function StructuredData() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: SITE_CONFIG.title,
-    url: `${SITE_CONFIG.baseUrl}/${locale}`,
-    description: messages.metadata.description,
-    inLanguage: locale === "zh" ? "zh-CN" : "en",
-    applicationCategory: "UtilitiesApplication",
-    operatingSystem: "Android, macOS, Windows, Linux, iOS",
-    isAccessibleForFree: true,
-    offers: {
+    "name": SITE_CONFIG.title,
+    "operatingSystem": "Windows, MacOS, Linux, Android",
+    "applicationCategory": "UtilitiesApplication",
+    "offers": {
       "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
+      "price": "0",
+      "priceCurrency": "USD"
     },
-    author: {
+    "description": "局域网优先的跨平台设备协作工具，支持文件传输、Android 通知、系统声音共享和桌面键鼠共享",
+    "downloadUrl": SITE_CONFIG.links.releases,
+    "author": {
       "@type": "Organization",
-      name: "lawnvi",
-      url: SITE_CONFIG.links.github,
-    },
-    license: `${SITE_CONFIG.links.github}/blob/main/LICENSE`,
-    codeRepository: SITE_CONFIG.links.github,
-    softwareVersion: isReady ? catalog.version : undefined,
-    datePublished: isReady ? catalog.publishedAt : undefined,
-    downloadUrl: isReady ? catalog.releaseUrl : undefined,
+      "name": "lawnvi"
+    }
   };
 
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
-      }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />
   );
 }

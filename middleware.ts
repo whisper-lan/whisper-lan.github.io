@@ -1,42 +1,16 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-
-function preferredLocale(header: string | null): "zh" | "en" {
-  if (!header) {
-    return "en";
-  }
-
-  const languages = header
-    .split(",")
-    .map((entry, index) => {
-      const [range, ...parameters] = entry.trim().split(";");
-      const qualityParameter = parameters.find((parameter) => parameter.trim().startsWith("q="));
-      const quality = qualityParameter ? Number(qualityParameter.trim().slice(2)) : 1;
-      return { range: range.toLowerCase(), quality: Number.isFinite(quality) ? quality : 0, index };
-    })
-    .filter(({ quality }) => quality > 0)
-    .sort((left, right) => right.quality - left.quality || left.index - right.index);
-
-  for (const { range } of languages) {
-    if (range === "zh" || range.startsWith("zh-")) {
-      return "zh";
-    }
-    if (range === "en" || range.startsWith("en-")) {
-      return "en";
-    }
-  }
-  return "en";
-}
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname !== "/") {
-    return NextResponse.next();
-  }
+    const pathname = request.nextUrl.pathname;
 
-  const locale = preferredLocale(request.headers.get("accept-language"));
-  return NextResponse.redirect(new URL(`/${locale}`, request.url));
+    // 如果访问根路径，根据用户语言重定向
+    if (pathname === '/') {
+        const language = request.headers.get('accept-language')?.split(',')[0].split('-')[0] || 'en';
+        return NextResponse.redirect(new URL(`/${language === 'zh' ? 'zh' : 'en'}`, request.url));
+    }
 }
 
 export const config = {
-  matcher: "/",
-};
+    matcher: '/',
+}; 
