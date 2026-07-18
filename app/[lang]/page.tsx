@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import Home from '../page';
+import { HomePage } from '../page';
 import { Metadata } from 'next';
 import { SITE_CONFIG } from '@/lib/constants';
 
@@ -8,21 +8,21 @@ import { SITE_CONFIG } from '@/lib/constants';
 // 实际项目中，你可能需要将 messages 移到共享位置
 const messagesForMetadata = {
     'zh': { // Assuming URL /zh maps to zh-CN content
-        title: 'Whisper - 局域网设备协作，文件、声音与键鼠共享',
-        description: 'Whisper 是局域网优先的跨平台设备协作工具，支持文本与文件传输、Android 通知转发、桌面系统声音共享和键鼠共享。',
+        title: 'Whisper - 端到端加密的局域网设备协作工具',
+        description: '支持系统快捷发送、二维码配对、断点续传、媒体预览、Android 通知、桌面系统声音和键鼠共享。',
         ogLocale: 'zh_CN',
         keywords: [
             'Whisper', '局域网文件传输', '本地网络共享', '离线文件传输',
             '聊天传文件', '文本传输', 'WiFi传文件', '无网络传文件', '本地共享',
-            '电脑互传文件', '手机传电脑局域网', '键鼠共享', '系统声音共享'
+            '电脑互传文件', '手机传电脑局域网', '端到端加密传输', '二维码配对', '系统快捷发送', '键鼠共享', '系统声音共享'
         ]
     },
     'en': {
-        title: 'Whisper: LAN collaboration for files, audio, and input',
-        description: 'Send files and text, forward Android notifications, share desktop audio, and control nearby desktops with keyboard and mouse on your LAN.',
+        title: 'Whisper: encrypted LAN transfer and device collaboration',
+        description: 'Quick-send files and text, pair by QR, preview media, resume large transfers, and share audio or input over an encrypted LAN connection.',
         ogLocale: 'en_US',
         keywords: [
-            'Whisper', 'Chat-Style Transfer', 'LAN file transfer', 'offline sharing', 'P2P chat', 'keyboard mouse sharing', 'desktop audio sharing'
+            'Whisper', 'encrypted LAN transfer', 'system quick send', 'QR pairing', 'media preview', 'resumable transfer', 'keyboard mouse sharing', 'desktop audio sharing'
         ]
     }
 };
@@ -105,5 +105,5 @@ export default async function LocalePage(
 
     const initialLanguage = params.lang === 'zh' ? 'zh-CN' : 'en';
 
-    return <Home initialLanguage={initialLanguage} />;
+    return <HomePage initialLanguage={initialLanguage} />;
 }

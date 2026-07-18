@@ -2,8 +2,8 @@
 export const SITE_CONFIG = {
   domain: process.env.NEXT_PUBLIC_SITE_DOMAIN || 'local-whisper.help',
   title: 'Whisper',
-  desc: 'LAN file transfer, audio sharing, and keyboard/mouse sharing',
-  description: 'Whisper is a local-first, chat-style LAN collaboration app for sending text and files, forwarding Android notifications, sharing desktop system audio, and controlling another desktop with keyboard and mouse across macOS, Windows, Linux, and Android. 中文：Whisper 是局域网优先的跨平台设备协作工具，支持文本文件传输、Android 通知、系统声音共享和桌面键鼠共享。',
+  desc: 'Encrypted LAN transfer and device collaboration',
+  description: 'Whisper is an end-to-end encrypted, local-first device collaboration app with system quick send, QR pairing, resumable file transfer, media previews, Android notification forwarding, desktop audio, and keyboard/mouse sharing. 中文：Whisper 是端到端加密的局域网设备协作工具，支持系统快捷发送、二维码配对、断点续传、媒体预览、Android 通知、系统声音和键鼠共享。',
   baseUrl: `https://${process.env.NEXT_PUBLIC_SITE_DOMAIN || 'local-whisper.help'}`,
   links: {
     github: 'https://github.com/lawnvi/whisper',

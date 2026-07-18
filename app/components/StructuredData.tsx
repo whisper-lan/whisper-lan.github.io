@@ -12,7 +12,7 @@ export default function StructuredData() {
       "price": "0",
       "priceCurrency": "USD"
     },
-    "description": "局域网优先的跨平台设备协作工具，支持文件传输、Android 通知、系统声音共享和桌面键鼠共享",
+    "description": "端到端加密的局域网设备协作工具，支持系统快捷发送、二维码配对、断点续传、媒体预览、Android 通知、系统声音和桌面键鼠共享",
     "downloadUrl": SITE_CONFIG.links.releases,
     "author": {
       "@type": "Organization",

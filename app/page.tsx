@@ -12,9 +12,9 @@ const messages = {
   'zh-CN': {
     nav: { features: '能力', platforms: '平台', faq: '问答', source: '源码' },
     hero: {
-      eyebrow: '局域网 · 点对点',
-      title: '你的设备之间，一条本地直连',
-      desc: '让文本、文件、声音和键鼠在你自己的设备之间直接流动 —— 全程只走局域网，中途不经过云。',
+      eyebrow: '局域网 · 点对点 · 端到端加密',
+      title: 'Whisper，本地直连的设备协作工具',
+      desc: '随手传、放心传、断线也能传。文本、文件、声音和键鼠在可信设备之间直接流动，全程只走局域网。',
       download: '下载',
       downloadFor: '下载 {platform} 版',
       source: '查看源码',
@@ -23,18 +23,19 @@ const messages = {
     specbar: {
       lanOnly: '仅局域网',
       noCloud: '不经云端',
+      encrypted: '端到端加密',
       platforms: '5 个平台',
       oss: '开源 · MIT',
       port: '端口 :10002',
     },
     features: {
       title: '它能做些什么',
-      subtitle: '一条本地通道，五类协作能力。',
+      subtitle: '六个核心工作流，覆盖发送、整理、通知、声音和输入协作。',
       items: {
-        chat: { title: '聊天式传输', description: '像聊天一样发文本、剪贴板和文件，桌面端可直接拖拽收发。' },
-        resume: { title: '大文件续传', description: '大文件中途断了也能接着传，依旧只走局域网，照片、视频、安装包都合适。' },
-        notification: { title: '通知同步', description: '把安卓设备的通知转发到其他设备，验证码这类短消息再也不会漏看。' },
-        ftp: { title: 'FTP 服务', description: '一键开启 FTP 服务端（alpha），方便临时访问文件。' },
+        quickSend: { title: '系统快捷发送', description: '从 Android 分享菜单、桌面文件右键或全局快捷键直接发送，不必先打开会话。' },
+        chat: { title: '媒体消息时间线', description: '图片全屏查看，视频和音频直接播放；长按消息还能多选和批量删除。' },
+        assistant: { title: '传输助手', description: '发送文件夹、全文搜索、收藏常用文本，并按需开启剪贴板自动同步。' },
+        notification: { title: 'Android 通知同步', description: '选择需要监听的 Android 应用，把通知内容转发到已连接的可信设备。' },
         audio: { title: '系统声音共享', description: '把一台桌面的系统声音，分给一台或多台设备一起播放。' },
         input: { title: '键鼠共享', description: '一套键盘鼠标，在 macOS、Windows、Linux 桌面之间来回操控。' },
       },
@@ -43,8 +44,8 @@ const messages = {
       chat: {
         eyebrow: '传输 · 聊天式时间线',
         title: '像聊天一样，收发一切',
-        desc: '文本、剪贴板和文件都落在同一条时间线里，桌面端可以直接拖进拖出，传过什么一目了然。',
-        points: ['文本 / 剪贴板 / 文件，一处收发', '桌面端拖拽即可传输', '大文件断线自动续传'],
+        desc: '文本、剪贴板和文件都落在同一条时间线里。图片、视频和音频在接收过程中就使用对应媒体卡片，完成后无需退出页面即可查看或播放。',
+        points: ['图片全屏查看，视频 / 音频直接播放', '接收、校验、完成状态原位更新', '大文件流式校验，断线后继续传', '长按多选，批量清理聊天记录'],
       },
       audio: {
         eyebrow: '音频 · 多设备组播放',
@@ -65,8 +66,8 @@ const messages = {
       steps: [
         { title: '下载安装', desc: '给每台设备下载对应平台的版本并安装。' },
         { title: '启动应用', desc: '在想要协作的设备上打开 Whisper。' },
-        { title: '局域网发现', desc: '同一网络下，设备会自动出现在列表里。' },
-        { title: '连接共享', desc: '确认连接，就能开始传文件、共享声音和键鼠。' },
+        { title: '发现或扫码', desc: '同一网络自动发现，也可以扫码带入地址和设备身份。' },
+        { title: '确认并发送', desc: '双方确认同一配对码后，即可从会话或系统入口加密发送。' },
       ],
     },
     specs: {
@@ -76,10 +77,10 @@ const messages = {
         role: '形态',
         notes: '差异与依赖',
         rows: [
-          { name: 'Android', role: '移动端', notes: '移动主力 · 独有通知监听 · 音频为播放端', tag: '主力' },
-          { name: 'macOS', role: '桌面端', notes: '桌面端功能最完整 · 含文件拖出', tag: '完整' },
-          { name: 'Windows', role: '桌面端', notes: '完整桌面端能力', tag: '' },
-          { name: 'Linux', role: '桌面端', notes: '需 Avahi · PulseAudio/PipeWire · 键鼠限 X11', tag: '' },
+          { name: 'Android', role: '移动端', notes: '系统分享 · 二维码 · 通知监听 · 统一前台通知 · 音频播放', tag: '主力' },
+          { name: 'macOS', role: '桌面端', notes: '系统服务 / 全局快捷发送 · 文件拖出 · 完整媒体能力', tag: '完整' },
+          { name: 'Windows', role: '桌面端', notes: '文件右键 / 全局快捷发送 · 完整桌面端能力', tag: '' },
+          { name: 'Linux', role: '桌面端', notes: '快捷发送 · 需 Avahi / PulseAudio 或 PipeWire · 键鼠限 X11', tag: '' },
           { name: 'iOS', role: '移动端', notes: '仅 runner · 可侧载 · 尚未测试', tag: '实验' },
         ],
       },
@@ -87,10 +88,10 @@ const messages = {
         title: '技术规格',
         items: [
           { k: '传输', v: '局域网内直连 WebSocket' },
-          { k: '加密', v: '暂无端到端加密，建议在可信网络中使用' },
+          { k: '加密', v: 'X25519 会话密钥 + XChaCha20-Poly1305' },
           { k: '中转', v: '不走公网中继，也不做 Hub 转发' },
           { k: '默认端口', v: ':10002（可在设置中修改）' },
-          { k: '协议', v: '设备发现 + 连接需双方确认' },
+          { k: '配对', v: '发现或二维码 + 双方配对码确认' },
           { k: '许可', v: 'MIT 开源' },
         ],
       },
@@ -98,10 +99,11 @@ const messages = {
     faq: {
       title: '常见问题',
       items: [
-        { q: '怎么用 Whisper？', a: '下载并安装对应平台的应用，让设备处在同一局域网，它们会自动发现并连接。' },
+        { q: '怎么用 Whisper？', a: '让设备处在同一局域网，通过自动发现或二维码找到对方，双方确认同一配对码后即可连接。扫码不需要额外输入密码。' },
         { q: '支持哪些文件类型？', a: '所有类型都支持，也没有大小限制，注意本地剩余空间就好。' },
-        { q: '传输速度怎么样？', a: '速度取决于局域网带宽，通常能跑满带宽，所以很快。' },
-        { q: '数据安全吗？', a: '目前还没做加密，它面向的是可信局域网里你自己的设备，请不要传输敏感数据；加密能力会在后续考虑。' },
+        { q: '传输速度怎么样？', a: '实际速度取决于 Wi-Fi 信号、终端性能和磁盘速度。加密与 SHA-256 校验采用流式处理，正常完成时不会再把整个大文件读取一遍。' },
+        { q: '数据安全吗？', a: '配对后的业务数据使用端到端加密，界面会显示设备身份与可信状态；局域网连接元数据和本地暂存文件不做隐藏或静态加密。' },
+        { q: '能直接预览收到的媒体吗？', a: '可以。图片支持全屏查看，视频和音频支持直接播放，其他文件交给系统可用应用打开。' },
         { q: '支持断点续传吗？', a: '支持。大文件断线重连后能接着传。' },
         { q: '能共享系统声音吗？', a: '桌面端可以。Linux 需要 PulseAudio 或 PipeWire Pulse 兼容层。' },
         { q: '电脑能用键鼠操作另一台桌面吗？', a: '可以。macOS、Windows、Linux 都能作为控制端或被控端，Linux 目前需要 X11。' },
@@ -122,7 +124,7 @@ const messages = {
     },
     footer: {
       tagline: '局域网优先的设备协作工具，让文件、文本、声音和键鼠像聊天一样自然地流动。',
-      privacy: { title: '隐私', content: 'Whisper 不提供公共云端中转，内容只在你明确连接的局域网设备之间传输。' },
+      privacy: { title: '隐私', content: 'Whisper 不提供公共云端中转；配对后的内容通过端到端加密，只在你明确连接的局域网设备之间传输。' },
       links: { source: '源代码', report: '问题反馈', sponsor: '赞助支持' },
       rights: '保留所有权利。',
     },
@@ -130,9 +132,9 @@ const messages = {
   'en': {
     nav: { features: 'Capabilities', platforms: 'Platforms', faq: 'FAQ', source: 'Source' },
     hero: {
-      eyebrow: 'LAN · PEER-TO-PEER',
-      title: 'Your devices, one local wire.',
-      desc: 'Whisper moves text, files, audio, and keyboard-and-mouse straight between your own machines — over the local network, with no cloud in between.',
+      eyebrow: 'LAN · PEER-TO-PEER · END-TO-END ENCRYPTED',
+      title: 'Whisper, a direct local link for your devices.',
+      desc: 'Share instantly, share confidently, and resume after a disconnect. Text, files, audio, and input move directly between trusted devices over your LAN.',
       download: 'Download',
       downloadFor: 'Download for {platform}',
       source: 'View source',
@@ -141,18 +143,19 @@ const messages = {
     specbar: {
       lanOnly: 'LAN-ONLY',
       noCloud: 'NO CLOUD RELAY',
+      encrypted: 'END-TO-END ENCRYPTED',
       platforms: '5 PLATFORMS',
       oss: 'OPEN SOURCE · MIT',
       port: 'PORT :10002',
     },
     features: {
       title: 'What it does',
-      subtitle: 'One local channel, carrying five kinds of collaboration.',
+      subtitle: 'Six core workflows for sending, organizing, notifications, audio, and input.',
       items: {
-        chat: { title: 'Chat-style transfer', description: 'Send text, clipboard, and files in a chat-style timeline. Drag and drop on the desktop.' },
-        resume: { title: 'Resumable transfers', description: 'Resume interrupted large files over the LAN — built for photos, video, and installers.' },
-        notification: { title: 'Notification sync', description: 'Forward Android notifications to your other devices. Never miss a one-time code.' },
-        ftp: { title: 'FTP service', description: 'Spin up a lightweight FTP server (alpha) for quick, temporary file access.' },
+        quickSend: { title: 'System quick send', description: 'Send from the Android share sheet, a desktop file menu, or a global hotkey without opening a conversation.' },
+        chat: { title: 'Media message timeline', description: 'View images full screen, play video and audio inline, then multi-select messages for batch deletion.' },
+        assistant: { title: 'Transfer assistant', description: 'Send folders, search message text, save favorite snippets, and optionally auto-sync the clipboard.' },
+        notification: { title: 'Android notification sync', description: 'Choose Android apps to listen to and forward their notifications to connected trusted devices.' },
         audio: { title: 'System audio sharing', description: "Stream one desktop's system audio to another device on your LAN." },
         input: { title: 'Keyboard & mouse', description: 'Share one keyboard and mouse across macOS, Windows, and Linux desktops.' },
       },
@@ -161,8 +164,8 @@ const messages = {
       chat: {
         eyebrow: 'TRANSFER · CHAT TIMELINE',
         title: 'Send anything, like a chat.',
-        desc: 'Text, clipboard, and files land in one shared timeline. Drag in and out on the desktop, with every transfer kept in plain view.',
-        points: ['Text / clipboard / files in one place', 'Drag-and-drop on the desktop', 'Large files resume after a drop'],
+        desc: 'Text, clipboard, and files land in one shared timeline. Image, video, and audio cards appear while data is still arriving and become playable without leaving the conversation.',
+        points: ['Full-screen images and inline video / audio', 'Receiving, verifying, and complete states update in place', 'Streaming verification and large-file resume', 'Long-press, multi-select, and batch-delete records'],
       },
       audio: {
         eyebrow: 'AUDIO · MULTI-DEVICE GROUP',
@@ -183,8 +186,8 @@ const messages = {
       steps: [
         { title: 'Download & install', desc: 'Grab the build for each of your platforms.' },
         { title: 'Launch the app', desc: 'Open Whisper on the devices you want to link.' },
-        { title: 'Discover on the LAN', desc: 'Devices on the same network appear automatically.' },
-        { title: 'Connect & share', desc: 'Confirm the link, then send files, audio, and input.' },
+        { title: 'Discover or scan', desc: 'Find devices automatically or scan a QR with endpoint and identity.' },
+        { title: 'Confirm & send', desc: 'Confirm the same pairing code on both devices, then send through an encrypted session.' },
       ],
     },
     specs: {
@@ -194,10 +197,10 @@ const messages = {
         role: 'Form',
         notes: 'Differences & needs',
         rows: [
-          { name: 'Android', role: 'Mobile', notes: 'Mobile hub · only one with notification listening · audio is playback-only', tag: 'Primary' },
-          { name: 'macOS', role: 'Desktop', notes: 'Most complete desktop · includes file drag-out', tag: 'Full' },
-          { name: 'Windows', role: 'Desktop', notes: 'Full desktop capabilities', tag: '' },
-          { name: 'Linux', role: 'Desktop', notes: 'Needs Avahi · PulseAudio/PipeWire · K/M requires X11', tag: '' },
+          { name: 'Android', role: 'Mobile', notes: 'System share · QR pairing · notification listening · unified foreground status · audio playback', tag: 'Primary' },
+          { name: 'macOS', role: 'Desktop', notes: 'System Services / global quick send · file drag-out · full media support', tag: 'Full' },
+          { name: 'Windows', role: 'Desktop', notes: 'File context menu / global quick send · full desktop capabilities', tag: '' },
+          { name: 'Linux', role: 'Desktop', notes: 'Quick send · needs Avahi / PulseAudio or PipeWire · K/M requires X11', tag: '' },
           { name: 'iOS', role: 'Mobile', notes: 'Runner only · sideload .ipa · untested', tag: 'Exp.' },
         ],
       },
@@ -205,10 +208,10 @@ const messages = {
         title: 'Technical spec',
         items: [
           { k: 'Transport', v: 'Direct WebSocket over the LAN' },
-          { k: 'Encryption', v: 'Not yet end-to-end — use on trusted networks' },
+          { k: 'Encryption', v: 'X25519 session keys + XChaCha20-Poly1305' },
           { k: 'Relay', v: 'No public relay, no hub forwarding' },
           { k: 'Default port', v: ':10002 (configurable in settings)' },
-          { k: 'Protocol', v: 'Discovery + explicit connection confirm' },
+          { k: 'Pairing', v: 'Discovery or QR + matching code confirmation' },
           { k: 'License', v: 'MIT, open source' },
         ],
       },
@@ -216,10 +219,11 @@ const messages = {
     faq: {
       title: 'FAQ',
       items: [
-        { q: 'How do I use Whisper?', a: 'Download and install the app for your platform, run it on devices on the same network, and they discover and connect automatically.' },
+        { q: 'How do I use Whisper?', a: 'Put devices on the same LAN, find the other device through discovery or QR, then confirm the same pairing code on both sides. QR pairing needs no extra password.' },
         { q: 'What file types are supported?', a: 'All types, with no size limit — just keep an eye on available local storage.' },
-        { q: 'How fast are transfers?', a: 'They scale with your LAN bandwidth, typically using it fully, so transfers are very fast.' },
-        { q: 'Is the data secure?', a: 'Encryption is not implemented yet; it is meant for your own devices on a trusted LAN. Avoid sensitive data. Encrypted transfer may come later.' },
+        { q: 'How fast are transfers?', a: 'Actual speed depends on Wi-Fi signal, device performance, and disk speed. Encryption and SHA-256 verification stream with the transfer, so normal completion does not reread the entire large file.' },
+        { q: 'Is the data secure?', a: 'Paired application data is end-to-end encrypted, and the UI shows identity and trust state. LAN connection metadata and local staged files are not hidden or encrypted at rest.' },
+        { q: 'Can I preview received media?', a: 'Yes. Images open full screen, video and audio play inline, and other files open through an available system app.' },
         { q: 'Can interrupted transfers resume?', a: 'Yes. Large file transfers can resume after reconnecting.' },
         { q: 'Can it share desktop audio?', a: 'Yes, on desktop. Linux needs PulseAudio or PipeWire Pulse compatibility.' },
         { q: 'Can a PC control another desktop with K/M?', a: 'Yes. macOS, Windows, and Linux can act as source or receiver. Linux currently requires X11.' },
@@ -240,7 +244,7 @@ const messages = {
     },
     footer: {
       tagline: 'A LAN-first device collaboration tool. File, text, audio, and input that flow as easily as a chat.',
-      privacy: { title: 'Privacy', content: 'Whisper offers no public cloud relay. Content moves only between the LAN devices you explicitly connect.' },
+      privacy: { title: 'Privacy', content: 'Whisper offers no public cloud relay. Paired content is end-to-end encrypted and moves only between the LAN devices you explicitly connect.' },
       links: { source: 'Source code', report: 'Report an issue', sponsor: 'Sponsor' },
       rights: 'All rights reserved.',
     },
@@ -340,10 +344,10 @@ function Reveal({ children, delay = 0, className = '' }: { children: ReactNode; 
 // icons (line, 1.6 stroke) — signal colored
 // ---------------------------------------------------------------------------
 const featureIcons: Record<string, ReactNode> = {
+  quickSend: <><path d="M4 12h11" /><path d="m11 6 6 6-6 6" /><path d="M20 5v14" /></>,
   chat: <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 20.5l1.4-3.5A8.38 8.38 0 0 1 3.5 11.5 8.5 8.5 0 0 1 12 3a8.5 8.5 0 0 1 9 8.5Z" />,
-  resume: <><path d="M3 12a9 9 0 0 1 15.3-6.4M21 12a9 9 0 0 1-15.3 6.4" /><path d="M18 3v3.6h-3.6M6 21v-3.6h3.6" /></>,
+  assistant: <><path d="M4 5h7l2 2h7v12H4z" /><path d="m9 14 1.5 1.5L14 12" /></>,
   notification: <><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></>,
-  ftp: <><path d="M4 7V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2M4 7v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7M4 7h16" /><path d="M9 12h6M9 16h6" /></>,
   audio: <><path d="M4 9v6h4l5 4V5L8 9H4Z" /><path d="M17 9.5a4 4 0 0 1 0 5M19.5 7a8 8 0 0 1 0 10" /></>,
   input: <><rect x="3" y="5" width="18" height="11" rx="1.5" /><path d="M8 20h8M12 16v4M7 9h.01M11 9h.01M15 9h.01M7 12.5h10" /></>,
 };
@@ -355,9 +359,9 @@ const FeatureIcon = ({ k }: { k: string }) => (
 );
 
 const featureTags: Record<string, string> = {
-  chat: 'TRANSFER', resume: 'TRANSFER', notification: 'SYNC', ftp: 'SERVER', audio: 'MEDIA', input: 'CONTROL',
+  quickSend: 'QUICK SEND', chat: 'MEDIA', assistant: 'ASSISTANT', notification: 'ANDROID', audio: 'AUDIO', input: 'CONTROL',
 };
-const featureKeys = ['chat', 'audio', 'input', 'resume', 'notification', 'ftp'];
+const featureKeys = ['quickSend', 'chat', 'assistant', 'notification', 'audio', 'input'];
 
 // device glyphs for the topology diagram
 const deviceGlyph: Record<string, ReactNode> = {
@@ -574,7 +578,7 @@ function KMDiagram() {
 // ---------------------------------------------------------------------------
 // page
 // ---------------------------------------------------------------------------
-export default function Home({ initialLanguage = 'zh-CN' }: { initialLanguage?: Language }) {
+export function HomePage({ initialLanguage = 'zh-CN' }: { initialLanguage?: Language }) {
   const deviceType = useDeviceDetect();
   const isMobile = useIsMobile();
   const { language, setLanguage } = useLanguage();
@@ -678,7 +682,7 @@ export default function Home({ initialLanguage = 'zh-CN' }: { initialLanguage?: 
     download(detected.platform);
   };
 
-  const specbar = [t.specbar.lanOnly, t.specbar.noCloud, t.specbar.platforms, t.specbar.oss, t.specbar.port];
+  const specbar = [t.specbar.lanOnly, t.specbar.encrypted, t.specbar.noCloud, t.specbar.platforms, t.specbar.oss];
   const themeForIcon = themeReady ? theme : 'light';
 
   return (
@@ -771,12 +775,12 @@ export default function Home({ initialLanguage = 'zh-CN' }: { initialLanguage?: 
             <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">{t.features.title}</h2>
             <p className="mt-3 text-muted-foreground">{t.features.subtitle}</p>
           </Reveal>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-auto grid w-full max-w-7xl gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-8">
             {featureKeys.map((key, i) => {
               const item = (t.features.items as any)[key];
               return (
                 <Reveal key={key} delay={(i % 3) * 0.06} className="h-full">
-                  <div className="group flex h-full flex-col rounded-xl border border-line bg-panel p-7 transition-colors hover:border-line-strong">
+                  <div className="group flex h-full min-h-[13.5rem] flex-col rounded-xl border border-line bg-panel p-7 transition-colors hover:border-line-strong">
                     <div className="flex items-center justify-between">
                       <span className="grid h-10 w-10 place-items-center rounded-md bg-signal-soft text-signal">
                         <FeatureIcon k={key} />
@@ -1010,4 +1014,8 @@ export default function Home({ initialLanguage = 'zh-CN' }: { initialLanguage?: 
       </AnimatePresence>
     </div>
   );
+}
+
+export default function Home() {
+  return <HomePage />;
 }

@@ -37,9 +37,9 @@ export const metadata: Metadata = {
   keywords: [
     'whisper',
     // 中文关键词
-    '文件传输', '局域网传输', '跨平台传输', '无线传输', '传文件',
+    '文件传输', '局域网传输', '端到端加密传输', '二维码配对', '跨平台传输', '无线传输', '传文件',
     // 英文关键词
-    'file transfer', 'LAN transfer', 'wireless transfer', 'local transfer'
+    'file transfer', 'encrypted LAN transfer', 'QR pairing', 'system quick send', 'wireless transfer', 'local transfer'
   ],
   authors: [{ name: 'lawnvi' }],
   creator: 'lawnvi',
@@ -50,8 +50,8 @@ export const metadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    title: 'Whisper - LAN device collaboration for files, audio, and input',
-    description: 'Send files and text, forward Android notifications, share desktop audio, and control nearby desktops with keyboard and mouse on your LAN.',
+    title: 'Whisper - Encrypted LAN transfer and device collaboration',
+    description: 'Quick-send files and text, pair by QR, preview media, resume large transfers, and share audio or input over an end-to-end encrypted LAN connection.',
     url: SITE_CONFIG.baseUrl,
     siteName: SITE_CONFIG.title,
     images: [
@@ -68,8 +68,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Whisper - LAN device collaboration for files, audio, and input',
-    description: 'Send files and text, forward Android notifications, share desktop audio, and control nearby desktops with keyboard and mouse on your LAN.',
+    title: 'Whisper - Encrypted LAN transfer and device collaboration',
+    description: 'Quick-send files and text, pair by QR, preview media, resume large transfers, and share audio or input over an end-to-end encrypted LAN connection.',
     images: ['/og-image.jpg'],
   },
   manifest: '/manifest.json',

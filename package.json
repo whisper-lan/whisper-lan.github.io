@@ -2,13 +2,17 @@
   "name": "whisper-web",
   "version": "0.0.29",
   "private": true,
-  "description": "A local network file and text transfer software using a chat-like interface. Easily share files and messages across devices on your LAN without needing an internet connection.",
+  "description": "An end-to-end encrypted LAN device collaboration app with quick send, QR pairing, resumable transfers, and media previews.",
   "keywords": [
     "file transfer",
     "lan sharing",
     "local network",
     "offline transfer",
     "p2p",
+    "end-to-end encryption",
+    "qr pairing",
+    "system quick send",
+    "media preview",
     "chat transfer",
     "text sharing",
     "whisper",
@@ -18,7 +22,7 @@
     "聊天传文件"
   ],
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
