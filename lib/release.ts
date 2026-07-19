@@ -12,7 +12,7 @@ export const PLATFORM_FILE_SUFFIXES = {
   windows: ['.exe'],
   mac: ['.dmg'],
   linux: ['.deb'],
-  android: ['android-universal.apk', 'app-release.apk'],
+  android: ['android-arm64-v8a.apk', 'android-universal.apk', 'app-release.apk'],
   ios: ['.ipa.bak'],
 } as const;
 
@@ -42,13 +42,14 @@ export async function fetchReleaseInfo(): Promise<ReleaseData | null> {
     const version = String(data.tag_name || '').replace('dev-v', '').replace('v', '');
     if (!version) return null;
     const info = emptyDownloadInfo();
-    (data.assets || []).forEach((asset: { name?: string; size?: number; browser_download_url?: string }) => {
-      const name = String(asset.name).toLowerCase();
-      (Object.entries(PLATFORM_FILE_SUFFIXES) as [PlatformType, readonly string[]][]).forEach(([plat, suffixes]) => {
-        if (suffixes.some((suffix) => name.endsWith(suffix))) {
-          info[plat] = { url: asset.browser_download_url || '', size: formatSize(asset.size || 0), version: data.tag_name };
-        }
-      });
+    const assets = (data.assets || []) as { name?: string; size?: number; browser_download_url?: string }[];
+    (Object.entries(PLATFORM_FILE_SUFFIXES) as [PlatformType, readonly string[]][]).forEach(([plat, suffixes]) => {
+      const asset = suffixes
+        .map((suffix) => assets.find((candidate) => String(candidate.name).toLowerCase().endsWith(suffix)))
+        .find(Boolean);
+      if (asset) {
+        info[plat] = { url: asset.browser_download_url || '', size: formatSize(asset.size || 0), version: data.tag_name };
+      }
     });
     return { version, info };
   } catch {
