@@ -54,14 +54,6 @@ export const metadata: Metadata = {
     description: 'Quick-send files and text, pair by QR, preview media, resume large transfers, and share audio or input over an end-to-end encrypted LAN connection.',
     url: SITE_CONFIG.baseUrl,
     siteName: SITE_CONFIG.title,
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Whisper - LAN device collaboration app',
-      }
-    ],
     locale: 'zh_CN',
     alternateLocale: ['en_US'],
     type: 'website',
@@ -70,26 +62,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Whisper - Encrypted LAN transfer and device collaboration',
     description: 'Quick-send files and text, pair by QR, preview media, resume large transfers, and share audio or input over an end-to-end encrypted LAN connection.',
-    images: ['/og-image.jpg'],
   },
   manifest: '/manifest.json',
-  icons: {
-    icon: [
-      { url: '/favicon.ico' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-    ],
-    apple: [
-      { url: '/apple-touch-icon.png' },
-    ],
-    other: [
-      {
-        rel: 'mask-icon',
-        url: '/safari-pinned-tab.svg',
-        color: '#2563eb'
-      }
-    ]
-  },
   category: 'Software Tools',
   alternates: {
     canonical: SITE_CONFIG.baseUrl,

@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
-import { HomePage } from '../page';
+import { HomePage } from '../components/HomePage';
 import { Metadata } from 'next';
 import { SITE_CONFIG } from '@/lib/constants';
+import { fetchReleaseInfo } from '@/lib/release';
 
 // 从 app/page.tsx (Home 组件) 或共享的 i18n 文件导入 messages
 // 这里为了示例，我们假设可以直接引用或有一个获取翻译的函数
@@ -51,7 +52,6 @@ export async function generateMetadata({ params: paramsProp }: Props): Promise<M
     const localeMessages = messagesForMetadata[lang as keyof typeof messagesForMetadata] || messagesForMetadata.en;
 
     const pageUrl = `${SITE_CONFIG.baseUrl}/${lang}`;
-    const ogImageUrl = `${SITE_CONFIG.baseUrl}/og-image.jpg`; // 假设 og-image 在 public 目录下
 
     return {
         title: localeMessages.title,
@@ -71,14 +71,6 @@ export async function generateMetadata({ params: paramsProp }: Props): Promise<M
             description: localeMessages.description,
             url: pageUrl,
             siteName: SITE_CONFIG.title, // Or localized site name
-            images: [
-                {
-                    url: ogImageUrl,
-                    width: 1200,
-                    height: 630,
-                    alt: localeMessages.title, // Alt text for OG image
-                }
-            ],
             locale: localeMessages.ogLocale,
             alternateLocale: lang === 'en' ? ['zh_CN'] : ['en_US'], // Example
             type: 'website',
@@ -87,7 +79,6 @@ export async function generateMetadata({ params: paramsProp }: Props): Promise<M
             card: 'summary_large_image',
             title: localeMessages.title,
             description: localeMessages.description,
-            images: [ogImageUrl],
         },
         // manifest, icons can be inherited from root layout or customized here
     };
@@ -104,6 +95,8 @@ export default async function LocalePage(
     }
 
     const initialLanguage = params.lang === 'zh' ? 'zh-CN' : 'en';
+    // 服务端拉取 Release 数据（ISR 缓存 1 小时），失败时页面内客户端兜底重试
+    const release = await fetchReleaseInfo();
 
-    return <HomePage initialLanguage={initialLanguage} />;
+    return <HomePage initialLanguage={initialLanguage} initialRelease={release} />;
 }

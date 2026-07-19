@@ -12,14 +12,11 @@ const getDefaultLanguage = () => {
   return 'en';
 };
 
+// 仅保存语言状态；路由跳转由页面组件通过 next/navigation 完成（SPA 跳转，不整页刷新）
 export const useLanguage = create<{
   language: 'en' | 'zh-CN';
   setLanguage: (lang: 'en' | 'zh-CN') => void;
 }>((set) => ({
   language: getDefaultLanguage() as 'en' | 'zh-CN',
-  setLanguage: (lang) => {
-    const newPath = lang === 'zh-CN' ? '/zh' : '/en';
-    window.location.href = newPath;
-    set({ language: lang });
-  },
+  setLanguage: (lang) => set({ language: lang }),
 }));

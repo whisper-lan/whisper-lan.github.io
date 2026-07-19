@@ -105,6 +105,10 @@
     background: var(--signal);
     color: #fff;
   }
+
+  .dark ::selection {
+    color: #06111f;
+  }
 }
 
 @layer components {
