@@ -37,17 +37,17 @@ const messages = {
       items: {
         quickSend: { title: '系统快捷发送', description: '从 Android 分享菜单、桌面文件右键或全局快捷键直接发送，不必先打开会话。' },
         chat: { title: '媒体消息时间线', description: '图片全屏查看，音频直接播放，视频交给系统播放器；长按消息还能多选和批量删除。' },
-        assistant: { title: '传输助手', description: '发送文件夹、全文搜索、收藏常用文本，并按需开启剪贴板自动同步。' },
+        assistant: { title: '传输助手', description: '发送文件夹、全文搜索、收藏常用文本；剪贴板同步不写入会话，文件在粘贴时才传输。' },
         notification: { title: 'Android 通知同步', description: '选择需要监听的 Android 应用，把通知内容转发到已连接的可信设备。' },
         audio: { title: '系统声音共享', description: '把一台桌面的系统声音，分给一台或多台设备一起播放。' },
-        input: { title: '键鼠共享', description: '一套键盘鼠标，在 macOS、Windows、Linux 桌面之间来回操控。' },
+        input: { title: '键鼠共享', description: '一套键盘鼠标控制多台桌面，文本、图片和文件剪贴板跟随工作区。' },
       },
     },
     spotlight: {
       chat: {
         eyebrow: '传输 · 聊天式时间线',
         title: '像聊天一样，收发一切',
-        desc: '文本、剪贴板和文件都落在同一条时间线里。图片、视频和音频在接收过程中就使用对应媒体卡片，完成后可以全屏查看图片、直接播放音频或调用系统播放器打开视频。',
+        desc: '文本和手动发送的文件落在同一条时间线里，自动同步的剪贴板不会写入会话。图片、视频和音频在接收过程中就使用对应媒体卡片，完成后可以全屏查看图片、直接播放音频或调用系统播放器打开视频。',
         points: ['图片全屏查看，音频直接播放', '视频调用系统默认播放器', '接收、校验、完成状态原位更新', '长按多选，批量清理聊天记录'],
       },
       audio: {
@@ -57,10 +57,10 @@ const messages = {
         points: ['一个声源，多端同时播放', '左 / 右声道角色分配', '基础同步，组内统一控制'],
       },
       input: {
-        eyebrow: '键鼠 · 边缘穿越',
+        eyebrow: '键鼠 · 多设备工作区',
         title: '一套键鼠，走遍每块屏幕',
-        desc: '按位置把各台桌面的屏幕排好，鼠标越过屏幕边缘，控制权就交给下一台设备，键盘也跟着指针一起过去。',
-        points: ['自定义屏幕排列', '鼠标边缘穿越切换设备', '键盘跟随当前控制目标'],
+        desc: '把多台可信桌面加入同一个键鼠工作区，控制权和剪贴板会跟随当前设备。任意设备复制的内容都会成为工作区里最新的一份。',
+        points: ['一套键鼠控制多台桌面', '最后一次复制在工作区生效', '文件在执行粘贴时按需传输'],
       },
     },
     how: {
@@ -81,7 +81,7 @@ const messages = {
         notes: '差异与依赖',
         rows: [
           { name: 'Android', role: '移动端', notes: '系统分享 · 二维码 · 通知监听 · 统一前台通知 · 音频播放', tag: '主力' },
-          { name: 'macOS', role: '桌面端', notes: '系统服务 / 全局快捷发送 · 文件拖出 · 完整媒体能力', tag: '完整' },
+          { name: 'macOS', role: '桌面端', notes: '系统服务 / 全局快捷发送 · 文件拖出 · Intel 原生 / Apple Silicon 经 Rosetta', tag: '完整' },
           { name: 'Windows', role: '桌面端', notes: '文件右键 / 全局快捷发送 · 完整桌面端能力', tag: '' },
           { name: 'Linux', role: '桌面端', notes: '快捷发送 · 需 Avahi / PulseAudio 或 PipeWire / GStreamer · 键鼠限 X11', tag: '' },
           { name: 'iOS', role: '移动端', notes: '仅 runner · 可侧载 · 尚未测试', tag: '实验' },
@@ -92,7 +92,7 @@ const messages = {
         items: [
           { k: '传输', v: '局域网内直连 WebSocket' },
           { k: '加密', v: 'X25519 会话密钥 + XChaCha20-Poly1305' },
-          { k: '中转', v: '不走公网中继，也不做 Hub 转发' },
+          { k: '中转', v: '不走公网中继；跨设备剪贴板可经当前控制端转发' },
           { k: '默认端口', v: ':10002（可在设置中修改）' },
           { k: '配对', v: '发现或二维码 + 双方配对码确认' },
           { k: '许可', v: 'MIT 开源' },
@@ -109,7 +109,7 @@ const messages = {
         { q: '能直接预览收到的媒体吗？', a: '可以。图片支持全屏查看，音频支持直接播放，视频和其他文件交给系统可用应用打开。' },
         { q: '支持断点续传吗？', a: '支持。大文件断线重连后能接着传。' },
         { q: '能共享系统声音吗？', a: '桌面端可以。Linux 需要 PulseAudio 或 PipeWire Pulse 兼容层。' },
-        { q: '电脑能用键鼠操作另一台桌面吗？', a: '可以。macOS、Windows、Linux 都能作为控制端或被控端，Linux 目前需要 X11。' },
+        { q: '电脑能用键鼠操作另一台桌面吗？', a: '可以。macOS、Windows、Linux 都能作为控制端或被控端，并可在工作区内共享文本、图片和文件剪贴板；Linux 目前需要 X11。' },
       ],
     },
     download: {
@@ -158,17 +158,17 @@ const messages = {
       items: {
         quickSend: { title: 'System quick send', description: 'Send from the Android share sheet, a desktop file menu, or a global hotkey without opening a conversation.' },
         chat: { title: 'Media message timeline', description: 'View images full screen, play audio inline, open video in the system player, and batch-delete selected messages.' },
-        assistant: { title: 'Transfer assistant', description: 'Send folders, search message text, save favorite snippets, and optionally auto-sync the clipboard.' },
+        assistant: { title: 'Transfer assistant', description: 'Send folders, search message text, and save snippets; clipboard sync stays out of conversations and transfers files on paste.' },
         notification: { title: 'Android notification sync', description: 'Choose Android apps to listen to and forward their notifications to connected trusted devices.' },
         audio: { title: 'System audio sharing', description: "Stream one desktop's system audio to another device on your LAN." },
-        input: { title: 'Keyboard & mouse', description: 'Share one keyboard and mouse across macOS, Windows, and Linux desktops.' },
+        input: { title: 'Keyboard & mouse', description: 'Control multiple desktops with one keyboard and mouse while text, image, and file clipboard content follows the workspace.' },
       },
     },
     spotlight: {
       chat: {
         eyebrow: 'TRANSFER · CHAT TIMELINE',
         title: 'Send anything, like a chat.',
-        desc: 'Text, clipboard, and files land in one shared timeline. Image, video, and audio cards appear while data is still arriving; completed images open full screen, audio plays inline, and video opens in the system player.',
+        desc: 'Text and manually sent files share one timeline, while auto-synced clipboard content stays out of conversation history. Image, video, and audio cards appear while data is still arriving; completed images open full screen, audio plays inline, and video opens in the system player.',
         points: ['Full-screen images and inline audio', 'Video opens in the system player', 'Receiving, verifying, and complete states update in place', 'Long-press, multi-select, and batch-delete records'],
       },
       audio: {
@@ -178,10 +178,10 @@ const messages = {
         points: ['One source, many devices at once', 'Left / right channel roles', 'Basic sync, controlled as a group'],
       },
       input: {
-        eyebrow: 'INPUT · EDGE CROSSING',
+        eyebrow: 'INPUT · MULTI-DEVICE WORKSPACE',
         title: 'One keyboard and mouse, every screen.',
-        desc: 'Lay out your desktops by position. Push the cursor past a screen edge and control hands off to the next machine — the keyboard follows wherever the pointer goes.',
-        points: ['Custom screen arrangement', 'Cursor crosses edges to switch devices', 'Keyboard follows the active target'],
+        desc: 'Bring trusted desktops into one input workspace. Control and clipboard content follow the active machine, and a copy made on any member becomes the latest workspace item.',
+        points: ['One keyboard and mouse across desktops', 'Latest copy wins throughout the workspace', 'Files transfer only when pasted'],
       },
     },
     how: {
@@ -202,7 +202,7 @@ const messages = {
         notes: 'Differences & needs',
         rows: [
           { name: 'Android', role: 'Mobile', notes: 'System share · QR pairing · notification listening · unified foreground status · audio playback', tag: 'Primary' },
-          { name: 'macOS', role: 'Desktop', notes: 'System Services / global quick send · file drag-out · full media support', tag: 'Full' },
+          { name: 'macOS', role: 'Desktop', notes: 'System Services / global quick send · file drag-out · native Intel / Rosetta on Apple Silicon', tag: 'Full' },
           { name: 'Windows', role: 'Desktop', notes: 'File context menu / global quick send · full desktop capabilities', tag: '' },
           { name: 'Linux', role: 'Desktop', notes: 'Quick send · needs Avahi / PulseAudio or PipeWire / GStreamer · K/M requires X11', tag: '' },
           { name: 'iOS', role: 'Mobile', notes: 'Runner only · sideload .ipa · untested', tag: 'Exp.' },
@@ -213,7 +213,7 @@ const messages = {
         items: [
           { k: 'Transport', v: 'Direct WebSocket over the LAN' },
           { k: 'Encryption', v: 'X25519 session keys + XChaCha20-Poly1305' },
-          { k: 'Relay', v: 'No public relay, no hub forwarding' },
+          { k: 'Relay', v: 'No public relay; cross-device clipboard items may pass through the active controller' },
           { k: 'Default port', v: ':10002 (configurable in settings)' },
           { k: 'Pairing', v: 'Discovery or QR + matching code confirmation' },
           { k: 'License', v: 'MIT, open source' },
@@ -230,7 +230,7 @@ const messages = {
         { q: 'Can I preview received media?', a: 'Yes. Images open full screen, audio plays inline, and video or other files open through an available system app.' },
         { q: 'Can interrupted transfers resume?', a: 'Yes. Large file transfers can resume after reconnecting.' },
         { q: 'Can it share desktop audio?', a: 'Yes, on desktop. Linux needs PulseAudio or PipeWire Pulse compatibility.' },
-        { q: 'Can a PC control another desktop with K/M?', a: 'Yes. macOS, Windows, and Linux can act as source or receiver. Linux currently requires X11.' },
+        { q: 'Can a PC control another desktop with K/M?', a: 'Yes. macOS, Windows, and Linux can act as source or receiver and share text, image, and file clipboard content inside the workspace. Linux currently requires X11.' },
       ],
     },
     download: {
