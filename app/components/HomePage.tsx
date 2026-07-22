@@ -583,9 +583,9 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
     setMounted(true);
   }, []);
 
-  // client-side fallback when no server-provided release data (e.g. the bare '/' route)
+  // Refresh build-time release data because Cloudflare Pages serves prerendered
+  // routes without ISR regeneration.
   useEffect(() => {
-    if (initialRelease) return;
     let cancelled = false;
     (async () => {
       const release = await fetchReleaseInfo();
@@ -595,7 +595,7 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
       }
     })();
     return () => { cancelled = true; };
-  }, [initialRelease]);
+  }, []);
 
   const platforms = (['windows', 'mac', 'linux', 'android', 'ios'] as const).map((p) => ({
     platform: p,
