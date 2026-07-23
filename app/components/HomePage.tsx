@@ -566,7 +566,6 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
   const activeLanguage = languageReady ? language : initialLanguage;
   const t = messages[activeLanguage];
 
-  const [downloading, setDownloading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [version, setVersion] = useState<string | null>(initialRelease?.version ?? null);
   const [info, setInfo] = useState<DownloadInfo>(initialRelease?.info ?? emptyDownloadInfo());
@@ -607,28 +606,8 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
     experimental: p === 'ios',
   }));
 
-  const download = (platform: PlatformType) => {
-    const url = info[platform]?.url;
-    if (!url) {
-      showMessage(t.download.notAvailable.replace('{platform}', PLATFORM_LABEL[platform as Exclude<PlatformType, 'unknown'>] ?? platform));
-      return;
-    }
-    setDownloading(true);
-    try {
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = url;
-      document.body.appendChild(iframe);
-      showMessage(t.download.starting);
-      setTimeout(() => document.body.removeChild(iframe), 3000);
-    } catch {
-      showMessage(t.download.failed);
-    } finally {
-      setDownloading(false);
-    }
-  };
-
   const detected = platforms.find((p) => p.detected);
+  const heroDownloadUrl = !isMobile && detected?.available ? info[detected.platform].url : null;
   const heroDownloadLabel =
     detected && detected.platform !== 'ios'
       ? t.hero.downloadFor.replace('{platform}', detected.name)
@@ -640,11 +619,7 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
   ].filter(Boolean).join(' · ');
 
   const handleHeroDownload = () => {
-    if (isMobile || !detected || !detected.available) {
-      document.getElementById('platforms')?.scrollIntoView({ behavior: 'smooth' });
-      return;
-    }
-    download(detected.platform);
+    document.getElementById('platforms')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const switchLanguage = () => {
@@ -723,14 +698,24 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
             <h1 className="font-display text-[2.6rem] font-bold leading-[1.04] text-ink [text-wrap:balance] sm:text-6xl">{t.hero.title}</h1>
             <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground [text-wrap:pretty] sm:text-lg">{t.hero.desc}</p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <button
-                onClick={handleHeroDownload}
-                disabled={downloading}
-                className="group inline-flex h-12 items-center gap-2 rounded-xl bg-signal px-6 font-medium text-white transition-colors hover:bg-signal-bright disabled:opacity-70"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M4 19h16" /></svg>
-                {heroDownloadLabel}
-              </button>
+              {heroDownloadUrl ? (
+                <a
+                  href={heroDownloadUrl}
+                  onClick={() => showMessage(t.download.starting)}
+                  className="group inline-flex h-12 items-center gap-2 rounded-xl bg-signal px-6 font-medium text-white transition-colors hover:bg-signal-bright"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M4 19h16" /></svg>
+                  {heroDownloadLabel}
+                </a>
+              ) : (
+                <button
+                  onClick={handleHeroDownload}
+                  className="group inline-flex h-12 items-center gap-2 rounded-xl bg-signal px-6 font-medium text-white transition-colors hover:bg-signal-bright"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M4 19h16" /></svg>
+                  {heroDownloadLabel}
+                </button>
+              )}
               <a
                 href={GITHUB_REPO.repoUrl}
                 target="_blank"
@@ -899,14 +884,14 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
                       <td className="hidden px-6 py-4 align-top text-sm leading-6 text-muted-foreground sm:table-cell">{row.notes}</td>
                       <td className="whitespace-nowrap px-6 py-4 text-right align-top">
                         {avail ? (
-                          <button
-                            onClick={() => download(key)}
-                            disabled={downloading}
-                            className="mono inline-flex items-center gap-1.5 rounded-md border border-line-strong bg-panel px-3 py-1.5 text-xs text-ink transition-colors hover:border-signal hover:text-signal disabled:opacity-60"
+                          <a
+                            href={info[key].url}
+                            onClick={() => showMessage(t.download.starting)}
+                            className="mono inline-flex items-center gap-1.5 rounded-md border border-line-strong bg-panel px-3 py-1.5 text-xs text-ink transition-colors hover:border-signal hover:text-signal"
                           >
                             {info[key].size}
                             <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M4 19h16" /></svg>
-                          </button>
+                          </a>
                         ) : exp ? (
                           <a href={GITHUB_REPO.repoReleaseUrl} target="_blank" rel="noopener noreferrer" className="mono inline-flex items-center gap-1 text-xs text-signal hover:underline">{t.download.experimental} →</a>
                         ) : (
