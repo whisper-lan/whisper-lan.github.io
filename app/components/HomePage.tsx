@@ -81,7 +81,7 @@ const messages = {
         notes: '差异与依赖',
         rows: [
           { name: 'Android', role: '移动端', notes: '系统分享 · 二维码 · 通知监听 · 统一前台通知 · 音频播放', tag: '主力' },
-          { name: 'macOS', role: '桌面端', notes: '系统服务 / 全局快捷发送 · 文件拖出 · Intel 原生 / Apple Silicon 经 Rosetta', tag: '完整' },
+          { name: 'macOS', role: '桌面端', notes: '系统服务 / 全局快捷发送 · 文件拖出 · Apple Silicon 与 Intel 原生包', tag: '完整' },
           { name: 'Windows', role: '桌面端', notes: '文件右键 / 全局快捷发送 · 完整桌面端能力', tag: '' },
           { name: 'Linux', role: '桌面端', notes: '快捷发送 · 需 Avahi / PulseAudio 或 PipeWire / GStreamer · 键鼠限 X11', tag: '' },
           { name: 'iOS', role: '移动端', notes: '仅 runner · 可侧载 · 尚未测试', tag: '实验' },
@@ -122,6 +122,8 @@ const messages = {
       notAvailable: '{platform} 版本暂未发布',
       unavailable: '暂无',
       recommended: '当前',
+      appleSilicon: 'Apple 芯片',
+      intel: 'Intel',
       experimental: 'IPA',
       iosNote: '可从 GitHub 下载 ipa',
     },
@@ -202,7 +204,7 @@ const messages = {
         notes: 'Differences & needs',
         rows: [
           { name: 'Android', role: 'Mobile', notes: 'System share · QR pairing · notification listening · unified foreground status · audio playback', tag: 'Primary' },
-          { name: 'macOS', role: 'Desktop', notes: 'System Services / global quick send · file drag-out · native Intel / Rosetta on Apple Silicon', tag: 'Full' },
+          { name: 'macOS', role: 'Desktop', notes: 'System Services / global quick send · file drag-out · native Apple Silicon and Intel builds', tag: 'Full' },
           { name: 'Windows', role: 'Desktop', notes: 'File context menu / global quick send · full desktop capabilities', tag: '' },
           { name: 'Linux', role: 'Desktop', notes: 'Quick send · needs Avahi / PulseAudio or PipeWire / GStreamer · K/M requires X11', tag: '' },
           { name: 'iOS', role: 'Mobile', notes: 'Runner only · sideload .ipa · untested', tag: 'Exp.' },
@@ -243,6 +245,8 @@ const messages = {
       notAvailable: 'The {platform} build is not available yet',
       unavailable: 'n/a',
       recommended: 'detected',
+      appleSilicon: 'Apple Silicon',
+      intel: 'Intel',
       experimental: 'IPA',
       iosNote: 'download .ipa from GitHub',
     },
@@ -607,7 +611,20 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
   }));
 
   const detected = platforms.find((p) => p.detected);
-  const heroDownloadUrl = !isMobile && detected?.available ? info[detected.platform].url : null;
+  // Safari does not reliably expose the Mac CPU architecture. Let Mac users
+  // choose Apple Silicon or Intel instead of silently serving the wrong DMG.
+  const heroDownloadUrl =
+    !isMobile && detected?.available && detected.platform !== 'mac'
+      ? info[detected.platform].url
+      : null;
+  const macBuilds = info.macArm64.url || info.macX64.url
+    ? [
+        { label: t.download.appleSilicon, ...info.macArm64 },
+        { label: t.download.intel, ...info.macX64 },
+      ].filter((build) => build.url)
+    : info.mac.url
+      ? [{ label: 'DMG', ...info.mac }]
+      : [];
   const heroDownloadLabel =
     detected && detected.platform !== 'ios'
       ? t.hero.downloadFor.replace('{platform}', detected.name)
@@ -868,7 +885,7 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
               <tbody>
                 {t.specs.matrix.rows.map((row, i) => {
                   const key = matrixOrder[i];
-                  const avail = !!info[key].url;
+                  const avail = key === 'mac' ? macBuilds.length > 0 : !!info[key].url;
                   const exp = key === 'ios';
                   const detected = deviceType === key;
                   return (
@@ -883,7 +900,21 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
                       <td className="mono whitespace-nowrap px-6 py-4 align-top text-xs text-muted-foreground">{row.role}</td>
                       <td className="hidden px-6 py-4 align-top text-sm leading-6 text-muted-foreground sm:table-cell">{row.notes}</td>
                       <td className="whitespace-nowrap px-6 py-4 text-right align-top">
-                        {avail ? (
+                        {key === 'mac' && macBuilds.length > 0 ? (
+                          <span className="flex flex-col items-end gap-2 lg:flex-row">
+                            {macBuilds.map((build) => (
+                              <a
+                                key={build.label}
+                                href={build.url}
+                                onClick={() => showMessage(t.download.starting)}
+                                className="mono inline-flex items-center gap-1.5 rounded-md border border-line-strong bg-panel px-3 py-1.5 text-xs text-ink transition-colors hover:border-signal hover:text-signal"
+                              >
+                                {build.label} · {build.size}
+                                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M4 19h16" /></svg>
+                              </a>
+                            ))}
+                          </span>
+                        ) : avail ? (
                           <a
                             href={info[key].url}
                             onClick={() => showMessage(t.download.starting)}

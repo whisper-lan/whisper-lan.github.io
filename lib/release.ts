@@ -1,16 +1,19 @@
 // Release data from GitHub — fetched server-side with ISR (see app/[lang]/page.tsx),
 // with a client-side fallback for the rare render path without server props.
 export type PlatformType = 'windows' | 'mac' | 'linux' | 'android' | 'ios' | 'unknown';
+export type DownloadKey = PlatformType | 'macArm64' | 'macX64';
 
 export type PlatformDownloadInfo = { url: string; size: string; version: string };
-export type DownloadInfo = { [key in PlatformType]: PlatformDownloadInfo };
+export type DownloadInfo = { [key in DownloadKey]: PlatformDownloadInfo };
 export type ReleaseData = { version: string; info: DownloadInfo };
 
 export const RELEASE_API = 'https://api.github.com/repos/lawnvi/whisper/releases/latest';
 
 export const PLATFORM_FILE_SUFFIXES = {
   windows: ['.exe'],
-  mac: ['.dmg'],
+  mac: ['macos.dmg'],
+  macArm64: ['macos-arm64.dmg'],
+  macX64: ['macos-x86_64.dmg'],
   linux: ['.deb'],
   android: ['android-arm64-v8a.apk', 'android-universal.apk', 'app-release.apk'],
   ios: ['.ipa.bak'],
@@ -19,6 +22,8 @@ export const PLATFORM_FILE_SUFFIXES = {
 export const emptyDownloadInfo = (): DownloadInfo => ({
   windows: { url: '', size: '-', version: '' },
   mac: { url: '', size: '-', version: '' },
+  macArm64: { url: '', size: '-', version: '' },
+  macX64: { url: '', size: '-', version: '' },
   linux: { url: '', size: '-', version: '' },
   android: { url: '', size: '-', version: '' },
   ios: { url: '', size: '-', version: '' },
@@ -43,7 +48,7 @@ export async function fetchReleaseInfo(): Promise<ReleaseData | null> {
     if (!version) return null;
     const info = emptyDownloadInfo();
     const assets = (data.assets || []) as { name?: string; size?: number; browser_download_url?: string }[];
-    (Object.entries(PLATFORM_FILE_SUFFIXES) as [PlatformType, readonly string[]][]).forEach(([plat, suffixes]) => {
+    (Object.entries(PLATFORM_FILE_SUFFIXES) as [DownloadKey, readonly string[]][]).forEach(([plat, suffixes]) => {
       const asset = suffixes
         .map((suffix) => assets.find((candidate) => String(candidate.name).toLowerCase().endsWith(suffix)))
         .find(Boolean);
@@ -51,6 +56,9 @@ export async function fetchReleaseInfo(): Promise<ReleaseData | null> {
         info[plat] = { url: asset.browser_download_url || '', size: formatSize(asset.size || 0), version: data.tag_name };
       }
     });
+    // Prefer the Apple Silicon package for generic macOS metadata while still
+    // exposing both architecture-specific downloads to the platform table.
+    if (info.macArm64.url) info.mac = info.macArm64;
     return { version, info };
   } catch {
     return null;
