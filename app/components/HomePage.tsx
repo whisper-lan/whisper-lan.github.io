@@ -5,7 +5,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useLanguage } from '@/hooks/useLanguage';
-import { emptyDownloadInfo, fetchReleaseInfo, type DownloadInfo, type PlatformType, type ReleaseData } from '@/lib/release';
+import { emptyDownloadInfo, fetchReleaseInfo, type DownloadInfo, type DownloadKey, type PlatformDownloadInfo, type PlatformType, type ReleaseData } from '@/lib/release';
 
 // ---------------------------------------------------------------------------
 // i18n
@@ -124,6 +124,13 @@ const messages = {
       recommended: '当前',
       appleSilicon: 'Apple 芯片',
       intel: 'Intel',
+      androidArm64: 'ARM64',
+      androidArmV7: 'ARMv7',
+      androidX64: 'x86_64',
+      androidUniversal: '通用 APK',
+      linuxDeb: 'DEB x86_64',
+      linuxAppImage: 'AppImage x86_64',
+      linuxRpm: 'RPM x86_64',
       experimental: 'IPA',
       iosNote: '可从 GitHub 下载 ipa',
     },
@@ -247,6 +254,13 @@ const messages = {
       recommended: 'detected',
       appleSilicon: 'Apple Silicon',
       intel: 'Intel',
+      androidArm64: 'ARM64',
+      androidArmV7: 'ARMv7',
+      androidX64: 'x86_64',
+      androidUniversal: 'Universal APK',
+      linuxDeb: 'DEB x86_64',
+      linuxAppImage: 'AppImage x86_64',
+      linuxRpm: 'RPM x86_64',
       experimental: 'IPA',
       iosNote: 'download .ipa from GitHub',
     },
@@ -263,6 +277,7 @@ const messages = {
 // config / types
 // ---------------------------------------------------------------------------
 type Language = 'en' | 'zh-CN';
+type BuildOption = PlatformDownloadInfo & { label: string };
 
 const GITHUB_REPO = {
   repoUrl: 'https://github.com/lawnvi/whisper',
@@ -611,20 +626,34 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
   }));
 
   const detected = platforms.find((p) => p.detected);
-  // Safari does not reliably expose the Mac CPU architecture. Let Mac users
-  // choose Apple Silicon or Intel instead of silently serving the wrong DMG.
+  const buildOptions = (options: readonly (readonly [string, DownloadKey])[]): BuildOption[] =>
+    options
+      .map(([label, key]) => ({ label, ...info[key] }))
+      .filter((build) => build.url);
+
+  // Browsers do not reliably expose CPU architecture or Linux distribution.
+  // Show explicit build choices instead of guessing an incompatible package.
+  const platformBuilds: Partial<Record<PlatformType, BuildOption[]>> = {
+    mac: buildOptions([
+      [t.download.appleSilicon, 'macArm64'],
+      [t.download.intel, 'macX64'],
+    ]),
+    android: buildOptions([
+      [t.download.androidArm64, 'androidArm64'],
+      [t.download.androidArmV7, 'androidArmV7'],
+      [t.download.androidX64, 'androidX64'],
+      [t.download.androidUniversal, 'androidUniversal'],
+    ]),
+    linux: buildOptions([
+      [t.download.linuxDeb, 'linuxDeb'],
+      [t.download.linuxAppImage, 'linuxAppImage'],
+      [t.download.linuxRpm, 'linuxRpm'],
+    ]),
+  };
   const heroDownloadUrl =
-    !isMobile && detected?.available && detected.platform !== 'mac'
+    !isMobile && detected?.available && !platformBuilds[detected.platform]?.length
       ? info[detected.platform].url
       : null;
-  const macBuilds = info.macArm64.url || info.macX64.url
-    ? [
-        { label: t.download.appleSilicon, ...info.macArm64 },
-        { label: t.download.intel, ...info.macX64 },
-      ].filter((build) => build.url)
-    : info.mac.url
-      ? [{ label: 'DMG', ...info.mac }]
-      : [];
   const heroDownloadLabel =
     detected && detected.platform !== 'ios'
       ? t.hero.downloadFor.replace('{platform}', detected.name)
@@ -885,7 +914,8 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
               <tbody>
                 {t.specs.matrix.rows.map((row, i) => {
                   const key = matrixOrder[i];
-                  const avail = key === 'mac' ? macBuilds.length > 0 : !!info[key].url;
+                  const builds = platformBuilds[key] ?? [];
+                  const avail = builds.length > 0 || !!info[key].url;
                   const exp = key === 'ios';
                   const detected = deviceType === key;
                   return (
@@ -900,9 +930,9 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
                       <td className="mono whitespace-nowrap px-6 py-4 align-top text-xs text-muted-foreground">{row.role}</td>
                       <td className="hidden px-6 py-4 align-top text-sm leading-6 text-muted-foreground sm:table-cell">{row.notes}</td>
                       <td className="whitespace-nowrap px-6 py-4 text-right align-top">
-                        {key === 'mac' && macBuilds.length > 0 ? (
+                        {builds.length > 0 ? (
                           <span className="flex flex-col items-end gap-2 lg:flex-row">
-                            {macBuilds.map((build) => (
+                            {builds.map((build) => (
                               <a
                                 key={build.label}
                                 href={build.url}

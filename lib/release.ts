@@ -1,7 +1,17 @@
 // Release data from GitHub — fetched server-side with ISR (see app/[lang]/page.tsx),
 // with a client-side fallback for the rare render path without server props.
 export type PlatformType = 'windows' | 'mac' | 'linux' | 'android' | 'ios' | 'unknown';
-export type DownloadKey = PlatformType | 'macArm64' | 'macX64';
+export type DownloadKey =
+  | PlatformType
+  | 'macArm64'
+  | 'macX64'
+  | 'androidArm64'
+  | 'androidArmV7'
+  | 'androidX64'
+  | 'androidUniversal'
+  | 'linuxDeb'
+  | 'linuxAppImage'
+  | 'linuxRpm';
 
 export type PlatformDownloadInfo = { url: string; size: string; version: string };
 export type DownloadInfo = { [key in DownloadKey]: PlatformDownloadInfo };
@@ -14,8 +24,15 @@ export const PLATFORM_FILE_SUFFIXES = {
   mac: ['macos.dmg'],
   macArm64: ['macos-arm64.dmg'],
   macX64: ['macos-x86_64.dmg'],
-  linux: ['.deb'],
-  android: ['android-arm64-v8a.apk', 'android-universal.apk', 'app-release.apk'],
+  linux: ['linux-amd64.deb', '.deb'],
+  linuxDeb: ['linux-amd64.deb'],
+  linuxAppImage: ['linux-x86_64.appimage'],
+  linuxRpm: ['linux-x86_64.rpm'],
+  android: ['android-universal.apk', 'app-release.apk'],
+  androidArm64: ['android-arm64-v8a.apk'],
+  androidArmV7: ['android-armeabi-v7a.apk'],
+  androidX64: ['android-x86_64.apk'],
+  androidUniversal: ['android-universal.apk'],
   ios: ['.ipa.bak'],
 } as const;
 
@@ -25,7 +42,14 @@ export const emptyDownloadInfo = (): DownloadInfo => ({
   macArm64: { url: '', size: '-', version: '' },
   macX64: { url: '', size: '-', version: '' },
   linux: { url: '', size: '-', version: '' },
+  linuxDeb: { url: '', size: '-', version: '' },
+  linuxAppImage: { url: '', size: '-', version: '' },
+  linuxRpm: { url: '', size: '-', version: '' },
   android: { url: '', size: '-', version: '' },
+  androidArm64: { url: '', size: '-', version: '' },
+  androidArmV7: { url: '', size: '-', version: '' },
+  androidX64: { url: '', size: '-', version: '' },
+  androidUniversal: { url: '', size: '-', version: '' },
   ios: { url: '', size: '-', version: '' },
   unknown: { url: '', size: '-', version: '' },
 });
