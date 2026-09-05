@@ -1,7 +1,7 @@
 import { HomePage } from './components/HomePage';
+import { LanguageRedirect } from './components/LanguageRedirect';
 
-// 根路径 '/' 会被 middleware 重定向到 /zh 或 /en；
-// 此页面作为兜底渲染，不传 initialRelease，由客户端自行拉取 Release 数据。
+// Cloudflare redirects at the edge; this also covers local/static-only hosting.
 export default function Home() {
-  return <HomePage />;
+  return <><LanguageRedirect /><HomePage /></>;
 }

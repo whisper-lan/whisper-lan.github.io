@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
  
 // 路由段配置
-export const runtime = 'edge'
+export const dynamic = 'force-static'
  
 // 图片元数据
 export const size = {

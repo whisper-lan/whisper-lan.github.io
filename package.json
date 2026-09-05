@@ -24,32 +24,32 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "pages:build": "next-on-pages",
-    "start": "next start",
-    "lint": "next lint",
-    "test:release-assets": "node scripts/check-release-asset-matching.mjs"
+    "pages:build": "npm run build && node scripts/prepare-pages-output.mjs",
+    "start": "node scripts/preview-static.mjs",
+    "lint": "eslint .",
+    "test:release-assets": "node scripts/check-release-asset-matching.mjs",
+    "test:pages": "node --test scripts/pages-routing.test.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.14.4",
-    "next": "15.1.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "next": "15.5.25",
+    "react": "19.1.9",
+    "react-dom": "19.1.9",
     "zustand": "^5.0.2",
     "next-themes": "^0.4.4"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "1.13.16",
-    "@cloudflare/workers-types": "4.20260702.1",
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.1.0",
-    "postcss": "^8",
+    "eslint-config-next": "15.5.25",
+    "postcss": "8.5.28",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5",
-    "vercel": "47.0.4",
-    "wrangler": "3.114.16"
+    "typescript": "^5"
+  },
+  "overrides": {
+    "postcss": "$postcss"
   }
 }

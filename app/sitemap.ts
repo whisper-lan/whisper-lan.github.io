@@ -1,3 +1,5 @@
+export const dynamic = 'force-static';
+
 import { MetadataRoute } from 'next';
 import { SITE_CONFIG } from '@/lib/constants'; // 确保路径正确
 

@@ -30,6 +30,7 @@ const messagesForMetadata = {
 
 // 定义支持的语言 (与 generateStaticParams 和 layout 逻辑保持一致)
 const supportedLanguages = ['en', 'zh'];
+export const dynamicParams = false;
 
 // 验证语言参数
 export async function generateStaticParams() {
@@ -95,7 +96,7 @@ export default async function LocalePage(
     }
 
     const initialLanguage = params.lang === 'zh' ? 'zh-CN' : 'en';
-    // 服务端拉取 Release 数据（ISR 缓存 1 小时），失败时页面内客户端兜底重试
+    // 构建时预取 Release 数据；浏览器加载后刷新，避免静态页面版本过期
     const release = await fetchReleaseInfo();
 
     return <HomePage initialLanguage={initialLanguage} initialRelease={release} />;

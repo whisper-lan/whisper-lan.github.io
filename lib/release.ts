@@ -1,5 +1,4 @@
-// Release data from GitHub — fetched server-side with ISR (see app/[lang]/page.tsx),
-// with a client-side fallback for the rare render path without server props.
+// Prefetch release data at build time and refresh it in the browser.
 export type PlatformType = 'windows' | 'mac' | 'linux' | 'android' | 'ios' | 'unknown';
 export type DownloadKey =
   | PlatformType
@@ -68,7 +67,7 @@ export async function fetchReleaseInfo(): Promise<ReleaseData | null> {
     const res = await fetch(RELEASE_API, { next: { revalidate: 3600 } });
     if (!res.ok) return null;
     const data = await res.json();
-    const version = String(data.tag_name || '').replace('dev-v', '').replace('v', '');
+    const version = String(data.tag_name || '').replace(/^(?:dev-|release-)?v/, '');
     if (!version) return null;
     const info = emptyDownloadInfo();
     const assets = (data.assets || []) as { name?: string; size?: number; browser_download_url?: string }[];

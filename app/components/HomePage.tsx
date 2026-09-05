@@ -75,7 +75,7 @@ const messages = {
     },
     specs: {
       title: '平台支持',
-      subtitle: '文本与文件传输在所有平台都能用；下表只列出各平台的差异与依赖。',
+      subtitle: 'Android、macOS、Windows 和 Linux 支持文本与文件传输；iOS 仍属实验性支持，尚未完成真机验证。',
       matrix: {
         role: '形态',
         notes: '差异与依赖',
@@ -205,7 +205,7 @@ const messages = {
     },
     specs: {
       title: 'Platform support',
-      subtitle: 'Text and file transfer work everywhere — the table lists only how each platform differs and what it needs.',
+      subtitle: 'Text and file transfer are supported on Android, macOS, Windows, and Linux. iOS is experimental and has not been verified on devices.',
       matrix: {
         role: 'Form',
         notes: 'Differences & needs',
@@ -600,6 +600,11 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
     setLanguageReady(true);
     setMounted(true);
   }, []);
+
+  // Next retains the root layout during client navigation between languages.
+  useEffect(() => {
+    document.documentElement.lang = activeLanguage === 'zh-CN' ? 'zh' : 'en';
+  }, [activeLanguage]);
 
   // Refresh build-time release data because Cloudflare Pages serves prerendered
   // routes without ISR regeneration.
