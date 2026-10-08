@@ -45,7 +45,7 @@ export default function OpengraphImage() {
             A direct local link for your devices.
           </span>
           <span style={{ fontSize: 28, color: muted, maxWidth: 880, lineHeight: 1.4 }}>
-            Text, files, audio, and input move directly between trusted devices — no cloud relay.
+            Share files and audio. Cast video apps to your computer. Use your Android phone as a mouse and keyboard.
           </span>
         </div>
 

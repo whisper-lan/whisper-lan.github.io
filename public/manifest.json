@@ -1,7 +1,7 @@
 {
   "name": "Whisper - 加密局域网设备协作工具",
   "short_name": "Whisper",
-  "description": "端到端加密的局域网快捷传输、媒体预览与设备协作工具",
+  "description": "局域网加密传输、声音与键鼠共享、视频 App 投屏、Android 手机鼠标与键盘控制",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

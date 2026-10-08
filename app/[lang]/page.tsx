@@ -10,20 +10,22 @@ import { fetchReleaseInfo } from '@/lib/release';
 const messagesForMetadata = {
     'zh': { // Assuming URL /zh maps to zh-CN content
         title: 'Whisper - 端到端加密的局域网设备协作工具',
-        description: '支持系统快捷发送、二维码配对、断点续传、媒体预览、Android 通知、桌面系统声音和键鼠共享。',
+        description: 'Whisper 支持局域网加密传文件、二维码配对、断点续传、通知与声音共享；支持视频 App 通过 DLNA 投屏到电脑，以及 Android 手机体感鼠标、触控板和虚拟键盘控制电脑。',
         ogLocale: 'zh_CN',
         keywords: [
             'Whisper', '局域网文件传输', '本地网络共享', '离线文件传输',
             '聊天传文件', '文本传输', 'WiFi传文件', '无网络传文件', '本地共享',
-            '电脑互传文件', '手机传电脑局域网', '端到端加密传输', '二维码配对', '系统快捷发送', '键鼠共享', '系统声音共享'
+            '电脑互传文件', '手机传电脑局域网', '端到端加密传输', '二维码配对', '系统快捷发送', '键鼠共享', '系统声音共享',
+            '视频App投屏', 'DLNA接收器', '安卓手机当鼠标', '手机控制电脑', '体感鼠标', '手机触控板'
         ]
     },
     'en': {
         title: 'Whisper: encrypted LAN transfer and device collaboration',
-        description: 'Quick-send files and text, pair by QR, preview media, resume large transfers, and share audio or input over an encrypted LAN connection.',
+        description: 'Share files, audio, and input over encrypted LAN sessions. Cast video apps to your computer via DLNA, or control it with an Android motion mouse, touchpad, and virtual keyboard.',
         ogLocale: 'en_US',
         keywords: [
-            'Whisper', 'encrypted LAN transfer', 'system quick send', 'QR pairing', 'media preview', 'resumable transfer', 'keyboard mouse sharing', 'desktop audio sharing'
+            'Whisper', 'encrypted LAN transfer', 'system quick send', 'QR pairing', 'media preview', 'resumable transfer', 'keyboard mouse sharing', 'desktop audio sharing',
+            'DLNA receiver', 'video app casting', 'Android mouse and keyboard', 'phone computer control', 'motion mouse', 'phone touchpad'
         ]
     }
 };

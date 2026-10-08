@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion as useMotionPreference } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useLanguage } from '@/hooks/useLanguage';
@@ -17,7 +16,7 @@ const messages = {
     hero: {
       eyebrow: '局域网 · 点对点 · 端到端加密',
       title: 'Whisper，本地直连的设备协作工具',
-      desc: '随手传、放心传、断线也能传。文本、文件、声音和键鼠在可信设备之间直接流动，全程只走局域网。',
+      desc: '在局域网里传文本和文件、共享声音与键鼠。把视频 App 投到电脑上，也能让 Android 手机变成随手可用的鼠标和键盘。',
       download: '下载',
       downloadFor: '下载 {platform} 版',
       source: '查看源码',
@@ -33,17 +32,26 @@ const messages = {
     },
     features: {
       title: '它能做些什么',
-      subtitle: '六个核心工作流，覆盖发送、整理、通知、声音和输入协作。',
+      subtitle: '从文件互传到视频投屏，从桌面键鼠共享到手机控制电脑。',
       items: {
         quickSend: { title: '系统快捷发送', description: '从 Android 分享菜单、桌面文件右键或全局快捷键直接发送，不必先打开会话。' },
         chat: { title: '媒体消息时间线', description: '图片全屏查看，音频直接播放，视频交给系统播放器；长按消息还能多选和批量删除。' },
+        cast: { title: '视频 App 投屏', description: '通过 DLNA，把同一局域网视频 App 的内容投到电脑独立窗口播放；手机无需安装 Whisper 或配对。' },
+        mobileControl: { title: 'Android 手机当键鼠', description: '体感鼠标、触控板和虚拟键盘，控制 macOS、Windows 或 Linux X11 电脑，也能发送短文本。' },
         assistant: { title: '传输助手', description: '发送文件夹、全文搜索、收藏常用文本；剪贴板同步不写入会话，文件在粘贴时才传输。' },
         notification: { title: 'Android 通知同步', description: '选择需要监听的 Android 应用，把通知内容转发到已连接的可信设备。' },
         audio: { title: '系统声音共享', description: '把一台桌面的系统声音，分给一台或多台设备一起播放。' },
-        input: { title: '键鼠共享', description: '一套键盘鼠标控制多台桌面，文本、图片和文件剪贴板跟随工作区。' },
+        input: { title: '桌面键鼠共享', description: '一套键盘鼠标控制多台桌面，文本、图片和文件剪贴板跟随工作区。' },
       },
     },
     spotlight: {
+      cast: {
+        eyebrow: '视频 · DLNA 投屏 · 实验性',
+        title: '手机选片，电脑大屏播放',
+        desc: '在电脑上开启电视投屏，同一局域网的视频 App 就能通过设备名称找到它。视频在独立窗口播放，主窗口仍可聊天和传文件；手机与电脑都能控制播放、进度和音量。',
+        points: ['接收端支持 macOS、Windows 和 Linux', '手机无需安装 Whisper，也无需配对', '支持暂停、拖动进度、音量和全屏', '接收视频 App 内容，不提供系统屏幕镜像'],
+        note: '清晰度与可投内容由视频平台决定；在线视频可能需要联网。DLNA 独立于 Whisper 的加密配对通道。',
+      },
       chat: {
         eyebrow: '传输 · 聊天式时间线',
         title: '像聊天一样，收发一切',
@@ -57,15 +65,15 @@ const messages = {
         points: ['一个声源，多端同时播放', '左 / 右声道角色分配', '基础同步，组内统一控制'],
       },
       input: {
-        eyebrow: '键鼠 · 多设备工作区',
-        title: '一套键鼠，走遍每块屏幕',
-        desc: '把多台可信桌面加入同一个键鼠工作区，控制权和剪贴板会跟随当前设备。任意设备复制的内容都会成为工作区里最新的一份。',
-        points: ['一套键鼠控制多台桌面', '最后一次复制在工作区生效', '文件在执行粘贴时按需传输'],
+        eyebrow: '键鼠 · 桌面工作区与 Android 控制器',
+        title: '电脑之间切换，手机也能接手',
+        desc: '一套键鼠在多台可信桌面之间切换，剪贴板跟随工作区。离开桌前，也能用已配对的 Android 手机控制电脑：转动手腕移动光标，或切换到触控板，再用虚拟键盘和手机输入法发送按键与短文本。',
+        points: ['桌面共享文本、图片和文件剪贴板，文件按粘贴传输', '手机支持体感鼠标、触控板、虚拟键盘和组合键', '手机可切换已连接电脑，一次控制一台', '退出控制页、切到后台或断连时自动停止'],
       },
     },
     how: {
       title: '怎么开始',
-      subtitle: '四步，设备之间就能直连。',
+      subtitle: '文本、文件、音频与键鼠协作，从配对设备开始。',
       steps: [
         { title: '下载安装', desc: '给每台设备下载对应平台的版本并安装。' },
         { title: '启动应用', desc: '在想要协作的设备上打开 Whisper。' },
@@ -80,18 +88,18 @@ const messages = {
         role: '形态',
         notes: '差异与依赖',
         rows: [
-          { name: 'Android', role: '移动端', notes: '系统分享 · 二维码 · 通知监听 · 统一前台通知 · 音频播放', tag: '主力' },
-          { name: 'macOS', role: '桌面端', notes: '系统服务 / 全局快捷发送 · 文件拖出 · Apple Silicon 与 Intel 原生包', tag: '完整' },
-          { name: 'Windows', role: '桌面端', notes: '文件右键 / 全局快捷发送 · 完整桌面端能力', tag: '' },
-          { name: 'Linux', role: '桌面端', notes: '快捷发送 · 需 Avahi / PulseAudio 或 PipeWire / GStreamer · 键鼠限 X11', tag: '' },
-          { name: 'iOS', role: '移动端', notes: '仅 runner · 可侧载 · 尚未测试', tag: '实验' },
+          { name: 'Android', role: '移动端', notes: 'Android 7.0+ · 手机键鼠控制器 · 系统分享 / 二维码 / 通知 / 音频播放 · 体感需陀螺仪与重力传感器', tag: '主力' },
+          { name: 'macOS', role: '桌面端', notes: '视频投屏接收 · 接收手机控制（需辅助功能权限）· 快捷发送 / 文件拖出 · Apple Silicon 与 Intel 原生包', tag: '完整' },
+          { name: 'Windows', role: '桌面端', notes: '视频投屏接收 · 接收手机控制 · 桌面键鼠共享 · 文件右键 / 全局快捷发送', tag: '' },
+          { name: 'Linux', role: '桌面端', notes: '桌面与手机键鼠需 X11 · 需 Avahi / PulseAudio 或 PipeWire / GStreamer · 投屏需 libmpv / libepoxy，尚未完成实机播放验证', tag: '' },
+          { name: 'iOS', role: '移动端', notes: '仅 runner · 可侧载 · 尚未测试 · 暂无手机键鼠控制器', tag: '实验' },
         ],
       },
       facts: {
         title: '技术规格',
         items: [
-          { k: '传输', v: '局域网内直连 WebSocket' },
-          { k: '加密', v: 'X25519 会话密钥 + XChaCha20-Poly1305' },
+          { k: '配对会话传输', v: '局域网内直连 WebSocket' },
+          { k: '配对会话加密', v: 'X25519 会话密钥 + XChaCha20-Poly1305' },
           { k: '中转', v: '不走公网中继；跨设备剪贴板可经当前控制端转发' },
           { k: '默认端口', v: ':10002（可在设置中修改）' },
           { k: '配对', v: '发现或二维码 + 双方配对码确认' },
@@ -105,10 +113,14 @@ const messages = {
         { q: '怎么用 Whisper？', a: '让设备处在同一局域网，通过自动发现或二维码找到对方，双方确认同一配对码后即可连接。扫码不需要额外输入密码。' },
         { q: '支持哪些文件类型？', a: '所有类型都支持，也没有大小限制，注意本地剩余空间就好。' },
         { q: '传输速度怎么样？', a: '实际速度取决于 Wi-Fi 信号、终端性能和磁盘速度。加密与 SHA-256 校验采用流式处理，正常完成时不会再把整个大文件读取一遍。' },
-        { q: '数据安全吗？', a: '配对后的业务数据使用端到端加密，界面会显示设备身份与可信状态；局域网连接元数据和本地暂存文件不做隐藏或静态加密。' },
+        { q: '数据安全吗？', a: '配对会话中的业务数据使用端到端加密，界面会显示设备身份与可信状态；局域网连接元数据和本地暂存文件不做隐藏或静态加密。视频投屏使用独立的 DLNA 服务，不使用 Whisper 的加密配对通道。' },
         { q: '能直接预览收到的媒体吗？', a: '可以。图片支持全屏查看，音频支持直接播放，视频和其他文件交给系统可用应用打开。' },
         { q: '支持断点续传吗？', a: '支持。大文件断线重连后能接着传。' },
         { q: '能共享系统声音吗？', a: '桌面端可以。Linux 需要 PulseAudio 或 PipeWire Pulse 兼容层。' },
+        { q: '如何把视频 App 投到电脑？', a: '在电脑 Whisper 的“设置 → 连接与传输”中开启“电视投屏”，再在同一局域网、支持 DLNA 的视频 App 中选择这台电脑的设备名称。手机无需安装 Whisper 或配对。投屏默认关闭；开启期间，同一来源首次请求会提示确认，显示提示后 5 秒自动允许，也可以立即允许或拒绝。' },
+        { q: '投屏支持手机屏幕镜像、所有视频和离线播放吗？', a: '目前只接收视频 App 的 DLNA 媒体播放，不支持 AirPlay、Miracast 或系统屏幕镜像。能否投屏、清晰度与受保护内容的限制由视频平台决定；电脑直接读取媒体地址，在线视频通常仍需联网。Linux 还需安装 libmpv 和 libepoxy，AppImage 也依赖这些系统库。' },
+        { q: 'Android 手机怎样当鼠标和键盘？', a: '手机和电脑都安装支持此功能的 Whisper，在同一局域网连接并完成双向信任后，进入手机上的电脑会话，点击“控制电脑”并开始。支持体感鼠标、触控板、虚拟键盘、组合键和短文本；没有体感传感器时仍可使用触控板和键盘。' },
+        { q: '手机控制支持哪些电脑？会显示电脑画面吗？', a: '支持 macOS、Windows 和 Linux X11；macOS 需要辅助功能权限。电脑需已登录并运行 Whisper，手机不显示电脑画面，也不支持唤醒或锁屏登录。Linux 短文本受电脑键盘布局限制，中文和表情可通过虚拟键盘配合电脑输入法输入。iOS / iPadOS 暂不支持手机控制器。' },
         { q: '电脑能用键鼠操作另一台桌面吗？', a: '可以。macOS、Windows、Linux 都能作为控制端或被控端，并可在工作区内共享文本、图片和文件剪贴板；Linux 目前需要 X11。' },
       ],
     },
@@ -135,8 +147,8 @@ const messages = {
       iosNote: '可从 GitHub 下载 ipa',
     },
     footer: {
-      tagline: '局域网优先的设备协作工具，让文件、文本、声音和键鼠像聊天一样自然地流动。',
-      privacy: { title: '隐私', content: 'Whisper 不提供公共云端中转；配对后的内容通过端到端加密，只在你明确连接的局域网设备之间传输。' },
+      tagline: '局域网优先的设备协作工具，传文件、共享声音与键鼠，也能视频投屏、用 Android 手机控制电脑。',
+      privacy: { title: '隐私', content: 'Whisper 不提供公共云端中转；配对会话内容在局域网内端到端加密传输。DLNA 视频投屏独立于配对通道，在线视频由电脑从视频源读取。' },
       links: { source: '源代码', report: '问题反馈', sponsor: '赞助支持' },
       rights: '保留所有权利。',
     },
@@ -147,7 +159,7 @@ const messages = {
     hero: {
       eyebrow: 'LAN · PEER-TO-PEER · END-TO-END ENCRYPTED',
       title: 'Whisper, a direct local link for your devices.',
-      desc: 'Share instantly, share confidently, and resume after a disconnect. Text, files, audio, and input move directly between trusted devices over your LAN.',
+      desc: 'Share text, files, audio, and input over your LAN. Cast from video apps to your computer, or turn your Android phone into a mouse and keyboard.',
       download: 'Download',
       downloadFor: 'Download for {platform}',
       source: 'View source',
@@ -163,17 +175,26 @@ const messages = {
     },
     features: {
       title: 'What it does',
-      subtitle: 'Six core workflows for sending, organizing, notifications, audio, and input.',
+      subtitle: 'From file transfers to video casting, from shared desktop input to phone control.',
       items: {
         quickSend: { title: 'System quick send', description: 'Send from the Android share sheet, a desktop file menu, or a global hotkey without opening a conversation.' },
         chat: { title: 'Media message timeline', description: 'View images full screen, play audio inline, open video in the system player, and batch-delete selected messages.' },
+        cast: { title: 'Video app casting', description: 'Cast from DLNA video apps on the same LAN to a separate playback window on your computer. No Whisper install or pairing is needed on the phone.' },
+        mobileControl: { title: 'Android mouse & keyboard', description: 'Control macOS, Windows, or Linux X11 with a motion pointer, touchpad, virtual keyboard, and short text input from your Android phone.' },
         assistant: { title: 'Transfer assistant', description: 'Send folders, search message text, and save snippets; clipboard sync stays out of conversations and transfers files on paste.' },
         notification: { title: 'Android notification sync', description: 'Choose Android apps to listen to and forward their notifications to connected trusted devices.' },
         audio: { title: 'System audio sharing', description: "Stream one desktop's system audio to another device on your LAN." },
-        input: { title: 'Keyboard & mouse', description: 'Control multiple desktops with one keyboard and mouse while text, image, and file clipboard content follows the workspace.' },
+        input: { title: 'Desktop keyboard & mouse', description: 'Control multiple desktops with one keyboard and mouse while text, image, and file clipboard content follows the workspace.' },
       },
     },
     spotlight: {
+      cast: {
+        eyebrow: 'VIDEO · DLNA CASTING · EXPERIMENTAL',
+        title: 'Pick on your phone. Watch on your computer.',
+        desc: 'Enable TV casting on your computer and video apps on the same LAN can find it by device name. Video plays in a separate window while chat and file transfers stay available. Control playback, seeking, and volume from either device.',
+        points: ['Receive on macOS, Windows, and Linux', 'No Whisper install or pairing needed on the phone', 'Pause, seek, adjust volume, and go full screen', 'Video app playback, without system screen mirroring'],
+        note: 'Quality and available content depend on the video platform; online videos may need internet access. DLNA is separate from Whisper\'s encrypted paired sessions.',
+      },
       chat: {
         eyebrow: 'TRANSFER · CHAT TIMELINE',
         title: 'Send anything, like a chat.',
@@ -187,15 +208,15 @@ const messages = {
         points: ['One source, many devices at once', 'Left / right channel roles', 'Basic sync, controlled as a group'],
       },
       input: {
-        eyebrow: 'INPUT · MULTI-DEVICE WORKSPACE',
-        title: 'One keyboard and mouse, every screen.',
-        desc: 'Bring trusted desktops into one input workspace. Control and clipboard content follow the active machine, and a copy made on any member becomes the latest workspace item.',
-        points: ['One keyboard and mouse across desktops', 'Latest copy wins throughout the workspace', 'Files transfer only when pasted'],
+        eyebrow: 'INPUT · DESKTOP WORKSPACE & ANDROID CONTROL',
+        title: 'Move between computers. Let your phone take over.',
+        desc: 'Share one keyboard, mouse, and clipboard across trusted desktops. Away from the desk, use your paired Android phone: move the pointer with your wrist or a touchpad, then send keys and short text with the virtual keyboard and phone input method.',
+        points: ['Share text, images, and files across desktops; files transfer on paste', 'Phone motion pointer, touchpad, virtual keyboard, and shortcuts', 'Switch between connected computers, controlling one at a time', 'Control stops on leaving the page, backgrounding, or disconnecting'],
       },
     },
     how: {
       title: 'How to start',
-      subtitle: 'Four steps to a direct device-to-device link.',
+      subtitle: 'Pair your devices to share text, files, audio, and input.',
       steps: [
         { title: 'Download & install', desc: 'Grab the build for each of your platforms.' },
         { title: 'Launch the app', desc: 'Open Whisper on the devices you want to link.' },
@@ -210,18 +231,18 @@ const messages = {
         role: 'Form',
         notes: 'Differences & needs',
         rows: [
-          { name: 'Android', role: 'Mobile', notes: 'System share · QR pairing · notification listening · unified foreground status · audio playback', tag: 'Primary' },
-          { name: 'macOS', role: 'Desktop', notes: 'System Services / global quick send · file drag-out · native Apple Silicon and Intel builds', tag: 'Full' },
-          { name: 'Windows', role: 'Desktop', notes: 'File context menu / global quick send · full desktop capabilities', tag: '' },
-          { name: 'Linux', role: 'Desktop', notes: 'Quick send · needs Avahi / PulseAudio or PipeWire / GStreamer · K/M requires X11', tag: '' },
-          { name: 'iOS', role: 'Mobile', notes: 'Runner only · sideload .ipa · untested', tag: 'Exp.' },
+          { name: 'Android', role: 'Mobile', notes: 'Android 7.0+ · phone mouse & keyboard · system share / QR / notifications / audio · motion needs gyroscope and gravity sensors', tag: 'Primary' },
+          { name: 'macOS', role: 'Desktop', notes: 'Video casting receiver · phone control with Accessibility permission · quick send / file drag-out · native Apple Silicon and Intel builds', tag: 'Full' },
+          { name: 'Windows', role: 'Desktop', notes: 'Video casting receiver · phone control · desktop input sharing · file context menu / global quick send', tag: '' },
+          { name: 'Linux', role: 'Desktop', notes: 'Desktop / phone input needs X11 · Avahi / PulseAudio or PipeWire / GStreamer · casting needs libmpv / libepoxy; on-device playback not yet verified', tag: '' },
+          { name: 'iOS', role: 'Mobile', notes: 'Runner only · sideload .ipa · untested · no phone input controller yet', tag: 'Exp.' },
         ],
       },
       facts: {
         title: 'Technical spec',
         items: [
-          { k: 'Transport', v: 'Direct WebSocket over the LAN' },
-          { k: 'Encryption', v: 'X25519 session keys + XChaCha20-Poly1305' },
+          { k: 'Paired session transport', v: 'Direct WebSocket over the LAN' },
+          { k: 'Paired session encryption', v: 'X25519 session keys + XChaCha20-Poly1305' },
           { k: 'Relay', v: 'No public relay; cross-device clipboard items may pass through the active controller' },
           { k: 'Default port', v: ':10002 (configurable in settings)' },
           { k: 'Pairing', v: 'Discovery or QR + matching code confirmation' },
@@ -235,10 +256,14 @@ const messages = {
         { q: 'How do I use Whisper?', a: 'Put devices on the same LAN, find the other device through discovery or QR, then confirm the same pairing code on both sides. QR pairing needs no extra password.' },
         { q: 'What file types are supported?', a: 'All types, with no size limit — just keep an eye on available local storage.' },
         { q: 'How fast are transfers?', a: 'Actual speed depends on Wi-Fi signal, device performance, and disk speed. Encryption and SHA-256 verification stream with the transfer, so normal completion does not reread the entire large file.' },
-        { q: 'Is the data secure?', a: 'Paired application data is end-to-end encrypted, and the UI shows identity and trust state. LAN connection metadata and local staged files are not hidden or encrypted at rest.' },
+        { q: 'Is the data secure?', a: 'Application data in paired sessions is end-to-end encrypted, and the UI shows identity and trust state. LAN connection metadata and local staged files are not hidden or encrypted at rest. Video casting uses a separate DLNA service, outside Whisper\'s encrypted paired sessions.' },
         { q: 'Can I preview received media?', a: 'Yes. Images open full screen, audio plays inline, and video or other files open through an available system app.' },
         { q: 'Can interrupted transfers resume?', a: 'Yes. Large file transfers can resume after reconnecting.' },
         { q: 'Can it share desktop audio?', a: 'Yes, on desktop. Linux needs PulseAudio or PipeWire Pulse compatibility.' },
+        { q: 'How do I cast from a video app to my computer?', a: 'Enable TV casting in desktop Whisper under Settings → Connection & transfer, then select the computer by device name in a DLNA-capable video app on the same LAN. The phone needs neither Whisper nor pairing. Casting is off by default. The first request from each source during an enabled session shows a prompt: it allows access after 5 seconds, or you can allow or reject immediately.' },
+        { q: 'Does casting mirror my screen, play every video, or work offline?', a: 'It currently receives DLNA media playback from video apps, without AirPlay, Miracast, or system screen mirroring. Casting availability, quality, and protected-content restrictions depend on the video platform. The computer reads the media URL directly, so online videos usually still need internet access. Linux needs libmpv and libepoxy, including when using the AppImage.' },
+        { q: 'How can my Android phone become a mouse and keyboard?', a: 'Install a Whisper version with this feature on both devices, connect over the same LAN, and establish mutual trust. Open the computer conversation on Android, select Control computer, and start. Motion pointer, touchpad, virtual keyboard, shortcuts, and short text input are supported. Without motion sensors, the touchpad and keyboard still work.' },
+        { q: 'Which computers can my phone control? Can I see their screen?', a: 'macOS, Windows, and Linux X11 are supported; macOS needs Accessibility permission. The computer must be logged in and running Whisper. Phone control does not show the computer screen, wake it, or log in from a lock screen. Linux short text is limited by the computer keyboard layout; use the virtual keyboard with the computer input method for Chinese or emoji. iOS / iPadOS has no phone controller yet.' },
         { q: 'Can a PC control another desktop with K/M?', a: 'Yes. macOS, Windows, and Linux can act as source or receiver and share text, image, and file clipboard content inside the workspace. Linux currently requires X11.' },
       ],
     },
@@ -265,8 +290,8 @@ const messages = {
       iosNote: 'download .ipa from GitHub',
     },
     footer: {
-      tagline: 'A LAN-first device collaboration tool. File, text, audio, and input that flow as easily as a chat.',
-      privacy: { title: 'Privacy', content: 'Whisper offers no public cloud relay. Paired content is end-to-end encrypted and moves only between the LAN devices you explicitly connect.' },
+      tagline: 'LAN-first device collaboration: share files, audio, and input, cast videos, or control your computer from Android.',
+      privacy: { title: 'Privacy', content: 'Whisper offers no public cloud relay. Paired session content is end-to-end encrypted over the LAN. DLNA casting is separate; the computer reads online video from its media source.' },
       links: { source: 'Source code', report: 'Report an issue', sponsor: 'Sponsor' },
       rights: 'All rights reserved.',
     },
@@ -298,6 +323,14 @@ const PLATFORM_LABEL: Record<Exclude<PlatformType, 'unknown'>, string> = {
 // ---------------------------------------------------------------------------
 // hooks
 // ---------------------------------------------------------------------------
+function useReducedMotion() {
+  const preference = useMotionPreference();
+  const [reduced, setReduced] = useState(false);
+  // Match the server markup before applying the browser's motion preference.
+  useEffect(() => setReduced(Boolean(preference)), [preference]);
+  return reduced;
+}
+
 const useDeviceDetect = () => {
   const [deviceType, setDeviceType] = useState<PlatformType>('unknown');
   useEffect(() => {
@@ -326,9 +359,10 @@ function Reveal({ children, delay = 0, className = '' }: { children: ReactNode; 
     <motion.div
       className={className}
       initial={reduce ? false : { opacity: 0, y: 14 }}
+      animate={reduce ? { opacity: 1, y: 0 } : undefined}
       whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: reduce ? 0 : 0.5, delay: reduce ? 0 : delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
@@ -341,6 +375,8 @@ function Reveal({ children, delay = 0, className = '' }: { children: ReactNode; 
 const featureIcons: Record<string, ReactNode> = {
   quickSend: <><path d="M4 12h11" /><path d="m11 6 6 6-6 6" /><path d="M20 5v14" /></>,
   chat: <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 20.5l1.4-3.5A8.38 8.38 0 0 1 3.5 11.5 8.5 8.5 0 0 1 12 3a8.5 8.5 0 0 1 9 8.5Z" />,
+  cast: <><path d="M3 8V5h18v14h-8M3 12a7 7 0 0 1 7 7M3 16a3 3 0 0 1 3 3" /><circle cx="3" cy="20" r=".5" /><path d="m12 8 5 3-5 3z" /></>,
+  mobileControl: <><rect x="5" y="2" width="14" height="20" rx="2" /><path d="M10 18h4M9 7l6 4-3 1-1 3z" /></>,
   assistant: <><path d="M4 5h7l2 2h7v12H4z" /><path d="m9 14 1.5 1.5L14 12" /></>,
   notification: <><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></>,
   audio: <><path d="M4 9v6h4l5 4V5L8 9H4Z" /><path d="M17 9.5a4 4 0 0 1 0 5M19.5 7a8 8 0 0 1 0 10" /></>,
@@ -354,9 +390,9 @@ const FeatureIcon = ({ k }: { k: string }) => (
 );
 
 const featureTags: Record<string, string> = {
-  quickSend: 'QUICK SEND', chat: 'MEDIA', assistant: 'ASSISTANT', notification: 'ANDROID', audio: 'AUDIO', input: 'CONTROL',
+  quickSend: 'QUICK SEND', chat: 'MEDIA', cast: 'DLNA', mobileControl: 'PHONE INPUT', assistant: 'ASSISTANT', notification: 'ANDROID', audio: 'AUDIO', input: 'CONTROL',
 };
-const featureKeys = ['quickSend', 'chat', 'assistant', 'notification', 'audio', 'input'];
+const featureKeys = ['quickSend', 'chat', 'cast', 'mobileControl', 'assistant', 'notification', 'audio', 'input'] as const;
 
 // device glyphs for the topology diagram
 const deviceGlyph: Record<string, ReactNode> = {
@@ -455,8 +491,8 @@ function ChatTransferDiagram() {
         <motion.g
           key={bubble.title}
           initial={reduce ? false : { opacity: 0, y: 8 }}
-          animate={reduce ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: i * 0.14, ease: 'easeOut' }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: reduce ? 0 : 0.45, delay: reduce ? 0 : i * 0.14, ease: 'easeOut' }}
         >
           <rect x={bubble.x} y={bubble.y} width={bubble.w} height={bubble.h} rx="9" fill={bubble.align === 'right' ? 'var(--signal-soft)' : 'var(--panel)'} stroke={bubble.align === 'right' ? 'var(--signal-line)' : 'var(--line-strong)'} strokeWidth={1.1} />
           <text x={bubble.x + 12} y={bubble.y + 15} className="mono" fontSize="7" letterSpacing="1.3" fill="var(--signal)">{bubble.tag}</text>
@@ -522,6 +558,27 @@ function AudioMatrixDiagram() {
   );
 }
 
+function VideoCastDiagram() {
+  const reduce = useReducedMotion();
+  return (
+    <DiagramFrame label="VIDEO CASTING" meta="DLNA · LAN" viewBox="0 0 460 280">
+      <DeviceNode x={72} y={132} glyph="phone" label="VIDEO APP" size={68} />
+      <path d="M108 132h88" stroke="var(--signal)" strokeWidth={1.7} strokeDasharray="4 6" className={reduce ? '' : 'flow'} />
+      <text x="152" y="116" textAnchor="middle" className="mono" fontSize="10" fill="var(--signal)">DLNA</text>
+      <rect x="196" y="52" width="232" height="158" rx="6" fill="var(--panel)" stroke="var(--line-strong)" strokeWidth={1.6} />
+      <path d="M196 80h232" stroke="var(--line)" />
+      <text x="210" y="70" className="mono" fontSize="9" fill="var(--muted)">WHISPER · VIDEO</text>
+      <path d="m301 108 28 18-28 18z" fill="var(--signal)" />
+      <path d="M212 171h200" stroke="var(--line-strong)" strokeWidth={3} strokeLinecap="round" />
+      <path d="M212 171h78" stroke="var(--signal)" strokeWidth={3} strokeLinecap="round" />
+      <circle cx="290" cy="171" r="4" fill="var(--signal)" />
+      <text x="212" y="194" className="mono" fontSize="8.5" fill="var(--muted)">PLAYBACK · SEEK · VOLUME</text>
+      <path d="M312 210v18m-26 0h52" stroke="var(--line-strong)" strokeWidth={1.6} strokeLinecap="round" />
+      <text x="312" y="252" textAnchor="middle" className="mono" fontSize="10" fill="var(--ink)">macOS · Windows · Linux</text>
+    </DiagramFrame>
+  );
+}
+
 // keyboard & mouse: arranged screens, cursor crosses the shared edge
 function KMDiagram() {
   const reduce = useReducedMotion();
@@ -532,7 +589,7 @@ function KMDiagram() {
   const edge = 230;                   // shared crossing edge
   const path = { x1: A.x + 120, x2: B.x + 70, y: 132 };
   return (
-    <DiagramFrame label="EDGE CROSSING" meta="DESKTOP A → B" viewBox="0 0 460 300">
+    <DiagramFrame label="SHARED INPUT" meta="DESKTOP · ANDROID" viewBox="0 0 460 320">
       {/* monitors */}
       {[{ ...A, tag: 'A', host: true }, { ...B, tag: 'B', host: false }].map((m) => (
         <g key={m.tag}>
@@ -566,6 +623,8 @@ function KMDiagram() {
         <path d="M7 8h.01M16 8h.01M25 8h.01M34 8h.01M7 14h32M14 19h18" />
         <path d="M58 2a7 7 0 0 1 7 7v8a7 7 0 0 1-14 0V9a7 7 0 0 1 7-7zM58 3v6" />
       </g>
+      <path d="M370 250h34v-56" stroke="var(--signal)" strokeWidth={1.4} strokeDasharray="4 6" className={reduce ? '' : 'flow'} fill="none" />
+      <DeviceNode x={338} y={250} glyph="phone" label="ANDROID" sub="mouse + keyboard" size={44} />
     </DiagramFrame>
   );
 }
@@ -802,9 +861,9 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
             <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">{t.features.title}</h2>
             <p className="mt-3 text-muted-foreground">{t.features.subtitle}</p>
           </Reveal>
-          <div className="mx-auto grid w-full max-w-7xl gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-8">
+          <div className="mx-auto grid w-full max-w-7xl gap-6 sm:grid-cols-2 xl:grid-cols-4 xl:gap-8">
             {featureKeys.map((key, i) => {
-              const item = (t.features.items as any)[key];
+              const item = t.features.items[key];
               return (
                 <Reveal key={key} delay={(i % 3) * 0.06} className="h-full">
                   <div className="group flex h-full flex-col rounded-xl border border-line bg-panel p-7 transition-colors hover:border-line-strong">
@@ -825,6 +884,22 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
 
         {/* spotlight: the flagship capabilities, each with a schematic diagram */}
         <section className="space-y-16 pb-2 sm:space-y-24">
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+            <Reveal>
+              <p className="eyebrow mb-3">{t.spotlight.cast.eyebrow}</p>
+              <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">{t.spotlight.cast.title}</h2>
+              <p className="mt-4 max-w-lg leading-7 text-muted-foreground">{t.spotlight.cast.desc}</p>
+              <ul className="mt-6 space-y-2.5">
+                {t.spotlight.cast.points.map((p, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm text-ink">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-signal" />{p}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 max-w-lg border-l-2 border-line-strong pl-4 text-sm leading-6 text-muted-foreground">{t.spotlight.cast.note}</p>
+            </Reveal>
+            <Reveal delay={0.1}><VideoCastDiagram /></Reveal>
+          </div>
           {/* chat — diagram left, text right */}
           <div className="grid items-center gap-10 lg:grid-cols-2">
             <Reveal className="lg:order-2">

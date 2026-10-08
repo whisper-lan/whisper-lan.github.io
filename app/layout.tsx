@@ -37,9 +37,9 @@ export const metadata: Metadata = {
   keywords: [
     'whisper',
     // 中文关键词
-    '文件传输', '局域网传输', '端到端加密传输', '二维码配对', '跨平台传输', '无线传输', '传文件',
+    '文件传输', '局域网传输', '端到端加密传输', '二维码配对', '跨平台传输', '无线传输', '传文件', '视频App投屏', '安卓手机当键鼠',
     // 英文关键词
-    'file transfer', 'encrypted LAN transfer', 'QR pairing', 'system quick send', 'wireless transfer', 'local transfer'
+    'file transfer', 'encrypted LAN transfer', 'QR pairing', 'system quick send', 'wireless transfer', 'local transfer', 'DLNA receiver', 'Android mouse and keyboard'
   ],
   authors: [{ name: 'lawnvi' }],
   creator: 'lawnvi',
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Whisper - Encrypted LAN transfer and device collaboration',
-    description: 'Quick-send files and text, pair by QR, preview media, resume large transfers, and share audio or input over an end-to-end encrypted LAN connection.',
+    description: 'Encrypted LAN file, audio, and input sharing, plus DLNA video app casting and Android phone mouse and keyboard control.',
     url: SITE_CONFIG.baseUrl,
     siteName: SITE_CONFIG.title,
     locale: 'zh_CN',
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Whisper - Encrypted LAN transfer and device collaboration',
-    description: 'Quick-send files and text, pair by QR, preview media, resume large transfers, and share audio or input over an end-to-end encrypted LAN connection.',
+    description: 'Encrypted LAN file, audio, and input sharing, plus DLNA video app casting and Android phone mouse and keyboard control.',
   },
   manifest: '/manifest.json',
   category: 'Software Tools',
