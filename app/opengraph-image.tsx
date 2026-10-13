@@ -9,56 +9,58 @@ export const size = {
 }
 export const contentType = 'image/png'
 
-// OG image in the site's blueprint style. English only — the default OG font
-// has no CJK glyphs.
+// Social card in the site's style: the ring on black. English only — the
+// default OG font has no CJK glyphs.
 export default function OpengraphImage() {
-  const signal = '#3b82f6'
-  const line = '#1a2436'
-  const muted = '#8696ac'
+  const ink = '#f2f3f5'
+  const muted = '#8a8f98'
   return new ImageResponse(
     (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          background: '#080c14',
-          padding: 64,
-          fontFamily: 'sans-serif',
-        }}
-      >
-        {/* header row */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 16 }}>
-            <span style={{ fontSize: 40, fontWeight: 700, color: '#e6edf5' }}>whisper</span>
-            <span style={{ fontSize: 20, color: muted, letterSpacing: 6 }}>/ LAN</span>
-          </div>
-          <span style={{ fontSize: 18, color: muted, letterSpacing: 4 }}>PORT :10002</span>
-        </div>
+      <div style={{ width: '100%', height: '100%', display: 'flex', position: 'relative', background: '#000000', fontFamily: 'sans-serif', overflow: 'hidden' }}>
+        <svg width="1200" height="630" viewBox="0 0 1200 630" style={{ position: 'absolute', left: 0, top: 0 }}>
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#2a8fe0" />
+              <stop offset="0.5" stopColor="#3bb3a4" />
+              <stop offset="1" stopColor="#8fd443" />
+            </linearGradient>
+            <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0.7" stopColor="#3bb3a4" stopOpacity="0" />
+              <stop offset="0.93" stopColor="#3bb3a4" stopOpacity="0.28" />
+              <stop offset="1" stopColor="#3bb3a4" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <circle cx="1010" cy="315" r="300" fill="url(#glow)" />
+          <circle cx="1010" cy="315" r="330" fill="none" stroke="url(#g)" strokeWidth="1" opacity="0.25" />
+          <circle cx="1010" cy="315" r="280" fill="none" stroke="url(#g)" strokeWidth="2.5" />
+          <circle cx="812" cy="117" r="9" fill="#ffffff" stroke="#9fe8ff" strokeWidth="3" />
+        </svg>
 
-        {/* headline */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-          <span style={{ fontSize: 22, color: signal, letterSpacing: 8 }}>LAN · PEER-TO-PEER · END-TO-END ENCRYPTED</span>
-          <span style={{ fontSize: 76, fontWeight: 700, color: '#e6edf5', lineHeight: 1.1, maxWidth: 900 }}>
-            A direct local link for your devices.
-          </span>
-          <span style={{ fontSize: 28, color: muted, maxWidth: 880, lineHeight: 1.4 }}>
-            Share files and audio. Cast video apps to your computer. Use your Android phone as a mouse and keyboard.
-          </span>
-        </div>
-
-        {/* footer chips */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: `1px solid ${line}`, paddingTop: 32 }}>
-          <div style={{ display: 'flex', gap: 28 }}>
-            {['LAN-ONLY', 'NO CLOUD RELAY', 'E2E ENCRYPTED', '5 PLATFORMS', 'OPEN SOURCE · MIT'].map((s) => (
-              <span key={s} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 18, color: muted, letterSpacing: 3 }}>
-                <span style={{ width: 8, height: 8, borderRadius: 4, background: signal }} />
-                {s}
-              </span>
-            ))}
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '64px 72px', width: '100%' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <svg width="34" height="34" viewBox="0 0 32 32">
+              <defs>
+                <linearGradient id="m" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stopColor="#2a8fe0" />
+                  <stop offset="1" stopColor="#8fd443" />
+                </linearGradient>
+              </defs>
+              <circle cx="16" cy="16" r="13" fill="none" stroke="url(#m)" strokeWidth="3.4" />
+            </svg>
+            <span style={{ fontSize: 34, fontWeight: 600, color: ink }}>Whisper</span>
           </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 26 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', fontSize: 64, lineHeight: 1.08, letterSpacing: -1.5 }}>
+              <span style={{ color: ink }}>Side by side.</span>
+              <span style={{ color: '#6f747d' }}>No cloud in between.</span>
+            </div>
+            <span style={{ fontSize: 26, color: muted, maxWidth: 600, lineHeight: 1.45 }}>
+              Files, clipboard, sound, and input between your own devices — encrypted end to end over the local network.
+            </span>
+          </div>
+
+          <span style={{ fontSize: 20, color: muted, letterSpacing: 1 }}>Android · macOS · Windows · Linux · Free & open source</span>
         </div>
       </div>
     ),

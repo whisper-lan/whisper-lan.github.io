@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 
 const page = readFileSync(new URL('../lib/release.ts', import.meta.url), 'utf8');
 const homePage = readFileSync(new URL('../app/components/HomePage.tsx', import.meta.url), 'utf8');
+const downloads = readFileSync(new URL('../lib/downloads.ts', import.meta.url), 'utf8');
 
 assert.match(page, /PLATFORM_FILE_SUFFIXES/);
 assert.match(page, /macArm64:\s*\['macos-arm64\.dmg'\]/);
@@ -20,6 +21,8 @@ assert.match(page, /app-release\.apk/);
 assert.match(page, /suffixes\s*\.map/);
 assert.doesNotMatch(page, /android:\s*\['android-arm64-v8a\.apk/);
 
-assert.match(homePage, /android:\s*buildOptions\(/);
-assert.match(homePage, /linux:\s*buildOptions\(/);
-assert.match(homePage, /!platformBuilds\[detected\.platform\]\?\.length/);
+assert.match(downloads, /mac:\s*buildOptions\(/);
+assert.match(downloads, /android:\s*buildOptions\(/);
+assert.match(downloads, /linux:\s*buildOptions\(/);
+// Platforms with several builds go to the download section instead of guessing.
+assert.match(homePage, /!builds\[detected\]\?\.length/);

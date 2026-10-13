@@ -4,7 +4,7 @@
   "description": "局域网加密传输、声音与键鼠共享、视频 App 投屏、Android 手机鼠标与键盘控制",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#fbfbfa",
   "theme_color": "#2563eb",
   "icons": [
     {
