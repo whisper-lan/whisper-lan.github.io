@@ -1,8 +1,7 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
-import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/hooks/useLanguage';
 import { messages, type Language } from '@/lib/i18n';
 import { emptyDownloadInfo, fetchReleaseInfo, type DownloadInfo, type PlatformType, type ReleaseData } from '@/lib/release';
@@ -33,7 +32,6 @@ const useDeviceDetect = () => {
 
 export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: { initialLanguage?: Language; initialRelease?: ReleaseData | null }) {
   const { deviceType, isMobile } = useDeviceDetect();
-  const router = useRouter();
   const { language, setLanguage } = useLanguage();
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -89,11 +87,39 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
   const isDark = mounted && resolvedTheme === 'dark';
   const isZh = activeLanguage === 'zh-CN';
   const onDirectDownload = () => showMessage(t.download.starting);
+  // Switching language changes the words in place. A route change would rebuild
+  // the page and replay its opening, so only the address is replaced. The
+  // content fades out, swaps while unseen (keeping the block being read where
+  // it was, as text lengths differ), and fades back in. Blocks marked
+  // `data-anchor` are finer anchors than whole sections.
+  const [swapping, setSwapping] = useState(false);
+  const pending = useRef<{ el: Element | null; top: number } | null>(null);
   const switchLanguage = () => {
+    if (swapping) return;
     const next: Language = activeLanguage === 'zh-CN' ? 'en' : 'zh-CN';
-    setLanguage(next);
-    router.push(next === 'zh-CN' ? '/zh' : '/en', { scroll: false });
+    setSwapping(true);
+    window.setTimeout(() => {
+      const mid = window.innerHeight / 2;
+      const el = [...document.querySelectorAll('[data-anchor], main section, footer')]
+        .filter((s) => {
+          const r = s.getBoundingClientRect();
+          return r.top <= mid && r.bottom > mid;
+        })
+        .sort((a, b) => a.getBoundingClientRect().height - b.getBoundingClientRect().height)[0];
+      pending.current = { el: el ?? null, top: el ? el.getBoundingClientRect().top : 0 };
+      setLanguage(next);
+      window.history.replaceState(null, '', `${next === 'zh-CN' ? '/zh' : '/en'}${window.location.hash}`);
+      document.title = messages[next].meta.title;
+    }, 180);
   };
+  useLayoutEffect(() => {
+    const a = pending.current;
+    if (!a) return;
+    pending.current = null;
+    const drift = a.el ? a.el.getBoundingClientRect().top - a.top : 0;
+    if (Math.abs(drift) > 1) window.scrollTo({ top: window.scrollY + drift, behavior: 'instant' });
+    requestAnimationFrame(() => setSwapping(false));
+  }, [activeLanguage]);
 
   return (
     <div className="min-h-screen overflow-x-clip">
@@ -102,10 +128,11 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
         t={t}
         isZh={isZh}
         isDark={isDark}
+        swapping={swapping}
         onToggleLanguage={switchLanguage}
         onToggleTheme={() => setTheme(isDark ? 'light' : 'dark')}
       />
-      <main>
+      <main className={`transition-opacity duration-200 ${swapping ? 'opacity-0' : 'opacity-100'}`}>
         <Prologue t={t} isZh={isZh} cta={heroCta} meta={heroMeta} onDirectDownload={onDirectDownload} />
         <Chapters t={t} />
         <Details t={t} />
@@ -115,7 +142,9 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
         <Faq t={t} isZh={isZh} />
         <Finale t={t} ctaHref={heroCta.href} ctaLabel={heroCta.label} direct={heroCta.direct} onDirectDownload={onDirectDownload} />
       </main>
-      <Footer t={t} isZh={isZh} />
+      <div className={`transition-opacity duration-200 ${swapping ? 'opacity-0' : 'opacity-100'}`}>
+        <Footer t={t} isZh={isZh} />
+      </div>
 
       <AnimatePresence>
         {toast && (

@@ -3,7 +3,8 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type Compone
 import { animate, motion, useInView, useMotionValue, useMotionValueEvent, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import type { Messages } from '@/lib/i18n';
 import { Icon, Reveal, useMediaQuery, useReducedMotion, useScrollProgress, useStill } from './primitives';
-import { useSnapPages } from './scroll';
+import { OPENING_REST } from './Prologue';
+import { useSnapGap, useSnapPages } from './scroll';
 import { TransferScene } from '../scenes/TransferScene';
 import { InputScene } from '../scenes/InputScene';
 import { AudioScene } from '../scenes/AudioScene';
@@ -21,25 +22,31 @@ const CHAPTERS: { key: ChapterKey; Scene: ComponentType<SceneProps>; tint: [numb
 ];
 const N = CHAPTERS.length;
 
-function ChapterText({ t, chapter, index }: { t: Messages; chapter: ChapterKey; index: number }) {
+// `parts`: all of it, or the heading and the text separately (phones put the
+// scene between them).
+function ChapterText({ t, chapter, index, parts = 'all' }: { t: Messages; chapter: ChapterKey; index: number; parts?: 'all' | 'head' | 'body' }) {
   const c = t.chapters.items[chapter];
-  return (
+  const [r, g, b] = CHAPTERS[index].tint;
+  const head = (
     <>
+      {/* the short rule takes the colour of this chapter's light on the stage */}
       <p className="kicker flex items-center gap-3">
         <span className="mono text-faint">{String(index + 1).padStart(2, '0')}</span>
-        <span className="h-px w-6 bg-[var(--hair-2)]" />
+        <span className="h-[2px] w-7 rounded-full" style={{ background: `rgb(${r} ${g} ${b})` }} />
         {c.kicker}
       </p>
-      <h3 className="display mt-5 text-ink" style={{ fontSize: 'clamp(30px, 3.6vw, 48px)' }}>
+      <h3 className="display mt-4 text-ink sm:mt-5" style={{ fontSize: 'clamp(26px, 3.6vw, 48px)' }}>
         <span className="block">{c.title[0]}</span>
-        <span className="block" style={{ color: 'var(--title-2)' }}>
-          {c.title[1]}
-        </span>
+        <span className="block">{c.title[1]}</span>
       </h3>
-      <p className="mt-6 max-w-[34rem] text-[17px] leading-[1.75] text-muted">{c.desc}</p>
-      <ul className="mt-7 space-y-3">
+    </>
+  );
+  const body = (
+    <>
+      <p className={`${parts === 'all' ? 'mt-6' : ''} max-w-[34rem] text-[15px] leading-[1.75] text-muted sm:text-[17px]`}>{c.desc}</p>
+      <ul className="mt-5 space-y-2.5 sm:mt-7 sm:space-y-3">
         {c.points.map((point) => (
-          <li key={point} className="flex items-start gap-3 text-[15px] text-ink-2">
+          <li key={point} className="flex items-start gap-3 text-[14px] text-ink-2 sm:text-[15px]">
             <span className="mt-[3px] grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
               <Icon name="check" className="h-3 w-3" strokeWidth={2.6} />
             </span>
@@ -47,6 +54,14 @@ function ChapterText({ t, chapter, index }: { t: Messages; chapter: ChapterKey; 
           </li>
         ))}
       </ul>
+    </>
+  );
+  if (parts === 'head') return head;
+  if (parts === 'body') return body;
+  return (
+    <>
+      {head}
+      {body}
     </>
   );
 }
@@ -74,7 +89,7 @@ const HANDOVER = 0.34; // half-width of a scene change, as a fraction of a chapt
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const easeInOutSine = (x: number) => -(Math.cos(Math.PI * x) - 1) / 2;
 
-type Geometry = { colTop: number; colH: number; stageH: number; vh: number; stickyTop: number };
+type Geometry = { titleMid: number; colTop: number; colH: number; stageH: number; vh: number; stickyTop: number };
 
 // Offset for a sticky element so its speed changes smoothly: it keeps moving
 // with the page as it reaches its sticky point and slows to rest over
@@ -131,7 +146,7 @@ function FlowText({ t, i }: { t: Messages; i: number }) {
   const p = useScrollProgress(ref, ['start end', 'end start']);
   const opacity = useTransform(p, [0.12, 0.4, 0.6, 0.88], [0.12, 1, 1, 0.12]);
   return (
-    <div ref={ref} className="flex h-[100vh] items-center">
+    <div ref={ref} data-anchor className="flex h-[100vh] items-center">
       <motion.div style={{ opacity }}>
         <ChapterText t={t} chapter={CHAPTERS[i].key} index={i} />
       </motion.div>
@@ -146,11 +161,26 @@ function Dot({ k, i }: { k: MotionValue<number>; i: number }) {
   return <motion.span className="h-1.5 rounded-full bg-ink" style={{ width, opacity }} />;
 }
 
+// The section title: one line on wide screens, broken at the comma on small ones.
+function SectionTitle({ t, className = '' }: { t: Messages; className?: string }) {
+  return (
+    <h2 className={`display text-ink ${className}`} style={{ fontSize: 'clamp(26px, 4vw, 56px)' }}>
+      <span className="block lg:inline">{t.chapters.title[0]}</span>
+      <span className="block lg:inline">{t.chapters.title[1]}</span>
+    </h2>
+  );
+}
+
+// Where the section title rests: a little above the middle, with the top of
+// the stage rising into view below it.
+const TITLE_AT = 0.4;
+
 function FlowChapters({ t }: { t: Messages }) {
+  const intro = useRef<HTMLDivElement>(null);
   const col = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
-  const geo = useRef<Geometry>({ colTop: 0, colH: 1, stageH: 1, vh: 900, stickyTop: 200 });
+  const geo = useRef<Geometry>({ titleMid: 0, colTop: 0, colH: 1, stageH: 1, vh: 900, stickyTop: 200 });
   const [stickyTop, setStickyTop] = useState(200);
 
   // Measure on layout changes only; reading layout every frame would stall.
@@ -158,19 +188,28 @@ function FlowChapters({ t }: { t: Messages }) {
     const measure = () => {
       const c = col.current;
       const s = stage.current;
-      if (!c || !s) return;
+      const h = intro.current;
+      if (!c || !s || !h) return;
       const vh = window.innerHeight;
       const stageH = s.offsetHeight;
       const rest = Math.max(80, (vh - stageH) / 2 + 28);
       const top = Math.round(rest + CUSHION / 2);
       // the sticky element travels within its own column, not the whole grid
       const track = s.parentElement ?? c;
-      geo.current = { colTop: track.getBoundingClientRect().top + window.scrollY, colH: track.offsetHeight, stageH, vh, stickyTop: top };
+      const box = h.getBoundingClientRect();
+      geo.current = {
+        titleMid: box.top + window.scrollY + box.height / 2,
+        colTop: track.getBoundingClientRect().top + window.scrollY,
+        colH: track.offsetHeight,
+        stageH,
+        vh,
+        stickyTop: top,
+      };
       setStickyTop(top);
     };
     measure();
     const observer = new ResizeObserver(measure);
-    [col.current, stage.current, document.body].forEach((el) => el && observer.observe(el));
+    [intro.current, col.current, stage.current, document.body].forEach((el) => el && observer.observe(el));
     window.addEventListener('resize', measure);
     return () => {
       observer.disconnect();
@@ -178,10 +217,23 @@ function FlowChapters({ t }: { t: Messages }) {
     };
   }, []);
 
-  // Each chapter is a page: its text centred and its scene settled. A flick
-  // moves one chapter at a time, so none is skipped by accident.
-  const pages = useCallback(() => CHAPTERS.map((_, i) => geo.current.colTop + i * geo.current.vh), []);
+  // The section title is the first page, so it is never swept past; then each
+  // chapter is a page: its text centred and its scene settled. A flick moves
+  // one page at a time, so none is skipped by accident.
+  const pages = useCallback(() => {
+    const g = geo.current;
+    return [g.titleMid - TITLE_AT * g.vh, ...CHAPTERS.map((_, i) => g.colTop + i * g.vh)];
+  }, []);
   useSnapPages(pages);
+  // Between the lit manifesto and the title there is nothing to stop on: the
+  // manifesto leaves as the title arrives, so that stretch is one shot.
+  const gap = useCallback(() => {
+    const opening = document.getElementById('top');
+    if (!opening) return null;
+    const top = opening.getBoundingClientRect().top + window.scrollY;
+    return [Math.round(top + OPENING_REST * (opening.offsetHeight - window.innerHeight)), Math.round(pages()[0])] as const;
+  }, [pages]);
+  useSnapGap(gap);
 
   const offset = useTransform(scrollY, (y) => {
     const g = geo.current;
@@ -208,33 +260,42 @@ function FlowChapters({ t }: { t: Messages }) {
   });
 
   return (
-    <div ref={col} className="shell-wide grid grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] gap-x-16 pb-[8vh]">
-      <div>
-        {CHAPTERS.map((c, i) => (
-          <FlowText key={c.key} t={t} i={i} />
-        ))}
-        {/* lengthens the row, so the stage stays until the last chapter's text has passed the middle */}
-        <div aria-hidden="true" className="h-[50vh]" />
-      </div>
-      <div className="relative">
-        <div ref={stage} className="sticky" style={{ top: stickyTop }}>
-          <motion.div style={{ y: offset }}>
-            <div className="relative overflow-hidden rounded-[32px] border border-hair bg-surface-2" style={{ aspectRatio: '1 / 0.82' }}>
-              <motion.div className="absolute inset-x-0 top-0 will-change-transform" style={{ height: `${N * 100}%`, y: stripY }}>
-                {CHAPTERS.map((c, i) => (
-                  <Panel key={c.key} t={t} i={i} playing={inView && settled === i} />
-                ))}
-              </motion.div>
-            </div>
-            <div className="mt-5 flex justify-center gap-2">
-              {CHAPTERS.map((c, i) => (
-                <Dot key={c.key} k={k} i={i} />
-              ))}
-            </div>
-          </motion.div>
+    <>
+      <div className="shell-wide">
+        <div ref={intro} data-anchor className="mb-[18vh]">
+          <Reveal>
+            <SectionTitle t={t} />
+          </Reveal>
         </div>
       </div>
-    </div>
+      <div ref={col} className="shell-wide grid grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] gap-x-16 pb-[8vh]">
+        <div>
+          {CHAPTERS.map((c, i) => (
+            <FlowText key={c.key} t={t} i={i} />
+          ))}
+          {/* lengthens the row, so the stage stays until the last chapter's text has passed the middle */}
+          <div aria-hidden="true" className="h-[50vh]" />
+        </div>
+        <div className="relative">
+          <div ref={stage} className="sticky" style={{ top: stickyTop }}>
+            <motion.div style={{ y: offset }}>
+              <div className="relative overflow-hidden rounded-[32px] border border-hair bg-surface-2" style={{ aspectRatio: '1 / 0.82' }}>
+                <motion.div className="absolute inset-x-0 top-0 will-change-transform" style={{ height: `${N * 100}%`, y: stripY }}>
+                  {CHAPTERS.map((c, i) => (
+                    <Panel key={c.key} t={t} i={i} playing={inView && settled === i} />
+                  ))}
+                </motion.div>
+              </div>
+              <div className="mt-5 flex justify-center gap-2">
+                {CHAPTERS.map((c, i) => (
+                  <Dot key={c.key} k={k} i={i} />
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -250,8 +311,11 @@ function StackedChapter({ t, i }: { t: Messages; i: number }) {
   const { key, Scene, tint } = CHAPTERS[i];
   const [r, g, b] = tint;
   return (
-    <div className="space-y-10">
+    <div>
       <Reveal>
+        <ChapterText t={t} chapter={key} index={i} parts="head" />
+      </Reveal>
+      <Reveal className="mt-6">
         <div ref={ref}>
           <StageFrame background={`radial-gradient(80% 70% at 70% 20%, rgba(${r}, ${g}, ${b}, 0.15), transparent 70%), radial-gradient(60% 60% at 10% 100%, rgba(${r}, ${g}, ${b}, 0.08), transparent 70%)`}>
             <div className="relative" style={{ aspectRatio: '680 / 540' }}>
@@ -262,8 +326,8 @@ function StackedChapter({ t, i }: { t: Messages; i: number }) {
           </StageFrame>
         </div>
       </Reveal>
-      <Reveal>
-        <ChapterText t={t} chapter={key} index={i} />
+      <Reveal className="mt-6">
+        <ChapterText t={t} chapter={key} index={i} parts="body" />
       </Reveal>
     </div>
   );
@@ -274,19 +338,14 @@ export function Chapters({ t }: { t: Messages }) {
   const wide = useMediaQuery('(min-width: 1024px)');
 
   return (
-    <section id="features" className="relative scroll-mt-16 pt-24 sm:pt-32">
-      <div className="shell-wide">
-        <Reveal className="mx-auto max-w-[46rem] text-center">
-          <h2 className="display text-ink" style={{ fontSize: 'clamp(28px, 4.4vw, 60px)' }}>
-            {t.chapters.title}
-          </h2>
-        </Reveal>
-      </div>
-
+    <section id="features" className="relative scroll-mt-16 pt-20 sm:pt-32">
       {wide && !reduce ? (
         <FlowChapters t={t} />
       ) : (
-        <div className="shell-wide mt-16 space-y-24 pb-16 sm:pb-24">
+        <div className="shell-wide space-y-16 pb-16 sm:space-y-24 sm:pb-24">
+          <Reveal>
+            <SectionTitle t={t} />
+          </Reveal>
           {CHAPTERS.map((c, i) => (
             <StackedChapter key={c.key} t={t} i={i} />
           ))}

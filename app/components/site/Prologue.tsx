@@ -2,7 +2,7 @@
 import { memo, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { easeIn, motion, useMotionValueEvent, useTransform, type MotionValue } from 'framer-motion';
 import type { Messages } from '@/lib/i18n';
-import { EASE_OUT, Icon, useMediaQuery, useReducedMotion, useScrollProgress } from './primitives';
+import { EASE_OUT, Icon, useReducedMotion, useScrollProgress } from './primitives';
 import { RingStage } from './RingStage';
 import { useSnapShots } from './scroll';
 
@@ -76,7 +76,21 @@ const ManifestoText = memo(function ManifestoText({ t, isZh, progress }: { t: Me
   );
 });
 
-const HeroCopy = memo(function HeroCopy({ t, cta, meta, onDirectDownload }: { t: Messages; cta: HeroCta; meta: string; onDirectDownload: () => void }) {
+// `parts`: the whole block (wide screens), or the headline and the rest
+// separately (phones, where the headline sits inside the ring).
+const HeroCopy = memo(function HeroCopy({
+  t,
+  cta,
+  meta,
+  onDirectDownload,
+  parts = 'all',
+}: {
+  t: Messages;
+  cta: HeroCta;
+  meta: string;
+  onDirectDownload: () => void;
+  parts?: 'all' | 'title' | 'body';
+}) {
   const reduce = useReducedMotion();
   // A short intro on load only; everything after is driven by scrolling.
   const rise = (delay: number) =>
@@ -88,30 +102,35 @@ const HeroCopy = memo(function HeroCopy({ t, cta, meta, onDirectDownload }: { t:
           transition: { duration: 1.1, delay, ease: EASE_OUT },
         };
 
+  const title = (
+    <motion.h1 {...rise(0.1)} className="display text-ink" style={{ fontSize: 'var(--hero-h1)' }}>
+      <span className="block">{t.hero.title[0]}</span>
+      <span className="block" style={{ color: 'var(--title-2)' }}>
+        {t.hero.title[1]}
+      </span>
+    </motion.h1>
+  );
+  if (parts === 'title') return <div className="text-center">{title}</div>;
+
   return (
     <div className="flex flex-col items-center text-center">
-      <motion.a {...rise(0.05)} href="https://github.com/lawnvi/whisper" target="_blank" rel="noopener noreferrer" className="chip hover:border-[var(--hair-2)]">
-        <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'linear-gradient(135deg, var(--ring-a), var(--ring-c))' }} />
-        {t.hero.badge}
-        <Icon name="arrowRight" className="h-3.5 w-3.5 text-muted" />
-      </motion.a>
+      {parts === 'all' && title}
 
-      <motion.h1 {...rise(0.15)} className="display mt-7 text-ink" style={{ fontSize: 'var(--hero-h1)' }}>
-        <span className="block">{t.hero.title[0]}</span>
-        <span className="block" style={{ color: 'var(--title-2)' }}>
-          {t.hero.title[1]}
-        </span>
-      </motion.h1>
-
-      <motion.p {...rise(0.28)} className="mt-6 text-muted" style={{ fontSize: 'var(--hero-lead)', lineHeight: 1.6, maxWidth: 'var(--hero-copy)' }}>
-        {t.hero.lead.map((line) => (
+      <motion.p
+        {...rise(0.28)}
+        className={`${parts === 'all' ? 'mt-6' : ''} break-keep text-muted [text-wrap:balance]`}
+        style={{ fontSize: 'var(--hero-lead)', lineHeight: 1.6, maxWidth: 'var(--hero-copy)' }}
+      >
+        {t.hero.lead.map((line, i) => (
           <span key={line} className="md:block">
+            {/* sentences run on in one paragraph on phones; Latin needs the space */}
+            {i > 0 && !/[\u3000-\u9fff]/.test(line) && ' '}
             {line}
           </span>
         ))}
       </motion.p>
 
-      <motion.div {...rise(0.4)} className="mt-9 flex flex-wrap items-center justify-center gap-3">
+      <motion.div {...rise(0.4)} className="mt-7 flex flex-wrap items-center justify-center gap-3 md:mt-9">
         <a href={cta.href} onClick={cta.direct ? onDirectDownload : undefined} className="btn btn-primary">
           <Icon name="download" className="h-[18px] w-[18px]" strokeWidth={2} />
           {cta.label}
@@ -129,13 +148,13 @@ const HeroCopy = memo(function HeroCopy({ t, cta, meta, onDirectDownload }: { t:
 });
 
 // where the opening shot comes to rest: the manifesto fully lit
-const REST = 0.88;
+export const OPENING_REST = 0.88;
+const REST = OPENING_REST;
 
 const STAGE_VARS = { '--stage': 'min(clamp(780px, 90vh, 980px), calc(100vw - 32px))' } as CSSProperties;
 
 export function Prologue({ t, isZh, cta, meta, onDirectDownload }: { t: Messages; isZh: boolean; cta: HeroCta; meta: string; onDirectDownload: () => void }) {
   const reduce = useReducedMotion();
-  const wide = useMediaQuery('(min-width: 768px)') ?? true;
   const ref = useRef<HTMLElement>(null);
   const p = useScrollProgress(ref, ['start start', 'end end']);
   // From the headline to the fully lit manifesto is one shot: the page never
@@ -145,13 +164,18 @@ export function Prologue({ t, isZh, cta, meta, onDirectDownload }: { t: Messages
   // 0 – 0.16: the headline lifts away
   const copyOpacity = useTransform(p, [0, 0.12], [1, 0]);
   const copyY = useTransform(p, [0, 0.16], [0, -90]);
-  const hintOpacity = useTransform(p, [0, 0.04], [1, 0]);
   // 0 – 0.34: the camera flies through the ring
   const detailOpacity = useTransform(p, [0, 0.08], [1, 0]);
   const ringScale = useTransform(p, [0, 0.34], [1, 3.1], { ease: easeIn });
   const ringOpacity = useTransform(p, [0.2, 0.33], [1, 0]);
-  const ringY = useTransform(p, [0, 0.24], wide ? ['0vh', '0vh'] : ['0vh', '-34vh']);
-  const roomLight = useTransform(p, [0.08, 0.34], [0, 1]);
+  // On phones the ring sits above the middle of the view; it drifts to the
+  // centre as the camera flies in.
+  const slot = useRef<HTMLDivElement>(null);
+  const shift = useRef(0);
+  const ringY = useTransform(p, (v) => Math.min(1, v / 0.24) * shift.current);
+  // the light goes down as the manifesto leaves, so the pinned view has no edge when it scrolls away
+  const roomLight = useTransform(p, [0.08, 0.34, 0.9, 1], [0, 1, 1, 0]);
+  const ambientLight = useTransform(p, [0.9, 1], [1, 0]);
   // 0.26 – 0.92: inside, the manifesto lights up word by word
   const manifestoOpacity = useTransform(p, [0.24, 0.36], [0, 1]);
   const manifestoScale = useTransform(p, [0.22, 0.42], [0.92, 1]);
@@ -162,6 +186,8 @@ export function Prologue({ t, isZh, cta, meta, onDirectDownload }: { t: Messages
   useLayoutEffect(() => {
     const measure = () => {
       if (ref.current) range.current = Math.max(1, ref.current.offsetHeight - window.innerHeight);
+      const s = slot.current;
+      if (s) shift.current = ((s.offsetParent as HTMLElement | null)?.clientHeight ?? window.innerHeight) / 2 - (s.offsetTop + s.offsetHeight / 2);
     };
     measure();
     window.addEventListener('resize', measure);
@@ -209,7 +235,9 @@ export function Prologue({ t, isZh, cta, meta, onDirectDownload }: { t: Messages
   return (
     <section ref={ref} id="top" className="hero relative h-[380vh]" style={STAGE_VARS}>
       <div className="sticky top-0 h-[100svh] overflow-hidden">
-        {ambient}
+        <motion.div className="absolute inset-0" style={{ opacity: ambientLight }}>
+          {ambient}
+        </motion.div>
         {/* once inside the ring, the whole view takes on its light */}
         <motion.div
           className="pointer-events-none absolute inset-0"
@@ -220,39 +248,44 @@ export function Prologue({ t, isZh, cta, meta, onDirectDownload }: { t: Messages
           }}
         />
 
-        {/* the ring: centred behind the headline, or below it on phones */}
-        <div className="absolute left-1/2 top-[84%] aspect-square w-[min(84vw,400px)] -translate-x-1/2 -translate-y-1/2 md:top-[calc(50%+32px)] md:w-[var(--stage)]">
-          <motion.div className="h-full w-full will-change-transform" style={{ scale: ringScale, opacity: ringOpacity, y: ringY }}>
-            <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.6, ease: EASE_OUT }} className="h-full w-full">
-              <RingStage t={t} className="h-full w-full" detailOpacity={detailOpacity} paused={zoomed} />
-              <motion.span
-                style={{ opacity: detailOpacity }}
-                className="pointer-events-none absolute inset-0 grid place-items-center text-[clamp(30px,10vw,44px)] font-light tracking-[0.04em] text-faint md:hidden"
-              >
-                whisper
-              </motion.span>
+        {/* Both layouts are rendered and CSS picks one, so the first paint is
+            already right on any screen. The hidden ring is out of view and idle. */}
+        <div className="hidden md:contents">
+          {/* the ring, with the headline inside it */}
+          <div className="absolute left-1/2 top-[calc(50%+32px)] aspect-square w-[var(--stage)] -translate-x-1/2 -translate-y-1/2">
+            <motion.div className="h-full w-full will-change-transform" style={{ scale: ringScale, opacity: ringOpacity }}>
+              <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.6, ease: EASE_OUT }} className="h-full w-full">
+                <RingStage t={t} className="h-full w-full" detailOpacity={detailOpacity} paused={zoomed} />
+              </motion.div>
             </motion.div>
+          </div>
+          <motion.div className="absolute inset-0 flex items-center justify-center px-5 pt-16" style={{ opacity: copyOpacity, y: copyY }}>
+            <HeroCopy t={t} cta={cta} meta={meta} onDirectDownload={onDirectDownload} />
           </motion.div>
         </div>
-
-        {/* the headline */}
-        <motion.div className="absolute inset-x-0 top-0 px-5 pt-28 md:inset-0 md:flex md:items-center md:justify-center md:pt-16" style={{ opacity: copyOpacity, y: copyY }}>
-          <HeroCopy t={t} cta={cta} meta={meta} onDirectDownload={onDirectDownload} />
-        </motion.div>
+        {/* Phones: the ring fills the upper part of the view with the headline
+            inside it, as on wide screens; the rest of the copy sits below. */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-5 pb-4 pt-16 md:hidden">
+          <div ref={slot} className="relative aspect-square w-[min(86vw,380px)] shrink-0">
+            <motion.div className="h-full w-full will-change-transform" style={{ scale: ringScale, opacity: ringOpacity, y: ringY }}>
+              <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.6, ease: EASE_OUT }} className="h-full w-full">
+                <RingStage t={t} className="h-full w-full" detailOpacity={detailOpacity} paused={zoomed} receipts={false} />
+              </motion.div>
+            </motion.div>
+            <motion.div className="absolute inset-0 flex items-center justify-center px-[8%]" style={{ opacity: copyOpacity, y: copyY }}>
+              <HeroCopy t={t} cta={cta} meta={meta} onDirectDownload={onDirectDownload} parts="title" />
+            </motion.div>
+          </div>
+          <motion.div className="mt-6 w-full" style={{ opacity: copyOpacity, y: copyY }}>
+            <HeroCopy t={t} cta={cta} meta={meta} onDirectDownload={onDirectDownload} parts="body" />
+          </motion.div>
+        </div>
 
         {/* inside the ring */}
         <motion.div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6" style={{ opacity: manifestoOpacity, scale: manifestoScale, y: departure }}>
           <ManifestoText t={t} isZh={isZh} progress={reveal} />
         </motion.div>
 
-        <motion.div className="pointer-events-none absolute inset-x-0 bottom-7 hidden justify-center md:flex" style={{ opacity: hintOpacity }}>
-          <span className="flex flex-col items-center gap-2 text-[12px] text-faint">
-            {t.hero.scroll}
-            <span className="relative h-8 w-px overflow-hidden bg-[var(--hair)]">
-              <span className="scroll-hint absolute inset-x-0 top-0 h-3 bg-[var(--muted)]" />
-            </span>
-          </span>
-        </motion.div>
       </div>
     </section>
   );

@@ -418,14 +418,20 @@ html.lenis body {
 
 /* hero: the ring and the type inside it share one size */
 .hero {
-  --hero-h1: clamp(40px, 11vw, 56px);
-  --hero-lead: 17px;
-  --hero-copy: 34rem;
+  /* phones: the headline sits inside the ring, the rest below it;
+     sized so a line of about eight characters stays on one line */
+  --hero-h1: clamp(26px, 8.4vw, 34px);
+  --hero-lead: 15px;
+  --hero-copy: 22rem;
+}
+
+.hero:lang(en) {
+  --hero-h1: clamp(20px, 5.6vw, 26px);
 }
 
 @media (min-width: 768px) {
   .hero {
-    --hero-h1: calc(var(--stage) * 0.078);
+    --hero-h1: calc(var(--stage) * 0.07);
     --hero-lead: clamp(16px, calc(var(--stage) * 0.021), 20px);
     --hero-copy: calc(var(--stage) * 0.7);
   }
@@ -452,6 +458,15 @@ html.lenis body {
 }
 
 /* FAQ disclosure */
+/* a horizontal row you swipe through, without a visible scrollbar */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 details > summary {
   list-style: none;
 }
@@ -460,15 +475,3 @@ details > summary::-webkit-details-marker {
   display: none;
 }
 
-@keyframes scroll-hint {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(300%);
-  }
-}
-
-.scroll-hint {
-  animation: scroll-hint 1.8s cubic-bezier(0.6, 0, 0.4, 1) infinite;
-}

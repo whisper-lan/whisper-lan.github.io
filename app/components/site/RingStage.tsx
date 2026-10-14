@@ -104,11 +104,13 @@ export function RingStage({
   className = '',
   detailOpacity,
   paused = false,
+  receipts = true,
 }: {
   t: Messages;
   className?: string;
   detailOpacity?: MotionValue<number>;
   paused?: boolean;
+  receipts?: boolean;
 }) {
   const reduce = useReducedMotion();
   const uid = useId().replace(/:/g, '');
@@ -212,7 +214,7 @@ export function RingStage({
               </div>
 
               <AnimatePresence>
-                {receiving && arrivedCopy && arrivedEvent && (
+                {receipts && receiving && arrivedCopy && arrivedEvent && (
                   <motion.div
                     key={arrived}
                     initial={{ opacity: 0, y: above ? 8 : -8, scale: 0.96 }}

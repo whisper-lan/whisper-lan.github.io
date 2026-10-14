@@ -64,6 +64,14 @@ export const chapterPages = (page) =>
     return [0, 1, 2, 3].map((i) => top + i * window.innerHeight);
   });
 
+// Where the features section title rests (TITLE_AT in Chapters.tsx): the
+// first "page" of the section, before chapter 1.
+export const titlePage = (page) =>
+  page.evaluate(() => {
+    const box = document.querySelector('#features h2').parentElement.parentElement.getBoundingClientRect();
+    return Math.round(box.top + window.scrollY + box.height / 2 - 0.4 * window.innerHeight);
+  });
+
 // Where the opening shot comes to rest (REST in Prologue.tsx).
 export const openingRest = (page) =>
   page.evaluate(() => Math.round(0.88 * (document.getElementById('top').offsetHeight - window.innerHeight)));

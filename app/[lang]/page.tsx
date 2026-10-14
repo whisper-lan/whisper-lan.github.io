@@ -3,13 +3,14 @@ import { HomePage } from '../components/HomePage';
 import { Metadata } from 'next';
 import { SITE_CONFIG } from '@/lib/constants';
 import { fetchReleaseInfo } from '@/lib/release';
+import { messages } from '@/lib/i18n';
 
 // 从 app/page.tsx (Home 组件) 或共享的 i18n 文件导入 messages
 // 这里为了示例，我们假设可以直接引用或有一个获取翻译的函数
 // 实际项目中，你可能需要将 messages 移到共享位置
 const messagesForMetadata = {
     'zh': { // Assuming URL /zh maps to zh-CN content
-        title: 'Whisper - 端到端加密的局域网设备协作工具',
+        title: messages['zh-CN'].meta.title,
         description: 'Whisper 支持局域网加密传文件、二维码配对、断点续传、通知与声音共享；支持视频 App 通过 DLNA 投屏到电脑，以及 Android 手机体感鼠标、触控板和虚拟键盘控制电脑。',
         ogLocale: 'zh_CN',
         keywords: [
@@ -20,7 +21,7 @@ const messagesForMetadata = {
         ]
     },
     'en': {
-        title: 'Whisper: encrypted LAN transfer and device collaboration',
+        title: messages.en.meta.title,
         description: 'Share files, audio, and input over encrypted LAN sessions. Cast video apps to your computer via DLNA, or control it with an Android motion mouse, touchpad, and virtual keyboard.',
         ogLocale: 'en_US',
         keywords: [

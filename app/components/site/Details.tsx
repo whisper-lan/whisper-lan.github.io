@@ -4,13 +4,15 @@ import type { ReactNode } from 'react';
 import type { Messages } from '@/lib/i18n';
 import { Icon, Reveal, useReducedMotion } from './primitives';
 
-function Card({ title, desc, children, className = '', visualClass = 'h-[230px]', delay = 0 }: { title: string; desc: string; children: ReactNode; className?: string; visualClass?: string; delay?: number }) {
+// On phones the cards sit in one row you swipe through, each a little narrower
+// than the screen so the next one shows; from tablets up they form a grid.
+function Card({ title, desc, children, className = '', visualClass = 'md:h-[230px]', delay = 0 }: { title: string; desc: string; children: ReactNode; className?: string; visualClass?: string; delay?: number }) {
   return (
-    <Reveal delay={delay} className={`card flex flex-col overflow-hidden ${className}`}>
-      <div className={`relative overflow-hidden ${visualClass}`}>{children}</div>
-      <div className="px-7 pb-7 pt-1">
-        <h3 className="text-[19px] font-semibold tracking-[-0.01em] text-ink">{title}</h3>
-        <p className="mt-2 text-[15px] leading-[1.7] text-muted">{desc}</p>
+    <Reveal delay={delay} className={`card flex w-[80vw] max-w-[340px] shrink-0 snap-center flex-col overflow-hidden md:w-auto md:max-w-none ${className}`}>
+      <div className={`relative h-[190px] overflow-hidden ${visualClass}`}>{children}</div>
+      <div className="px-5 pb-5 pt-1 md:px-7 md:pb-7">
+        <h3 className="text-[17px] font-semibold tracking-[-0.01em] text-ink md:text-[19px]">{title}</h3>
+        <p className="mt-1.5 text-[14px] leading-[1.7] text-muted md:mt-2 md:text-[15px]">{desc}</p>
       </div>
     </Reveal>
   );
@@ -189,7 +191,7 @@ function MultiVisual({ t }: { t: Messages }) {
   const peers = t.scenes.peers;
   const icons = ['phone', 'desktop', 'laptop'];
   return (
-    <div className="absolute inset-0 flex items-center justify-center px-6">
+    <div className="absolute inset-0 flex scale-[0.78] items-center justify-center px-6 md:scale-100">
       <div className="flex items-center gap-3 rounded-full border border-hair bg-surface py-2 pl-2 pr-4 shadow-card">
         <span className="grid h-9 w-9 place-items-center rounded-full bg-surface-2 text-ink-2">
           <Icon name="laptop" className="h-[18px] w-[18px]" />
@@ -224,18 +226,18 @@ function MultiVisual({ t }: { t: Messages }) {
 export function Details({ t }: { t: Messages }) {
   const d = t.details.items;
   return (
-    <section className="py-24 sm:py-32">
+    <section className="py-16 sm:py-32">
       <div className="shell">
         <Reveal>
-          <h2 className="display max-w-[20ch] whitespace-pre-line text-ink" style={{ fontSize: 'clamp(30px, 4vw, 52px)' }}>
+          <h2 className="display max-w-[20ch] whitespace-pre-line text-ink" style={{ fontSize: 'clamp(26px, 4vw, 52px)' }}>
             {t.details.title}
           </h2>
         </Reveal>
-        <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          <Card title={d.quickSend.title} desc={d.quickSend.desc} className="md:col-span-2" visualClass="h-[250px]">
+        <div className="no-scrollbar -mx-5 mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-1 md:mx-0 md:mt-14 md:grid md:snap-none md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-3">
+          <Card title={d.quickSend.title} desc={d.quickSend.desc} className="md:col-span-2" visualClass="md:h-[250px]">
             <QuickSendVisual t={t} />
           </Card>
-          <Card title={d.notify.title} desc={d.notify.desc} visualClass="h-[250px]" delay={0.05}>
+          <Card title={d.notify.title} desc={d.notify.desc} visualClass="md:h-[250px]" delay={0.05}>
             <NotifyVisual t={t} />
           </Card>
           <Card title={d.clipboard.title} desc={d.clipboard.desc}>
@@ -247,7 +249,7 @@ export function Details({ t }: { t: Messages }) {
           <Card title={d.qr.title} desc={d.qr.desc} delay={0.1}>
             <QrVisual />
           </Card>
-          <Card title={d.multi.title} desc={d.multi.desc} className="md:col-span-2 lg:col-span-3" visualClass="h-[230px]">
+          <Card title={d.multi.title} desc={d.multi.desc} className="md:col-span-2 lg:col-span-3">
             <MultiVisual t={t} />
           </Card>
         </div>

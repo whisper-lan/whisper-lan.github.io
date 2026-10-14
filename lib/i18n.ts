@@ -3,6 +3,7 @@
 export type Language = 'en' | 'zh-CN';
 
 const zh = {
+  meta: { title: 'Whisper - 端到端加密的局域网设备协作工具' },
   nav: { features: '功能', security: '安全', download: '下载', faq: '问答', getApp: '下载' },
   a11y: {
     theme: '切换亮暗主题',
@@ -13,9 +14,8 @@ const zh = {
     github: '在 GitHub 上查看源码',
   },
   hero: {
-    badge: '开源免费 · 不用注册账号',
-    title: ['近在咫尺', '何必绕道云端'],
-    lead: ['让电脑和手机在局域网里直接相连。', '文件、剪贴板、声音与键鼠，端到端加密传递，不经过任何服务器。'],
+    title: ['悄悄地说着', '你也不懂的话'],
+    lead: ['在同一个局域网里传文件、同步剪贴板、共享声音与键鼠。', '端到端加密，不经过任何服务器。'],
     download: '下载',
     downloadFor: '下载 {platform} 版',
     allPlatforms: '全部平台',
@@ -29,13 +29,12 @@ const zh = {
       { label: '文件夹', detail: '1.2 GB' },
     ],
     received: '已送达',
-    scroll: '向下了解',
   },
   manifesto: {
     body: '花下的照片，蝉声里的歌，秋灯下的字，雪天的电影，\n都不必托付给云。凑近些，在耳边说就好。',
   },
   chapters: {
-    title: '一个应用，接管设备之间的所有往来。',
+    title: ['一个应用，', '接管设备之间的所有往来。'],
     items: {
       transfer: {
         kicker: '传输',
@@ -69,14 +68,14 @@ const zh = {
     nearby: '附近可连接',
     composer: '发点什么…',
     peers: [
-      { name: 'Pixel 9', initial: 'P', last: '四月' },
+      { name: 'Pixel 9', initial: 'P', last: '六月' },
       { name: '书房 iMac', initial: 'i', last: '当前已连接' },
       { name: 'ThinkPad', initial: 'T', last: '附近可连接' },
     ],
     msgIn: '那天拍的照片，还在吗？',
     msgOut: '都在，整个文件夹发你',
     photoName: 'IMG_1001.HEIC',
-    folderName: '四月',
+    folderName: '六月',
     folderMeta: '248 个文件',
     verified: '已校验',
     workspace: '键鼠工作区',
@@ -208,6 +207,7 @@ const zh = {
 export type Messages = typeof zh;
 
 const en: Messages = {
+  meta: { title: 'Whisper: encrypted LAN transfer and device collaboration' },
   nav: { features: 'Features', security: 'Security', download: 'Download', faq: 'FAQ', getApp: 'Download' },
   a11y: {
     theme: 'Toggle light / dark theme',
@@ -218,8 +218,7 @@ const en: Messages = {
     github: 'View the source on GitHub',
   },
   hero: {
-    badge: 'Free & open source · No account needed',
-    title: ['Side by side.', 'No cloud in between.'],
+    title: ['No need to shout.', 'Close enough to whisper.'],
     lead: ['Whisper connects your computers and phones on your local network.', 'Files, clipboard, sound, and input travel encrypted, end to end.'],
     download: 'Download',
     downloadFor: 'Download for {platform}',
@@ -234,13 +233,12 @@ const en: Messages = {
       { label: 'Folder', detail: '1.2 GB' },
     ],
     received: 'Delivered',
-    scroll: 'Learn more',
   },
   manifesto: {
     body: 'Blossom photos, cicada songs, lamplit words, a snow-day film —\nnone of it needs the cloud. Lean in, and say it softly.',
   },
   chapters: {
-    title: 'One app for everything that moves between your devices.',
+    title: ['One app', 'for everything between your devices.'],
     items: {
       transfer: {
         kicker: 'Transfer',
@@ -250,7 +248,7 @@ const en: Messages = {
       },
       input: {
         kicker: 'Input',
-        title: ['One keyboard and mouse,', 'every computer.'],
+        title: ['One keyboard,', 'every computer.'],
         desc: 'Arrange other screens next to yours and the pointer crosses over at the edge, with the clipboard following along. Away from the desk, your Android phone becomes a motion mouse, touchpad, and keyboard.',
         points: ['macOS, Windows, and Linux (X11) control each other', 'Works on the Windows lock screen too', 'Ctrl + Alt + Esc brings input back at any time'],
       },
@@ -262,7 +260,7 @@ const en: Messages = {
       },
       cast: {
         kicker: 'Casting · Experimental',
-        title: ['Pick on your phone.', 'Watch on your computer.'],
+        title: ['Pick on your phone.', 'Watch it bigger.'],
         desc: 'Turn on TV casting and your computer shows up in the cast list of video apps on the same network. Video plays in its own window, with no Whisper install needed on the phone.',
         points: ['Receive on macOS, Windows, and Linux', 'Pause, seek, adjust volume, go full screen', "Built on DLNA, separate from Whisper's encrypted sessions"],
       },
@@ -274,14 +272,14 @@ const en: Messages = {
     nearby: 'Nearby',
     composer: 'Say something…',
     peers: [
-      { name: 'Pixel 9', initial: 'P', last: 'April' },
+      { name: 'Pixel 9', initial: 'P', last: 'June' },
       { name: 'Studio iMac', initial: 'i', last: 'Connected' },
       { name: 'ThinkPad', initial: 'T', last: 'Nearby' },
     ],
     msgIn: 'Still have the photos from that day?',
     msgOut: 'All of them. Sending the folder',
     photoName: 'IMG_1001.HEIC',
-    folderName: 'April',
+    folderName: 'June',
     folderMeta: '248 files',
     verified: 'Verified',
     workspace: 'Input workspace',

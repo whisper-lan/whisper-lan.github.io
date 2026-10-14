@@ -10,10 +10,11 @@ import { useReducedMotion } from './primitives';
 //
 // Sections can also tell the page where it may come to rest:
 //
-// - Shots (useSnapShots): a stretch of scroll between two finished states,
-//   such as the opening fly-through. Let go inside one and the page carries on
-//   to the finished state in the direction it was moving; a nudge that barely
-//   entered falls back.
+// - Shots (useSnapShots, useSnapGap): a stretch of scroll between two finished
+//   states, such as the opening fly-through. Let go inside one and the page
+//   carries on to the finished state in the direction it was moving; a nudge
+//   that barely entered falls back, and a gesture that came in from outside
+//   stops at the end it came in by.
 // - Pages (useSnapPages): resting points a reader should land on, such as each
 //   feature chapter centred. A gesture moves at most one page: what the reader
 //   drags is followed as it is, but momentum never carries past the next page.
@@ -23,7 +24,8 @@ import { useReducedMotion } from './primitives';
 // stop (a cubic Hermite curve), so there is no halt-and-restart and no jolt.
 
 type Decision = { y: number; rest: number; dir: number; origin: number | null };
-type Zone = (d: Decision) => { target: number; kind: 'shot' | 'page' } | null;
+// `owns` says whether the page is currently inside the zone; `decide` says where to rest.
+type Zone = { owns: (y: number) => boolean; decide: (d: Decision) => { target: number; kind: 'shot' | 'page' } | null };
 const zones = new Set<Zone>();
 
 const clamp = (min: number, v: number, max: number) => Math.min(max, Math.max(min, v));
@@ -35,40 +37,80 @@ const NOTCH_GAP = 120; // the same for a notched mouse wheel, whose clicks arriv
 const SETTLE_DELAY = 140; // ms of stillness for anything else (touch, keys, scrollbar)
 const MAX_SLOPE = 2.4; // Hermite start slope beyond which the curve would overshoot
 
-// `intervals` are fractions of the pinned element's scroll range
-// (0 = its top reaches the top of the view, 1 = its bottom reaches the bottom).
-export function useSnapShots(ref: RefObject<HTMLElement | null>, intervals: [number, number][], enabled = true) {
-  const key = intervals.map(([a, b]) => `${a}:${b}`).join(',');
-  useEffect(() => {
-    if (!enabled) return;
-    const fractions = key.split(',').map((pair) => pair.split(':').map(Number) as [number, number]);
-    const zone: Zone = ({ rest, dir }) => {
-      const el = ref.current;
-      if (!el) return null;
-      const top = el.getBoundingClientRect().top + window.scrollY;
-      const range = el.offsetHeight - window.innerHeight;
-      for (const [fa, fb] of fractions) {
-        const a = Math.round(top + fa * range);
-        const b = Math.round(top + fb * range);
+type Span = readonly [number, number];
+
+function shotZone(bounds: () => Span[]): Zone {
+  return {
+    owns: (y) => bounds().some(([a, b]) => y > a + 1 && y < b - 1),
+    decide: ({ rest, dir, origin }) => {
+      for (const [a, b] of bounds()) {
         if (rest <= a + 1 || rest >= b - 1) continue;
+        // came in from outside: stop at the end it came in by, one stop per gesture
+        if (origin !== null && dir < 0 && origin > b + 1) return { target: b, kind: 'shot' };
+        if (origin !== null && dir > 0 && origin < a - 1) return { target: a, kind: 'shot' };
         const f = (rest - a) / (b - a);
         return { target: dir > 0 ? (f < DEAD_ZONE ? a : b) : f > 1 - DEAD_ZONE ? b : a, kind: 'shot' };
       }
       return null;
-    };
+    },
+  };
+}
+
+function useZone(make: () => Zone, deps: unknown[], enabled: boolean) {
+  useEffect(() => {
+    if (!enabled) return;
+    const zone = make();
     zones.add(zone);
     return () => {
       zones.delete(zone);
     };
-  }, [ref, key, enabled]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...deps, enabled]);
+}
+
+// `intervals` are fractions of the pinned element's scroll range
+// (0 = its top reaches the top of the view, 1 = its bottom reaches the bottom).
+export function useSnapShots(ref: RefObject<HTMLElement | null>, intervals: [number, number][], enabled = true) {
+  const key = intervals.map(([a, b]) => `${a}:${b}`).join(',');
+  useZone(
+    () => {
+      const fractions = key.split(',').map((pair) => pair.split(':').map(Number) as [number, number]);
+      return shotZone(() => {
+        const el = ref.current;
+        if (!el) return [];
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        const range = el.offsetHeight - window.innerHeight;
+        return fractions.map(([fa, fb]) => [Math.round(top + fa * range), Math.round(top + fb * range)] as const);
+      });
+    },
+    [ref, key],
+    enabled,
+  );
+}
+
+// A shot between two resting points in different sections, in page pixels,
+// such as the stretch from the manifesto to the next section's title.
+export function useSnapGap(span: () => Span | null, enabled = true) {
+  useZone(
+    () =>
+      shotZone(() => {
+        const s = span();
+        return s && s[1] - s[0] > 4 ? [s] : [];
+      }),
+    [span],
+    enabled,
+  );
 }
 
 // `points` returns the resting scroll positions in page pixels, in order.
 // It is called on every decision, so it should read cached measurements.
 export function useSnapPages(points: () => number[], enabled = true) {
-  useEffect(() => {
-    if (!enabled) return;
-    const zone: Zone = ({ y, rest, dir, origin }) => {
+  useZone(() => {
+    const owns = (y: number) => {
+      const p = points();
+      return p.length > 1 && y >= p[0] - 1 && y <= p[p.length - 1] + 1;
+    };
+    const decide: Zone['decide'] = ({ y, rest, dir, origin }) => {
       const p = points();
       const n = p.length;
       if (n < 2) return null;
@@ -93,16 +135,16 @@ export function useSnapPages(points: () => number[], enabled = true) {
       const ahead = dir > 0 ? p.find((x) => x > y + 1) : [...p].reverse().find((x) => x < y - 1);
       return ahead === undefined ? null : { target: ahead, kind: 'page' };
     };
-    zones.add(zone);
-    return () => {
-      zones.delete(zone);
-    };
-  }, [points, enabled]);
+    return { owns, decide };
+  }, [points], enabled);
 }
 
+// The zone the page is in decides first, so a gesture that starts among the
+// pages moves one page even if its momentum would carry it into a shot.
 function decide(d: Decision) {
-  for (const zone of zones) {
-    const result = zone(d);
+  const all = [...zones];
+  for (const zone of [...all.filter((z) => z.owns(d.y)), ...all.filter((z) => !z.owns(d.y))]) {
+    const result = zone.decide(d);
     if (result) return result;
   }
   return null;

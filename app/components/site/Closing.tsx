@@ -8,41 +8,52 @@ import { GITHUB } from './links';
 export function Faq({ t, isZh }: { t: Messages; isZh: boolean }) {
   const f = t.faq;
   return (
-    <section id="faq" className="scroll-mt-16 py-24 sm:py-32">
-      <div className="shell grid gap-12 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] lg:gap-20">
+    <section id="faq" className="scroll-mt-16 py-16 sm:py-32">
+      <div className="shell grid gap-6 sm:gap-12 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] lg:gap-20">
         <Reveal className="lg:sticky lg:top-28 lg:self-start">
-          <h2 className="display text-ink" style={{ fontSize: 'clamp(32px, 4vw, 52px)' }}>
+          <h2 className="display text-ink" style={{ fontSize: 'clamp(26px, 4vw, 52px)' }}>
             {f.title}
           </h2>
-          <p className="mt-6 text-[15px] text-muted">{f.more}</p>
-          <div className="mt-3 flex flex-col items-start gap-2 text-[15px]">
-            <a href={isZh ? GITHUB.guide.zh : GITHUB.guide.en} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-accent hover:underline">
-              {f.guide}
-              <Icon name="arrowUpRight" className="h-3.5 w-3.5" />
-            </a>
-            <a href={GITHUB.issues} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-accent hover:underline">
-              {f.issue}
-              <Icon name="arrowUpRight" className="h-3.5 w-3.5" />
-            </a>
-          </div>
+          <FaqMore t={t} isZh={isZh} className="mt-6 hidden lg:block" />
         </Reveal>
         <Reveal delay={0.05}>
           <div className="border-t border-hair">
             {f.items.map((item) => (
               <details key={item.q} className="group border-b border-hair">
-                <summary className="flex cursor-pointer items-center justify-between gap-6 py-6 text-[17px] font-medium text-ink transition-colors hover:text-ink-2">
+                <summary className="flex cursor-pointer items-center justify-between gap-4 py-4 text-[15.5px] font-medium text-ink transition-colors hover:text-ink-2 sm:gap-6 sm:py-6 sm:text-[17px]">
                   {item.q}
                   <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-hair text-muted transition-transform duration-300 group-open:rotate-45">
                     <Icon name="plus" className="h-3.5 w-3.5" strokeWidth={2} />
                   </span>
                 </summary>
-                <p className="-mt-1 max-w-[44rem] pb-7 pr-12 text-[15.5px] leading-[1.8] text-muted">{item.a}</p>
+                <p className="-mt-1 max-w-[44rem] pb-5 pr-8 text-[14.5px] leading-[1.75] text-muted sm:pb-7 sm:pr-12 sm:text-[15.5px] sm:leading-[1.8]">{item.a}</p>
               </details>
             ))}
           </div>
+          {/* phones: the way out comes after the questions, not before */}
+          <FaqMore t={t} isZh={isZh} className="mt-6 lg:hidden" />
         </Reveal>
       </div>
     </section>
+  );
+}
+
+function FaqMore({ t, isZh, className }: { t: Messages; isZh: boolean; className: string }) {
+  const f = t.faq;
+  return (
+    <div className={className}>
+      <p className="text-[14px] text-muted sm:text-[15px]">{f.more}</p>
+      <div className="mt-3 flex flex-col items-start gap-2 text-[15px]">
+        <a href={isZh ? GITHUB.guide.zh : GITHUB.guide.en} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-accent hover:underline">
+          {f.guide}
+          <Icon name="arrowUpRight" className="h-3.5 w-3.5" />
+        </a>
+        <a href={GITHUB.issues} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-accent hover:underline">
+          {f.issue}
+          <Icon name="arrowUpRight" className="h-3.5 w-3.5" />
+        </a>
+      </div>
+    </div>
   );
 }
 
@@ -65,7 +76,7 @@ function LiveIcon() {
     </linearGradient>
   );
   return (
-    <motion.div ref={ref} className="relative mx-auto aspect-square w-[min(300px,72vw)]">
+    <motion.div ref={ref} className="relative mx-auto aspect-square w-[min(300px,58vw)]">
       <motion.div className="absolute inset-0 will-change-transform" style={reduce ? undefined : { scale, opacity: ringOpacity }}>
         {/* glow, ripples and line on separate layers, like the opening ring */}
         <div className="breathe absolute inset-0">
@@ -102,16 +113,16 @@ function LiveIcon() {
 
 export function Finale({ t, ctaHref, ctaLabel, direct, onDirectDownload }: { t: Messages; ctaHref: string; ctaLabel: string; direct: boolean; onDirectDownload: () => void }) {
   return (
-    <section className="relative overflow-hidden py-28 sm:py-40">
+    <section className="relative overflow-hidden py-20 sm:py-40">
       <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(40% 50% at 50% 40%, color-mix(in srgb, var(--ring-b) 8%, transparent), transparent 70%)' }} />
       <div className="shell relative text-center">
         <LiveIcon />
         <Reveal delay={0.1}>
-          <h2 className="display mt-14 text-ink" style={{ fontSize: 'clamp(32px, 4.6vw, 60px)' }}>
+          <h2 className="display mt-10 text-ink sm:mt-14" style={{ fontSize: 'clamp(28px, 4.6vw, 60px)' }}>
             {t.finale.title}
           </h2>
-          <p className="mt-5 text-[17px] text-muted">{t.finale.desc}</p>
-          <div className="mt-9 flex flex-wrap justify-center gap-3">
+          <p className="mt-4 text-[15px] text-muted sm:mt-5 sm:text-[17px]">{t.finale.desc}</p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3 sm:mt-9">
             <a href={ctaHref} onClick={direct ? onDirectDownload : undefined} className="btn btn-primary">
               <Icon name="download" className="h-[18px] w-[18px]" strokeWidth={2} />
               {ctaLabel}
@@ -145,9 +156,9 @@ export function Footer({ t, isZh }: { t: Messages; isZh: boolean }) {
   ];
   return (
     <footer className="border-t border-hair">
-      <div className="shell py-16">
-        <div className="grid gap-12 sm:grid-cols-[1.6fr_1fr_1fr]">
-          <div>
+      <div className="shell py-12 sm:py-16">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-[1.6fr_1fr_1fr] sm:gap-12">
+          <div className="col-span-2 sm:col-span-1">
             <a href="#top" className="flex items-center gap-2.5">
               <RingMark className="h-[22px] w-[22px]" strokeWidth={3} />
               <span className="text-[17px] font-semibold tracking-[-0.02em] text-ink">Whisper</span>
@@ -179,7 +190,7 @@ export function Footer({ t, isZh }: { t: Messages; isZh: boolean }) {
             </ul>
           </div>
         </div>
-        <div className="mt-16 flex flex-col gap-2 border-t border-hair pt-6 text-[12.5px] text-faint sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col gap-2 border-t border-hair pt-6 text-[12px] text-faint sm:mt-16 sm:flex-row sm:items-center sm:justify-between sm:text-[12.5px]">
           <span>
             © {new Date().getFullYear()} lawnvi · {f.license}
           </span>
