@@ -263,7 +263,6 @@ const zh = {
           { q: '指针留在另一台电脑上回不来怎么办？', a: '在主控端按 Ctrl + Alt + Esc（macOS 为 Control + Option + Esc），键鼠会立即回到本机。工作区里屏幕排列区域的底部一直显示着这个快捷键。' },
           { q: 'Linux 用的是 Wayland，可以用吗？', a: '目前不能。键鼠共享和用手机控制电脑都需要 X11 会话。' },
           { q: '和远程桌面有什么不同？', a: '键鼠共享只把键盘和鼠标的操作发过去，不传画面：每台电脑用自己的显示器，适合摆在同一张桌上的几台电脑。它面向身边的自有设备，不是无人值守的远程控制方案。' },
-          { q: '和 Synergy、Input Leap 有什么不同？', a: '用法相近：排好屏幕，指针移过边缘就切换。区别是 Whisper 把键鼠共享和传文件、剪贴板、声音共享放在同一个应用里，配对一次都能用。如果只需要键鼠共享，或者想要更细的设置，专门的工具可能更合适。' },
           { q: '指针移动一顿一顿的？', a: '先确认两台电脑的网络稳定。Windows 上检查「设置 → 系统 → 投影到此电脑」：开启时无线网卡要同时维持一个 Wi-Fi Direct 网络，会带来周期性的延迟；不用无线投屏就设为「始终关闭」。' },
         ],
       },
@@ -303,7 +302,6 @@ const zh = {
           { q: '没有网也能传吗？', a: '可以。只要两台设备在同一个局域网（同一个 Wi-Fi 或同一台路由器）里，就不需要连接互联网。' },
           { q: '照片会被压缩吗？', a: '不会。发出去的是原文件，到达时会校验，对方收到的和你发出的一模一样。' },
           { q: '传输速度取决于什么？', a: 'Wi-Fi 信号、设备性能和磁盘速度。加密与校验都是边传边做，不会在传完以后再花时间。' },
-          { q: '和 LocalSend 有什么不同？', a: '同样是局域网直传。Whisper 以会话的形式保留记录，还把剪贴板同步、键鼠共享和声音共享放在同一个应用里，配对一次都能用。' },
         ],
       },
       audioSharing: {
@@ -341,7 +339,6 @@ const zh = {
           { q: 'Mac 上为什么要「屏幕录制」权限？', a: 'macOS 把采集系统声音归在「屏幕录制」这一项权限里。Whisper 共享声音时只取声音，不录制屏幕内容。' },
           { q: '有延迟吗？能用来看视频吗？', a: '声音要经过网络和缓冲，会比电脑本身晚一点，具体取决于 Wi-Fi 质量。听音乐、播客没有问题；看视频、玩游戏这类要求声画同步的场景，可能会觉得声音稍慢。' },
           { q: '能把手机的声音共享到电脑吗？', a: '目前不能。Android 只能做播放端，共享声音要从电脑上发起。' },
-          { q: '和 AudioRelay 有什么不同？', a: 'AudioRelay 专注声音这一件事，选项更多，比如把手机当成电脑的麦克风。Whisper 的声音共享和传文件、键鼠共享放在同一个应用里，配对一次都能用，也能让几台设备同时播放、分配声道。' },
         ],
       },
       phoneControl: {
@@ -646,7 +643,6 @@ const en: Messages = {
           { q: 'My pointer is stuck on another computer. Now what?', a: 'Press Ctrl + Alt + Esc on the controlling computer (Control + Option + Esc on macOS) and input returns immediately. The shortcut is always shown at the bottom of the screen arrangement in the workspace.' },
           { q: 'My Linux desktop uses Wayland. Will it work?', a: 'Not yet. Keyboard and mouse sharing, and control from a phone, need an X11 session.' },
           { q: 'How is this different from remote desktop?', a: 'Only keyboard and mouse input is sent, not the picture: each computer keeps its own display, which suits computers on the same desk. It is meant for your own devices nearby, not for unattended remote control.' },
-          { q: 'How is it different from Synergy or Input Leap?', a: 'It works the same way: arrange the screens and the pointer crosses at the edge. The difference is that Whisper keeps keyboard and mouse sharing in the same app as file transfer, clipboard, and audio sharing, with one pairing for all of them. If you only need keyboard and mouse sharing, or want finer settings, a dedicated tool may suit you better.' },
           { q: 'Why does the pointer stutter?', a: 'First check that both computers have a steady network connection. On Windows, check Settings → System → Projecting to this PC: while it is on, the wireless adapter keeps a Wi-Fi Direct network alive as well, which adds periodic delay. Set it to Always Off if you do not project to this PC.' },
         ],
       },
@@ -686,7 +682,6 @@ const en: Messages = {
           { q: 'Does it work without internet?', a: 'Yes. The two devices only need to be on the same local network, such as the same Wi-Fi or router.' },
           { q: 'Are photos compressed?', a: 'No. The original file is sent and verified on arrival, so what the other side gets is exactly what you sent.' },
           { q: 'What decides the speed?', a: 'Wi-Fi signal, device performance, and disk speed. Encryption and verification happen while the data streams, not afterwards.' },
-          { q: 'How is it different from LocalSend?', a: 'Both send directly over the local network. Whisper keeps a conversation history, and puts clipboard sync, keyboard and mouse sharing, and audio sharing in the same app, with one pairing for all of them.' },
         ],
       },
       audioSharing: {
@@ -724,7 +719,6 @@ const en: Messages = {
           { q: 'Why does the Mac ask for Screen Recording?', a: 'macOS puts capturing system audio under the Screen Recording permission. When sharing audio, Whisper takes only the sound and does not record what is on screen.' },
           { q: 'Is there a delay? Can I watch video with it?', a: 'Audio goes through the network and a buffer, so it plays a little later than on the computer itself, depending on your Wi-Fi. Music and podcasts are fine; where sound must match the picture, as in video or games, you may notice it lagging.' },
           { q: 'Can I share my phone’s audio to the computer?', a: 'Not at the moment. Android only plays; sharing starts from a computer.' },
-          { q: 'How is it different from AudioRelay?', a: 'AudioRelay focuses on audio alone and has more options, such as using your phone as the computer’s microphone. Whisper keeps audio sharing in the same app as file transfer and keyboard and mouse sharing, with one pairing for all of them, and can play on several devices at once with channels assigned.' },
         ],
       },
       phoneControl: {
