@@ -192,6 +192,7 @@ CSS `position: sticky` 会让元素在一帧之内从"随页面移动"变成"静
 - 大块移动的层加 `will-change: transform`。
 - framer-motion 的 transform 会覆盖 Tailwind 的 `translate-*` 类。需要居中定位又要做动画时，外层负责定位，内层负责动画。
 - SVG 的渐变 / 滤镜 ID 用 `useId` 生成。同一组件可能同时渲染两份（比如一份是 `display:none`），ID 重复会导致渐变消失。
+- **首屏的入场用 CSS（`.rise`），不要用 framer 的 `initial`**：`initial` 会让标题在 HTML 里就是透明的，要等脚本加载、水合完才显示，慢网络下首屏空白四五秒。`.rise` 随第一次绘制开始播放，起点是 1% 而不是 0：Chrome 不会把第一次绘制时完全透明的元素算作页面主要内容（LCP），会改算脚本之后才画出来的东西。改完后慢速网络（1.6 Mbps、150 ms）下 LCP 从约 6 秒降到约 1.6 秒。
 - **"减少动态效果"时要显式给出终态**：`useReducedMotion` 首次渲染先按"有动效"算（为了和服务端一致），元素已经带上了起始的 `opacity: 0`；之后切成减少动效时如果只是把 `style` / `initial` 去掉，起始值会一直留在元素上，整页看不见（踩过的坑：开着这个系统设置时，首页除了导航和页脚全是空白）。所以减少动效分支要写成 `{ opacity: 1, y: 0 }` 或 `animate` 到终态，不能写 `undefined` / `{}`。
 - `useScroll({ target: ref })` 必须写在**挂这个 ref 的组件里**。framer 在 layout effect 里读取 ref，而子组件的 effect 先于父组件的 ref 赋值执行，读到 null 后就会退化成整页进度（踩过的坑：安全区一度让整页一直是黑的）。
 

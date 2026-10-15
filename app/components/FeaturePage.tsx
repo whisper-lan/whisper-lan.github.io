@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import type { Language, Messages } from '@/lib/i18n';
 import type { ReleaseData } from '@/lib/release';
 import { PLATFORM_LABEL } from '@/lib/downloads';
@@ -10,7 +9,7 @@ import { StageFrame } from './site/Chapters';
 import { FEATURE_SCENES } from './scenes/featureScenes';
 import { Steps } from './site/Download';
 import { Faq, Finale } from './site/Closing';
-import { EASE_OUT, Icon, PlatformMark, Reveal, useReducedMotion, useStill, useStoryClock, type Platform } from './site/primitives';
+import { Icon, PlatformMark, Reveal, useReducedMotion, useStill, useStoryClock, type Platform } from './site/primitives';
 import { GITHUB } from './site/links';
 
 // A closer look at one capability: the home page's chapter for it, opened up.
@@ -35,20 +34,11 @@ function Hero({ site, copy, feature }: { site: Site; copy: Copy; feature: Featur
   }, []);
   const clock = useStoryClock(play && !reduce);
   const still = useStill(1);
-  const rise = (delay: number) =>
-    reduce
-      ? { initial: false as const, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
-      : {
-          initial: { opacity: 0, y: 18 },
-          animate: { opacity: 1, y: 0 },
-          transition: { duration: 1.1, delay, ease: EASE_OUT },
-        };
-
   return (
     <section className="pb-4 pt-24 sm:pt-32 lg:pb-8 lg:pt-40">
       <div className="shell-wide grid items-center gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-16">
         <div data-anchor>
-          <motion.h1 {...rise(0.05)}>
+          <h1 className="rise" style={{ animationDelay: '0.05s' }}>
             {/* the short rule takes the colour of this chapter's light on the home page */}
             <span className="kicker flex items-center gap-3">
               <span className="h-[2px] w-7 rounded-full" style={{ background: `rgb(${r} ${g} ${b})` }} />
@@ -58,11 +48,11 @@ function Hero({ site, copy, feature }: { site: Site; copy: Copy; feature: Featur
               <span className="block">{copy.title[0]}</span>
               <span className="block">{copy.title[1]}</span>
             </span>
-          </motion.h1>
-          <motion.p {...rise(0.18)} className={`mt-5 max-w-[34rem] text-[15px] leading-[1.75] text-muted sm:mt-6 sm:text-[17px] ${isZh ? 'break-keep' : ''}`}>
+          </h1>
+          <p style={{ animationDelay: '0.18s' }} className={`rise mt-5 max-w-[34rem] text-[15px] leading-[1.75] text-muted sm:mt-6 sm:text-[17px] ${isZh ? 'break-keep' : ''}`}>
             {copy.lead}
-          </motion.p>
-          <motion.div {...rise(0.3)} className="mt-7 flex flex-wrap gap-3 sm:mt-9">
+          </p>
+          <div className="rise mt-7 flex flex-wrap gap-3 sm:mt-9" style={{ animationDelay: '0.3s' }}>
             <a href={cta.href} onClick={cta.direct ? onDirectDownload : undefined} className="btn btn-primary">
               <Icon name="download" className="h-[18px] w-[18px]" strokeWidth={2} />
               {cta.label}
@@ -71,9 +61,9 @@ function Hero({ site, copy, feature }: { site: Site; copy: Copy; feature: Featur
               {t.features.guide}
               <Icon name="arrowUpRight" className="h-4 w-4" />
             </a>
-          </motion.div>
+          </div>
         </div>
-        <motion.div {...rise(0.22)}>
+        <div className="rise" style={{ animationDelay: '0.22s' }}>
           <StageFrame background={`radial-gradient(80% 70% at 70% 20%, rgba(${r}, ${g}, ${b}, 0.15), transparent 70%), radial-gradient(60% 60% at 10% 100%, rgba(${r}, ${g}, ${b}, 0.08), transparent 70%)`}>
             <div className="relative" style={{ aspectRatio: '680 / 540' }}>
               <div className="absolute inset-0">
@@ -81,7 +71,7 @@ function Hero({ site, copy, feature }: { site: Site; copy: Copy; feature: Featur
               </div>
             </div>
           </StageFrame>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

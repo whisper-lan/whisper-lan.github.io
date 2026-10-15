@@ -91,24 +91,15 @@ const HeroCopy = memo(function HeroCopy({
   onDirectDownload: () => void;
   parts?: 'all' | 'title' | 'body';
 }) {
-  const reduce = useReducedMotion();
-  // A short intro on load only; everything after is driven by scrolling.
-  const rise = (delay: number) =>
-    reduce
-      ? { initial: false as const, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
-      : {
-          initial: { opacity: 0, y: 18 },
-          animate: { opacity: 1, y: 0 },
-          transition: { duration: 1.1, delay, ease: EASE_OUT },
-        };
-
+  // A short intro on load only (the .rise animation in globals.css);
+  // everything after is driven by scrolling.
   const title = (
-    <motion.h1 {...rise(0.1)} className="display text-ink" style={{ fontSize: 'var(--hero-h1)' }}>
+    <h1 className="rise display text-ink" style={{ fontSize: 'var(--hero-h1)', animationDelay: '0.1s' }}>
       <span className="block">{t.hero.title[0]}</span>
       <span className="block" style={{ color: 'var(--title-2)' }}>
         {t.hero.title[1]}
       </span>
-    </motion.h1>
+    </h1>
   );
   if (parts === 'title') return <div className="text-center">{title}</div>;
 
@@ -116,10 +107,9 @@ const HeroCopy = memo(function HeroCopy({
     <div className="flex flex-col items-center text-center">
       {parts === 'all' && title}
 
-      <motion.p
-        {...rise(0.28)}
-        className={`${parts === 'all' ? 'mt-6' : ''} break-keep text-muted [text-wrap:balance]`}
-        style={{ fontSize: 'var(--hero-lead)', lineHeight: 1.6, maxWidth: 'var(--hero-copy)' }}
+      <p
+        className={`rise ${parts === 'all' ? 'mt-6' : ''} break-keep text-muted [text-wrap:balance]`}
+        style={{ fontSize: 'var(--hero-lead)', lineHeight: 1.6, maxWidth: 'var(--hero-copy)', animationDelay: '0.28s' }}
       >
         {t.hero.lead.map((line, i) => (
           <span key={line} className="md:block">
@@ -128,9 +118,9 @@ const HeroCopy = memo(function HeroCopy({
             {line}
           </span>
         ))}
-      </motion.p>
+      </p>
 
-      <motion.div {...rise(0.4)} className="mt-7 flex flex-wrap items-center justify-center gap-3 md:mt-9">
+      <div className="rise mt-7 flex flex-wrap items-center justify-center gap-3 md:mt-9" style={{ animationDelay: '0.4s' }}>
         <a href={cta.href} onClick={cta.direct ? onDirectDownload : undefined} className="btn btn-primary">
           <Icon name="download" className="h-[18px] w-[18px]" strokeWidth={2} />
           {cta.label}
@@ -138,11 +128,11 @@ const HeroCopy = memo(function HeroCopy({
         <a href="#download" className="btn btn-quiet">
           {t.hero.allPlatforms}
         </a>
-      </motion.div>
+      </div>
 
-      <motion.p {...rise(0.5)} className="mono mt-5 text-[12px] tracking-wide text-faint">
+      <p className="rise mono mt-5 text-[12px] tracking-wide text-faint" style={{ animationDelay: '0.5s' }}>
         {meta}
-      </motion.p>
+      </p>
     </div>
   );
 });
