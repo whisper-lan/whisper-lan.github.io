@@ -26,12 +26,41 @@ export type Site = {
   info: DownloadInfo;
   builds: Partial<Record<PlatformType, BuildOption[]>>;
   detected: PlatformType;
+  // URL of the build that fits this device, or null when that can't be told
+  // (a Mac whose browser doesn't reveal its CPU).
+  recommended: string | null;
   onDirectDownload: () => void;
 };
+
+type Arch = 'arm' | 'x86';
+type UserAgentData = { getHighEntropyValues(hints: string[]): Promise<{ architecture?: string }> };
+
+// Which CPU a Mac has. Chromium browsers say so through client hints. Others
+// may name the GPU, and an Apple M-series GPU only comes with Apple silicon.
+// Safari reports "Apple GPU" either way, so there it stays unknown.
+async function detectArch(): Promise<Arch | null> {
+  try {
+    const hints = await (navigator as Navigator & { userAgentData?: UserAgentData }).userAgentData?.getHighEntropyValues(['architecture']);
+    if (hints?.architecture === 'arm' || hints?.architecture === 'x86') return hints.architecture;
+  } catch {}
+  try {
+    const gl = document.createElement('canvas').getContext('webgl');
+    if (!gl) return null;
+    // Firefox puts the (coarsened) GPU name in RENDERER; Chromium and Safari need the extension.
+    const plain = String(gl.getParameter(gl.RENDERER));
+    const ext = /webkit/i.test(plain) ? gl.getExtension('WEBGL_debug_renderer_info') : null;
+    const renderer = ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : plain;
+    gl.getExtension('WEBGL_lose_context')?.loseContext();
+    if (/apple m\d/i.test(renderer)) return 'arm';
+    if (/intel|amd|radeon|nvidia|geforce/i.test(renderer)) return 'x86';
+  } catch {}
+  return null;
+}
 
 const useDeviceDetect = () => {
   const [deviceType, setDeviceType] = useState<PlatformType>('unknown');
   const [isMobile, setIsMobile] = useState(false);
+  const [arch, setArch] = useState<Arch | null>(null);
   useEffect(() => {
     const ua = window.navigator.userAgent.toLowerCase();
     if (/android/i.test(ua)) setDeviceType('android');
@@ -40,8 +69,15 @@ const useDeviceDetect = () => {
     else if (ua.includes('mac')) setDeviceType('mac');
     else if (ua.includes('linux')) setDeviceType('linux');
     setIsMobile(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(ua));
+    if (ua.includes('mac') && !/iphone|ipad|ipod/i.test(ua)) {
+      let cancelled = false;
+      detectArch().then((a) => !cancelled && setArch(a));
+      return () => {
+        cancelled = true;
+      };
+    }
   }, []);
-  return { deviceType, isMobile };
+  return { deviceType, isMobile, arch };
 };
 
 export function SiteFrame({
@@ -58,7 +94,7 @@ export function SiteFrame({
   title: (t: Messages) => string;
   children: (site: Site) => ReactNode;
 }) {
-  const { deviceType, isMobile } = useDeviceDetect();
+  const { deviceType, isMobile, arch } = useDeviceDetect();
   const { language, setLanguage } = useLanguage();
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -102,6 +138,10 @@ export function SiteFrame({
   const builds = platformBuilds(info, t);
   const detected = deviceType === 'unknown' ? null : deviceType;
   const home = path ? t.home : '';
+  // Elsewhere the first build is the safe pick (the notes say so); a Mac
+  // build for the wrong chip is not, so without the CPU none is singled out.
+  const fits = detected === 'mac' ? (arch === 'arm' ? info.macArm64.url : arch === 'x86' ? info.macX64.url : '') : detected ? (builds[detected]?.[0]?.url ?? info[detected].url) : '';
+  const recommended = fits || null;
   // Browsers do not reliably expose CPU architecture or Linux distribution, so
   // platforms with several builds scroll to the download section instead.
   const directUrl = !isMobile && detected && info[detected].url && !builds[detected]?.length ? info[detected].url : null;
@@ -148,7 +188,7 @@ export function SiteFrame({
     requestAnimationFrame(() => setSwapping(false));
   }, [activeLanguage]);
 
-  const site: Site = { t, isZh, home, cta, version, info, builds, detected: deviceType, onDirectDownload };
+  const site: Site = { t, isZh, home, cta, version, info, builds, detected: deviceType, recommended, onDirectDownload };
 
   return (
     <div className="min-h-screen overflow-x-clip">

@@ -12,7 +12,7 @@ import { Faq, Finale } from './site/Closing';
 export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: { initialLanguage?: Language; initialRelease?: ReleaseData | null }) {
   return (
     <SiteFrame initialLanguage={initialLanguage} initialRelease={initialRelease} title={(t) => t.meta.title}>
-      {({ t, isZh, cta, version, info, builds, detected, onDirectDownload }) => {
+      {({ t, isZh, cta, version, info, builds, detected, recommended, onDirectDownload }) => {
         const heroMeta = [version ? `v${version}` : null, t.hero.meta].filter(Boolean).join('  ·  ');
         return (
           <>
@@ -21,7 +21,7 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
             <Details t={t} />
             <Security t={t} />
             <Steps title={t.steps.title} items={t.steps.items} />
-            <Download t={t} info={info} builds={builds} version={version} detected={detected} onDownload={onDirectDownload} />
+            <Download t={t} info={info} builds={builds} version={version} detected={detected} recommended={recommended} onDownload={onDirectDownload} />
             <Faq t={t} isZh={isZh} />
             <Finale t={t} ctaHref={cta.href} ctaLabel={cta.label} direct={cta.direct} onDirectDownload={onDirectDownload} />
           </>

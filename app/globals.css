@@ -448,17 +448,6 @@ html.lenis body {
   }
 }
 
-/* the detected platform gets the ring's gradient as its edge */
-.gradient-border {
-  border-radius: 29.5px;
-  padding: 1.5px;
-  background: linear-gradient(135deg, var(--ring-a), var(--ring-b), var(--ring-c));
-}
-
-.gradient-border > .card {
-  border-radius: 28px;
-}
-
 /* Load-time entrance for the first screen. As a CSS animation it starts with
    the first paint; framer's `initial` would ship the headline invisible in the
    HTML until the scripts have loaded (seconds on a slow phone). The delay is

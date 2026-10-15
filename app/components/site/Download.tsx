@@ -58,13 +58,13 @@ function BuildButton({ build, primary, onClick }: { build: { label: string; size
   );
 }
 
-function Builds({ t, platform, list, primary, onDownload }: { t: Messages; platform: Platform; list: { label: string; size: string; url: string }[]; primary: boolean; onDownload: () => void }) {
+function Builds({ t, platform, list, recommended, onDownload }: { t: Messages; platform: Platform; list: { label: string; size: string; url: string }[]; recommended: string | null; onDownload: () => void }) {
   const d = t.download;
   if (list.length > 0)
     return (
       <div className={`grid gap-2 ${list.length > 2 ? 'grid-cols-2' : ''}`}>
-        {list.map((build, j) => (
-          <BuildButton key={build.url} build={build} primary={primary && j === 0} onClick={onDownload} />
+        {list.map((build) => (
+          <BuildButton key={build.url} build={build} primary={build.url === recommended} onClick={onDownload} />
         ))}
       </div>
     );
@@ -78,12 +78,105 @@ function Builds({ t, platform, list, primary, onDownload }: { t: Messages; platf
   return <span className="block rounded-[14px] border border-dashed border-hair px-4 py-3 text-[14px] text-faint">{d.unavailable}</span>;
 }
 
+function buildList(platform: Platform, info: DownloadInfo, builds: Partial<Record<PlatformType, BuildOption[]>>, t: Messages) {
+  const options = builds[platform] ?? [];
+  if (options.length) return options;
+  return info[platform].url ? [{ label: platform === 'windows' ? t.download.builds.windows : PLATFORM_LABEL[platform], size: info[platform].size, url: info[platform].url }] : [];
+}
+
+const tile = 'inline-flex h-12 items-center gap-2.5 whitespace-nowrap rounded-[14px] px-3.5 text-[13.5px] font-medium transition-colors';
+const quiet = 'border border-hair bg-surface text-ink hover:border-[var(--hair-2)] hover:bg-surface-2';
+
+// A build as a small tile, its size under its name: narrow enough that even
+// Android's four builds share one line beside the text.
+function BuildTile({ build, primary, onClick }: { build: { label: string; size: string; url: string }; primary: boolean; onClick: () => void }) {
+  return (
+    <a href={build.url} onClick={onClick} className={`${tile} ${primary ? 'bg-accent text-accent-ink hover:bg-[var(--accent-hover)]' : quiet}`}>
+      <Icon name="download" className="h-4 w-4" strokeWidth={2} />
+      <span className="flex flex-col leading-[1.2]">
+        {build.label}
+        <span className={`mono text-[11px] font-normal ${primary ? 'opacity-75' : 'text-faint'}`}>{build.size}</span>
+      </span>
+    </a>
+  );
+}
+
+// Wider screens: every platform at once, one row each, like a table. The text
+// on the left, the builds on the right; from lg the rows share a subgrid so
+// every row's builds start on the same line (below lg they sit under the text).
+// Your device's row is lit; the build that fits it, when known, is the only
+// primary button.
+function Table({
+  t,
+  info,
+  builds,
+  detected,
+  recommended,
+  onDownload,
+}: {
+  t: Messages;
+  info: DownloadInfo;
+  builds: Partial<Record<PlatformType, BuildOption[]>>;
+  detected: PlatformType;
+  recommended: string | null;
+  onDownload: () => void;
+}) {
+  const d = t.download;
+  return (
+    <ul className="card mt-10 hidden overflow-hidden md:block lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-10 xl:gap-x-14">
+      {ORDER.map((platform, i) => {
+        const list = buildList(platform, info, builds, t);
+        const isDetected = platform === detected;
+        return (
+          <Reveal
+            as="li"
+            key={platform}
+            delay={i * 0.04}
+            className={`relative border-t border-hair px-7 py-5 first:border-t-0 lg:col-span-2 lg:grid lg:grid-cols-subgrid lg:items-center ${isDetected ? 'bg-surface-2' : ''}`}
+          >
+            {isDetected && (
+              <span aria-hidden="true" className="absolute inset-y-0 left-0 w-[3px]" style={{ background: 'linear-gradient(var(--ring-a), var(--ring-b), var(--ring-c))' }} />
+            )}
+            <div className="flex min-w-0 items-center gap-4">
+              <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-[13px] border border-hair text-ink ${isDetected ? 'bg-surface' : 'bg-surface-2'}`}>
+                <PlatformMark platform={platform} className="h-[22px] w-[22px]" />
+              </span>
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                  <h3 className="text-[17px] font-semibold tracking-[-0.01em] text-ink">{PLATFORM_LABEL[platform]}</h3>
+                  <span className="text-[13px] text-muted">{d.platforms[platform].req}</span>
+                  {isDetected && <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-medium text-accent">{d.detected}</span>}
+                  {!isDetected && platform === 'ios' && <span className="rounded-full border border-hair px-2 py-0.5 text-[11px] font-medium text-muted">{d.experimental}</span>}
+                </div>
+                <p className="mt-1 text-[13px] leading-[1.6] text-faint">{d.platforms[platform].note}</p>
+              </div>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2 pl-[60px] lg:mt-0 lg:pl-0">
+              {list.length > 0 ? (
+                list.map((build) => <BuildTile key={build.url} build={build} primary={build.url === recommended} onClick={onDownload} />)
+              ) : platform === 'ios' ? (
+                <a href={GITHUB.releases} target="_blank" rel="noopener noreferrer" className={`${tile} ${quiet}`}>
+                  {d.getIpa}
+                  <Icon name="arrowUpRight" className="h-3.5 w-3.5" />
+                </a>
+              ) : (
+                <span className={`${tile} border border-dashed border-hair text-faint`}>{d.unavailable}</span>
+              )}
+            </div>
+          </Reveal>
+        );
+      })}
+    </ul>
+  );
+}
+
 export function Download({
   t,
   info,
   builds,
   version,
   detected,
+  recommended,
   onDownload,
 }: {
   t: Messages;
@@ -91,6 +184,7 @@ export function Download({
   builds: Partial<Record<PlatformType, BuildOption[]>>;
   version: string | null;
   detected: PlatformType;
+  recommended: string | null;
   onDownload: () => void;
 }) {
   const d = t.download;
@@ -122,8 +216,6 @@ export function Download({
             A phone mostly downloads for itself, and the rest is for later. */}
         <Reveal className="mt-8 rounded-[24px] border border-hair bg-surface px-4 md:hidden">
           {[...ORDER].sort((a, b) => Number(b === detected) - Number(a === detected)).map((platform) => {
-            const options = builds[platform] ?? [];
-            const single = info[platform].url ? [{ label: platform === 'windows' ? d.builds.windows : PLATFORM_LABEL[platform], size: info[platform].size, url: info[platform].url }] : [];
             const isDetected = detected === platform;
             return (
               <details key={platform} open={isDetected} className="group border-b border-hair last:border-0">
@@ -145,53 +237,14 @@ export function Download({
                 </summary>
                 <div className="pb-5">
                   <p className="mb-3 text-[13px] leading-[1.6] text-faint">{d.platforms[platform].note}</p>
-                  <Builds t={t} platform={platform} list={options.length ? options : single} primary={isDetected} onDownload={onDownload} />
+                  <Builds t={t} platform={platform} list={buildList(platform, info, builds, t)} recommended={recommended} onDownload={onDownload} />
                 </div>
               </details>
             );
           })}
         </Reveal>
 
-        <div className="mt-12 hidden gap-5 md:grid md:grid-cols-2 lg:grid-cols-6">
-          {ORDER.map((platform, i) => {
-            const options = builds[platform] ?? [];
-            const single = info[platform].url ? [{ label: platform === 'windows' ? d.builds.windows : PLATFORM_LABEL[platform], size: info[platform].size, url: info[platform].url }] : [];
-            const list = options.length ? options : single;
-            const isDetected = detected === platform;
-            const experimental = platform === 'ios';
-            const meta = d.platforms[platform];
-            // three wide cards on top, two below
-            const span = i < 3 ? 'lg:col-span-2' : 'lg:col-span-3';
-            return (
-              <Reveal key={platform} delay={(i % 3) * 0.06} className={`${span} ${isDetected ? 'gradient-border' : ''}`}>
-                <div className={`card relative flex h-full flex-col p-7 ${isDetected ? 'border-transparent' : ''}`}>
-                  <div className="flex items-start justify-between">
-                    <span className="grid h-12 w-12 place-items-center rounded-[14px] border border-hair bg-surface-2 text-ink">
-                      <PlatformMark platform={platform} className="h-6 w-6" />
-                    </span>
-                    {isDetected && <span className="chip border-transparent bg-accent-soft text-accent">{d.detected}</span>}
-                    {!isDetected && experimental && <span className="chip">{d.experimental}</span>}
-                  </div>
-                  <h3 className="mt-6 text-[24px] font-semibold tracking-[-0.02em] text-ink">{PLATFORM_LABEL[platform]}</h3>
-                  <p className="mt-1 text-[14px] text-muted">{meta.req}</p>
-                  <p className="mt-4 text-[13.5px] leading-[1.65] text-faint">{meta.note}</p>
-                  <div className="mt-auto pt-7">
-                    {list.length > 2 && i < 3 ? (
-                      // the three narrow cards on top keep their builds in one column
-                      <div className="grid gap-2">
-                        {list.map((build, j) => (
-                          <BuildButton key={build.url} build={build} primary={isDetected && j === 0} onClick={onDownload} />
-                        ))}
-                      </div>
-                    ) : (
-                      <Builds t={t} platform={platform} list={list} primary={isDetected} onDownload={onDownload} />
-                    )}
-                  </div>
-                </div>
-              </Reveal>
-            );
-          })}
-        </div>
+        <Table t={t} info={info} builds={builds} detected={detected} recommended={recommended} onDownload={onDownload} />
       </div>
     </section>
   );

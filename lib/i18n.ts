@@ -160,7 +160,7 @@ const zh = {
     experimental: '实验性',
     getIpa: '前往 GitHub',
     platforms: {
-      mac: { req: 'macOS 10.15 及以上', note: 'Apple 芯片与 Intel 均有原生安装包。' },
+      mac: { req: 'macOS 10.15 及以上', note: 'Apple 芯片与 Intel 各有原生安装包，「关于本机」里能看到你是哪一种。' },
       windows: { req: 'Windows 10 / 11 · 64 位', note: '安装包附带锁屏键鼠服务。' },
       linux: { req: 'x86_64', note: '自动发现依赖 Avahi；视频预览与投屏需要 libmpv。' },
       android: { req: 'Android 7.0 及以上', note: '多数手机选 ARM64，不确定就选通用包。' },
@@ -547,7 +547,7 @@ const en: Messages = {
     experimental: 'Experimental',
     getIpa: 'Get it on GitHub',
     platforms: {
-      mac: { req: 'macOS 10.15 or later', note: 'Native builds for Apple silicon and Intel.' },
+      mac: { req: 'macOS 10.15 or later', note: 'Native builds for Apple silicon and Intel; About This Mac shows which you have.' },
       windows: { req: 'Windows 10 / 11 · 64-bit', note: 'Includes the lock-screen input service.' },
       linux: { req: 'x86_64', note: 'Discovery needs Avahi; video preview and casting need libmpv.' },
       android: { req: 'Android 7.0 or later', note: 'Most phones want ARM64; pick Universal if unsure.' },
