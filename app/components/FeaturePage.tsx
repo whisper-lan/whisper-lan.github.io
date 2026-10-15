@@ -4,17 +4,13 @@ import { motion } from 'framer-motion';
 import type { Language, Messages } from '@/lib/i18n';
 import type { ReleaseData } from '@/lib/release';
 import { PLATFORM_LABEL } from '@/lib/downloads';
-import type { ComponentType } from 'react';
 import { FEATURES, type FeatureKey } from '@/lib/features';
 import { SiteFrame, type Site } from './site/SiteFrame';
-import { StageFrame, useStoryClock, type SceneProps } from './site/Chapters';
-import { TransferScene } from './scenes/TransferScene';
-import { InputScene } from './scenes/InputScene';
-import { AudioScene } from './scenes/AudioScene';
-import { PhoneScene } from './scenes/PhoneScene';
+import { StageFrame } from './site/Chapters';
+import { FEATURE_SCENES } from './scenes/featureScenes';
 import { Steps } from './site/Download';
 import { Faq, Finale } from './site/Closing';
-import { EASE_OUT, Icon, PlatformMark, Reveal, useReducedMotion, useStill, type Platform } from './site/primitives';
+import { EASE_OUT, Icon, PlatformMark, Reveal, useReducedMotion, useStill, useStoryClock, type Platform } from './site/primitives';
 import { GITHUB } from './site/links';
 
 // A closer look at one capability: the home page's chapter for it, opened up.
@@ -24,19 +20,12 @@ import { GITHUB } from './site/links';
 
 type Copy = Messages['features']['items'][FeatureKey];
 
-// Each page's scene: the home page chapter's where there is one.
-const SCENES: Record<FeatureKey, ComponentType<SceneProps>> = {
-  fileTransfer: TransferScene,
-  keyboardMouse: InputScene,
-  audioSharing: AudioScene,
-  phoneControl: PhoneScene,
-};
 const tintOf = (key: FeatureKey) => FEATURES.find((f) => f.key === key)!.tint;
 
 function Hero({ site, copy, feature }: { site: Site; copy: Copy; feature: FeatureKey }) {
   const { t, isZh, cta, onDirectDownload } = site;
   const reduce = useReducedMotion();
-  const Scene = SCENES[feature];
+  const Scene = FEATURE_SCENES[feature];
   const [r, g, b] = tintOf(feature);
   // The scene plays its story once, after the page has risen in.
   const [play, setPlay] = useState(false);

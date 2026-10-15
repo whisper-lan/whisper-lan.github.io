@@ -265,7 +265,7 @@ app/components/site/
   SiteFrame.tsx                    各页共用：语言、主题、Release 数据、平台识别、导航、页脚、提示
   scroll.tsx                       Lenis + 停靠规则（Shot / Page）
   primitives.tsx                   Reveal、useScrollProgress、Icon、RingMark、平台标志
-  Nav.tsx                          顶栏；「功能」是功能页菜单（桌面悬停或点击展开，手机在菜单里列出）
+  Nav.tsx                          顶栏；「功能」展开成一个小舞台：左边大字列出功能页，指到哪一项就亮哪一项、带出它的短线，右边在它的光里播放它的场景，后面的页面微微变暗。手机在菜单里按章节标题的写法列出
   Prologue.tsx                     开场一镜到底（标题、圆环、宣言）
   RingStage.tsx                    圆环、设备、光点、回执
   Chapters.tsx                     功能区（桌面：文字 + 胶片舞台；手机：堆叠）

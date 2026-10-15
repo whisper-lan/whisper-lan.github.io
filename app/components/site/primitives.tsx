@@ -1,6 +1,6 @@
 'use client';
 import { ReactNode, useEffect, useId, useRef, useState } from 'react';
-import { motion, useMotionValue, useReducedMotion as useMotionPreference, useScroll, useTransform, type MotionValue } from 'framer-motion';
+import { animate, motion, useMotionValue, useReducedMotion as useMotionPreference, useScroll, useTransform, type MotionValue } from 'framer-motion';
 
 // Match the server markup first, then apply the browser's motion preference.
 export function useReducedMotion() {
@@ -33,6 +33,23 @@ export function useScrollProgress(target: React.RefObject<HTMLElement | null>, o
 // A progress value that never moves, for reduced motion.
 export function useStill(value = 1): MotionValue<number> {
   return useMotionValue(value);
+}
+
+// A scene's story told once on a clock: 0 → 1 over `duration` seconds while
+// `playing`, back to 0 a moment after it stops. Scenes are drawn so 1 is a
+// finished picture (DESIGN.md §4).
+export function useStoryClock(playing: boolean, duration = 2.8) {
+  const clock = useMotionValue(0);
+  useEffect(() => {
+    if (playing) {
+      clock.set(0);
+      const controls = animate(clock, 1, { duration, ease: [0.45, 0, 0.25, 1], delay: 0.1 });
+      return () => controls.stop();
+    }
+    const timer = window.setTimeout(() => clock.set(0), 900);
+    return () => window.clearTimeout(timer);
+  }, [playing, clock, duration]);
+  return clock;
 }
 
 // Scroll-linked entrance: it rises in as it enters the viewport and sinks

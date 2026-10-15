@@ -1,8 +1,8 @@
 'use client';
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
-import { animate, motion, useInView, useMotionValue, useMotionValueEvent, useScroll, useTransform, type MotionValue } from 'framer-motion';
+import { useCallback, useLayoutEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
+import { motion, useInView, useMotionValueEvent, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import type { Messages } from '@/lib/i18n';
-import { Icon, Reveal, useMediaQuery, useReducedMotion, useScrollProgress, useStill } from './primitives';
+import { Icon, Reveal, useMediaQuery, useReducedMotion, useScrollProgress, useStill, useStoryClock } from './primitives';
 import { OPENING_REST } from './Prologue';
 import { useSnapGap, useSnapPages } from './scroll';
 import { TransferScene } from '../scenes/TransferScene';
@@ -113,20 +113,6 @@ function cushionOffset(d: number, travel: number) {
     return -L / 2 - (x * x) / (2 * L);
   }
   return -L;
-}
-
-export function useStoryClock(playing: boolean, duration = 2.8) {
-  const clock = useMotionValue(0);
-  useEffect(() => {
-    if (playing) {
-      clock.set(0);
-      const controls = animate(clock, 1, { duration, ease: [0.45, 0, 0.25, 1], delay: 0.1 });
-      return () => controls.stop();
-    }
-    const timer = window.setTimeout(() => clock.set(0), 900);
-    return () => window.clearTimeout(timer);
-  }, [playing, clock, duration]);
-  return clock;
 }
 
 // One scene on the strip, with its own light. Its story plays once it has
