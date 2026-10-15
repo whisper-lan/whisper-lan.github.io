@@ -53,7 +53,7 @@ export function HomePage({ initialLanguage = 'zh-CN', initialRelease = null }: {
 
   // Next retains the root layout during client navigation between languages.
   useEffect(() => {
-    document.documentElement.lang = activeLanguage === 'zh-CN' ? 'zh' : 'en';
+    document.documentElement.lang = activeLanguage === 'zh-CN' ? 'zh-CN' : 'en';
   }, [activeLanguage]);
 
   // Refresh build-time release data because Cloudflare Pages serves prerendered

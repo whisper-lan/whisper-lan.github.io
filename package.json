@@ -28,7 +28,8 @@
     "start": "node scripts/preview-static.mjs",
     "lint": "eslint .",
     "test:release-assets": "node scripts/check-release-asset-matching.mjs",
-    "test:pages": "node --test scripts/pages-routing.test.mjs"
+    "test:pages": "node --test scripts/pages-routing.test.mjs",
+    "test:seo": "node scripts/check-seo.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.14.4",

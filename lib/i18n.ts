@@ -3,7 +3,14 @@
 export type Language = 'en' | 'zh-CN';
 
 const zh = {
-  meta: { title: 'Whisper - 端到端加密的局域网设备协作工具' },
+  // Search result title and snippet: what people type when they need this,
+  // not the hero's line. Keep the title near 30 characters.
+  meta: {
+    title: 'Whisper - 局域网传文件、键鼠共享、音频共享 | 免费开源',
+    description:
+      '免费开源的局域网协作工具：在 Mac、Windows、Linux 和 Android 之间传文件和文件夹、同步剪贴板，多台电脑共用一套键鼠，Android 手机当鼠标和键盘，电脑声音送到其他设备播放。端到端加密，不经过服务器。',
+    keywords: ['局域网传文件', '电脑手机互传文件', '键鼠共享', '跨屏键鼠', '剪贴板同步', '电脑声音共享', '手机控制电脑'],
+  },
   nav: { features: '功能', security: '安全', download: '下载', faq: '问答', getApp: '下载' },
   a11y: {
     theme: '切换亮暗主题',
@@ -152,7 +159,7 @@ const zh = {
       windows: { req: 'Windows 10 / 11 · 64 位', note: '安装包附带锁屏键鼠服务。' },
       linux: { req: 'x86_64', note: '自动发现依赖 Avahi；视频预览与投屏需要 libmpv。' },
       android: { req: 'Android 7.0 及以上', note: '多数手机选 ARM64，不确定就选通用包。' },
-      ios: { req: 'iOS 15 及以上', note: '尚未完成真机验证，需要自行签名安装。' },
+      ios: { req: 'iOS 15 及以上', note: '未上架 App Store，也没有真机测试过。发布页附带未签名的安装包，可自行签名安装。' },
     },
     builds: {
       appleSilicon: 'Apple 芯片',
@@ -183,6 +190,7 @@ const zh = {
       { q: 'Android 手机怎样当鼠标和键盘？', a: '两台设备连接并互相信任后，在手机上打开电脑的会话，点「控制电脑」再点开始。支持体感鼠标、触控板、虚拟键盘、组合键和短文本；没有陀螺仪时仍可使用触控板和键盘。被控电脑支持 macOS（需辅助功能权限）、Windows 和 Linux X11。' },
       { q: '投屏是屏幕镜像吗？', a: '不是。它接收视频 App 通过 DLNA 投过来的媒体，不支持 AirPlay、Miracast 或系统屏幕镜像。能否投屏、清晰度和受保护内容由视频平台决定。功能默认关闭，同一来源第一次请求时会提示确认。' },
       { q: 'Linux 上需要准备什么？', a: '自动发现依赖 Avahi；声音共享需要 PulseAudio 或 PipeWire Pulse；键鼠共享和手机控制需要 X11 会话；视频预览与投屏需要 libmpv，没有它其他功能照常可用。' },
+      { q: '为什么没有 iOS 版？', a: '上架 App Store 需要每年付费的 Apple 开发者账号，项目也没有 iOS 设备可以测试，所以暂时没有正式的 iOS 版。每次发布都附带一个未签名的 ipa，可以用 AltStore、Sideloadly 等工具以自己的 Apple ID 签名安装；免费 Apple ID 签的应用每 7 天要重新签一次。它没有经过真机测试，遇到问题欢迎反馈。' },
     ],
   },
   finale: {
@@ -207,7 +215,13 @@ const zh = {
 export type Messages = typeof zh;
 
 const en: Messages = {
-  meta: { title: 'Whisper: encrypted LAN transfer and device collaboration' },
+  // Keep the title under about 60 characters.
+  meta: {
+    title: 'Whisper: share files, keyboard & mouse, and audio over LAN',
+    description:
+      'Free, open-source LAN app for macOS, Windows, Linux and Android: send files, sync the clipboard, share one keyboard and mouse, and stream system audio. End-to-end encrypted.',
+    keywords: ['LAN file transfer', 'keyboard and mouse sharing', 'software KVM', 'clipboard sync', 'stream PC audio', 'phone as mouse'],
+  },
   nav: { features: 'Features', security: 'Security', download: 'Download', faq: 'FAQ', getApp: 'Download' },
   a11y: {
     theme: 'Toggle light / dark theme',
@@ -356,7 +370,7 @@ const en: Messages = {
       windows: { req: 'Windows 10 / 11 · 64-bit', note: 'Includes the lock-screen input service.' },
       linux: { req: 'x86_64', note: 'Discovery needs Avahi; video preview and casting need libmpv.' },
       android: { req: 'Android 7.0 or later', note: 'Most phones want ARM64; pick Universal if unsure.' },
-      ios: { req: 'iOS 15 or later', note: 'Not yet verified on devices; requires self-signing.' },
+      ios: { req: 'iOS 15 or later', note: 'Not on the App Store and not yet tested on a device. Each release includes an unsigned IPA you can sign yourself.' },
     },
     builds: {
       appleSilicon: 'Apple silicon',
@@ -387,6 +401,7 @@ const en: Messages = {
       { q: 'How does my Android phone become a mouse and keyboard?', a: 'Once both devices are connected and trust each other, open the computer conversation on your phone, tap Control computer, then start. Motion pointer, touchpad, virtual keyboard, shortcuts, and short text are supported; without a gyroscope the touchpad and keyboard still work. macOS (with Accessibility permission), Windows, and Linux X11 can be controlled.' },
       { q: 'Is casting screen mirroring?', a: 'No. It receives media that video apps cast over DLNA, without AirPlay, Miracast, or system screen mirroring. Availability, quality, and protected content depend on the video platform. Casting is off by default, and the first request from each source asks for confirmation.' },
       { q: 'What does Linux need?', a: 'Discovery relies on Avahi; sound sharing needs PulseAudio or PipeWire Pulse; input sharing and phone control need an X11 session; video preview and casting need libmpv, and everything else works without it.' },
+      { q: 'Why is there no iOS app?', a: 'Publishing on the App Store requires a paid Apple Developer account, and the project has no iOS device to test on, so there is no official iOS release yet. Every release includes an unsigned IPA that you can sign with your own Apple ID using a tool such as AltStore or Sideloadly; apps signed with a free Apple ID must be re-signed every 7 days. It has not been tested on a real device, so please report any problems.' },
     ],
   },
   finale: {

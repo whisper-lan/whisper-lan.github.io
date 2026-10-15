@@ -30,7 +30,14 @@ npm run build
 The site exports static HTML into `out/`. Use `npm start` for a local preview,
 or `npm run pages:build` to produce `.vercel/output/static`, preserving the
 existing Cloudflare Pages output directory. `npm run test:pages` checks the
-root language redirect; `npm run test:release-assets` checks package matching.
+root language redirect; `npm run test:release-assets` checks package matching;
+after a build, `npm run test:seo` checks that canonical, hreflang, sitemap,
+robots and the share image all point at the live domain.
+
+The live domain is set once in `lib/constants.ts` (or `NEXT_PUBLIC_SITE_DOMAIN`)
+and must be the one that actually serves the site. Search titles and snippets
+live under `meta` in `lib/i18n.ts`; they describe what the app does in the
+words people search with, and are separate from the hero's line.
 
 Cloudflare only runs the small root-language worker for `/`; localized pages,
 icons, and the social image are built ahead of time. GitHub release data is

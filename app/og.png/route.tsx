@@ -2,16 +2,9 @@ import { ImageResponse } from 'next/og'
 
 export const dynamic = 'force-static'
 
-export const alt = 'Whisper - encrypted LAN transfer and device collaboration'
-export const size = {
-  width: 1200,
-  height: 630,
-}
-export const contentType = 'image/png'
-
-// Social card in the site's style: the ring on black. English only — the
-// default OG font has no CJK glyphs.
-export default function OpengraphImage() {
+// Social card in the site's style: the ring on black, served as /og.png (see
+// OG_IMAGE in lib/seo.ts). English only — the default OG font has no CJK glyphs.
+export function GET() {
   const ink = '#f2f3f5'
   const muted = '#8a8f98'
   return new ImageResponse(
@@ -64,8 +57,6 @@ export default function OpengraphImage() {
         </div>
       </div>
     ),
-    {
-      ...size,
-    }
+    { width: 1200, height: 630 }
   )
 }
