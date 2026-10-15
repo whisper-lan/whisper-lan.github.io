@@ -95,7 +95,7 @@ const HeroCopy = memo(function HeroCopy({
   // A short intro on load only; everything after is driven by scrolling.
   const rise = (delay: number) =>
     reduce
-      ? {}
+      ? { initial: false as const, animate: { opacity: 1, y: 0 }, transition: { duration: 0 } }
       : {
           initial: { opacity: 0, y: 18 },
           animate: { opacity: 1, y: 0 },

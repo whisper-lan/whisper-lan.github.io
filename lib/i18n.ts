@@ -11,6 +11,8 @@ const zh = {
       '免费开源的局域网协作工具：在 Mac、Windows、Linux 和 Android 之间传文件和文件夹、同步剪贴板，多台电脑共用一套键鼠，Android 手机当鼠标和键盘，电脑声音送到其他设备播放。端到端加密，不经过服务器。',
     keywords: ['局域网传文件', '电脑手机互传文件', '键鼠共享', '跨屏键鼠', '剪贴板同步', '电脑声音共享', '手机控制电脑'],
   },
+  // This language's home page; feature pages live under it.
+  home: '/zh',
   nav: { features: '功能', security: '安全', download: '下载', faq: '问答', getApp: '下载' },
   a11y: {
     theme: '切换亮暗主题',
@@ -92,6 +94,9 @@ const zh = {
     exitHint: 'Ctrl + Alt + Esc 收回',
     phoneModes: ['体感', '触控板', '键盘'],
     phoneTitle: '控制电脑',
+    motionHint: '握住手机，转动手腕',
+    note: '便签',
+    typed: '记得带伞',
     source: '音源',
     sourceSub: '系统声音',
     left: '左声道',
@@ -200,6 +205,7 @@ const zh = {
   footer: {
     tagline: '只说给近处的人听。',
     product: '产品',
+    features: '功能',
     resources: '资源',
     links: {
       source: '源代码',
@@ -209,6 +215,175 @@ const zh = {
     },
     disclaimer: '本项目与 OpenAI 的 Whisper 语音识别模型无关。',
     license: 'MIT 许可',
+  },
+  // Feature pages (lib/features.ts). Same voice as the rest: concrete, calm,
+  // limits stated where they apply, every claim from the user guide.
+  features: {
+    more: '了解更多',
+    all: '全部功能',
+    guide: '使用指南',
+    home: '首页',
+    steps: '怎么开始',
+    platforms: '平台与要求',
+    faq: '常见问题',
+    others: '它还能做这些。',
+    items: {
+      keyboardMouse: {
+        meta: {
+          title: 'Whisper 键鼠共享：一套键盘鼠标控制多台电脑 | 免费开源',
+          description:
+            '桌上有两台电脑，只用一套键盘鼠标：把另一台的屏幕排在本机旁边，指针移过边缘就切换过去，键盘和剪贴板跟着走。支持 macOS、Windows 和 Linux（X11），局域网直连，端到端加密。',
+          keywords: ['键鼠共享', '跨屏键鼠', '一套键鼠控制多台电脑', 'Mac 和 Windows 共享键鼠', '软件 KVM'],
+        },
+        name: '键鼠共享',
+        guideAnchor: '#键鼠共享',
+        title: ['一套键鼠，', '横跨每一台电脑。'],
+        lead: '桌上有两台电脑，只用一套键盘鼠标。把另一台的屏幕排在本机旁边，指针移过屏幕边缘就到了那台电脑上，键盘输入跟着指针走。',
+        steps: [
+          { title: '连接', desc: '两台电脑都打开 Whisper，在设备列表里连接对方；第一次连接要核对配对码。' },
+          { title: '排好屏幕', desc: '在桌面端打开键鼠工作区，把对方的屏幕拖到本机屏幕旁边，照桌上实际的位置摆。' },
+          { title: '启动', desc: '点「启动」。指针从相邻的那条边移出去，就到了对方的电脑上。' },
+        ],
+        highlightsTitle: '不只是指针过去了。',
+        highlights: [
+          { icon: 'keyboard', title: '键盘跟着指针', desc: '指针在哪台电脑上，键盘输入就发到哪台，不用另外切换。' },
+          { icon: 'clipboard', title: '这边复制，那边粘贴', desc: '开启剪贴板同步后，在一台电脑上复制，到另一台直接粘贴。在键鼠工作区里，图片和文件也能这样过去，有大小限制。' },
+          { icon: 'devices', title: '不止两台', desc: '一个工作区里可以排进多台电脑，指针从哪条边出去，就到那一边的电脑上。' },
+          { icon: 'undo', title: '随时收回', desc: '指针回不来时，在主控端按 Ctrl + Alt + Esc（macOS 为 Control + Option + Esc），键鼠立即回到本机。对方断开时也会自动回来。' },
+          { icon: 'lock', title: 'Windows 锁屏也能输入', desc: '安装包附带一个系统服务，锁屏后也能在 Windows 的锁屏界面输入密码。解锁后的 UAC 提示默认不接收，需要时可以单独打开。' },
+          { icon: 'phone', title: '手机也能当键鼠', desc: '离开桌前，Android 手机可以当体感鼠标、触控板和键盘来控制电脑。' },
+        ],
+        platforms: [
+          { platform: 'mac', status: '控制与被控制', note: '需要在系统设置里授予辅助功能权限。' },
+          { platform: 'windows', status: '控制与被控制', note: '锁屏输入需要安装包附带的系统服务。' },
+          { platform: 'linux', status: '仅 X11', note: 'Wayland 会话下不可用。' },
+          { platform: 'android', status: '手机当键鼠', note: '不参与屏幕之间的键鼠共享，但可以把手机当成鼠标和键盘来控制电脑。' },
+        ],
+        faq: [
+          { q: '指针留在另一台电脑上回不来怎么办？', a: '在主控端按 Ctrl + Alt + Esc（macOS 为 Control + Option + Esc），键鼠会立即回到本机。工作区里屏幕排列区域的底部一直显示着这个快捷键。' },
+          { q: 'Linux 用的是 Wayland，可以用吗？', a: '目前不能。键鼠共享和用手机控制电脑都需要 X11 会话。' },
+          { q: '和远程桌面有什么不同？', a: '键鼠共享只把键盘和鼠标的操作发过去，不传画面：每台电脑用自己的显示器，适合摆在同一张桌上的几台电脑。它面向身边的自有设备，不是无人值守的远程控制方案。' },
+          { q: '和 Synergy、Input Leap 有什么不同？', a: '用法相近：排好屏幕，指针移过边缘就切换。区别是 Whisper 把键鼠共享和传文件、剪贴板、声音共享放在同一个应用里，配对一次都能用。如果只需要键鼠共享，或者想要更细的设置，专门的工具可能更合适。' },
+          { q: '指针移动一顿一顿的？', a: '先确认两台电脑的网络稳定。Windows 上检查「设置 → 系统 → 投影到此电脑」：开启时无线网卡要同时维持一个 Wi-Fi Direct 网络，会带来周期性的延迟；不用无线投屏就设为「始终关闭」。' },
+        ],
+      },
+      fileTransfer: {
+        meta: {
+          title: 'Whisper 局域网传文件：电脑和手机互传，不限大小 | 免费开源',
+          description:
+            '像聊天一样在电脑和手机之间传文字、照片、视频和整个文件夹。不限大小，断线后从断点接着传，到达时自动校验。macOS、Windows、Linux 和 Android 互通，局域网直连，端到端加密。',
+          keywords: ['局域网传文件', '电脑手机互传文件', '大文件传输', '断点续传', '传文件夹', '没网也能传文件'],
+        },
+        name: '传文件',
+        guideAnchor: '#发送文本和文件',
+        title: ['像聊天一样，', '传任何东西。'],
+        lead: '电脑和手机在同一个 Wi-Fi 里，打开对方的会话，把文件拖进去就发出去了。照片、视频、整个文件夹都可以，不限大小，也不经过任何服务器。',
+        steps: [
+          { title: '连接', desc: '两台设备都打开 Whisper，在设备列表里点击对方；第一次连接要核对配对码。' },
+          { title: '发送', desc: '在会话里输入文字，或者把文件、文件夹拖进来，也可以点附件按钮选择。' },
+          { title: '收到', desc: '消息和文件直接出现在对方的会话里。图片可以全屏看，音频直接播放，其他文件交给系统应用打开。' },
+        ],
+        highlightsTitle: '大文件和整个文件夹，也一样。',
+        highlights: [
+          { icon: 'folder', title: '整个文件夹', desc: '桌面端可以直接发送文件夹，不用先打包，对方收到同样的目录结构。个别文件没传成时，消息上会标出来。' },
+          { icon: 'wifi', title: '断线接着传', desc: '传到一半断了线，重新连上后从已确认的位置继续，不用从头再来。' },
+          { icon: 'check', title: '到达就校验', desc: '每个文件到达时都会做 SHA-256 校验。校验边传边算，传完不需要再把大文件读一遍。' },
+          { icon: 'share', title: '不打开会话也能发', desc: 'Android 用系统分享菜单，桌面用文件右键菜单；按 Cmd + Option + V（Windows / Linux 为 Ctrl + Alt + V）可以直接发送剪贴板里的内容。' },
+          { icon: 'search', title: '记录找得回来', desc: '可以搜索会话里的文字、收藏常用内容。删除消息时可以选择保留收到的文件。' },
+          { icon: 'devices', title: '同时连着多台', desc: '一台设备可以同时连着多台电脑和手机，每台都有自己的会话。' },
+        ],
+        platforms: [
+          { platform: 'mac', status: '收发文件和文件夹', note: '可以从访达的右键菜单直接发送；收到的文件能在访达里定位，也能从消息里拖出来。' },
+          { platform: 'windows', status: '收发文件和文件夹', note: '可以从文件的右键菜单直接发送。' },
+          { platform: 'linux', status: '收发文件和文件夹', note: '自动发现依赖 Avahi；网络禁用 mDNS 时，用二维码或 IP 连接。' },
+          { platform: 'android', status: '收发文件，文件夹只接收', note: '可以从系统分享菜单直接发送照片和文件。' },
+        ],
+        faq: [
+          { q: '有大小或类型限制吗？', a: '没有。任何类型、任何大小都可以，留意本地剩余空间即可。' },
+          { q: '没有网也能传吗？', a: '可以。只要两台设备在同一个局域网（同一个 Wi-Fi 或同一台路由器）里，就不需要连接互联网。' },
+          { q: '照片会被压缩吗？', a: '不会。发出去的是原文件，到达时会校验，对方收到的和你发出的一模一样。' },
+          { q: '传输速度取决于什么？', a: 'Wi-Fi 信号、设备性能和磁盘速度。加密与校验都是边传边做，不会在传完以后再花时间。' },
+          { q: '和 LocalSend 有什么不同？', a: '同样是局域网直传。Whisper 以会话的形式保留记录，还把剪贴板同步、键鼠共享和声音共享放在同一个应用里，配对一次都能用。' },
+        ],
+      },
+      audioSharing: {
+        meta: {
+          title: 'Whisper 声音共享：电脑的声音放到手机和多台设备上 | 免费开源',
+          description:
+            '把电脑正在播放的声音送到一台或多台设备同时播放，还能分配左右声道，临时拼出一套立体声。macOS、Windows、Linux 共享，Android 手机也能当扬声器，局域网直连。',
+          keywords: ['电脑声音传到手机', '系统音频共享', '电脑声音共享', '多设备同步播放', '手机当电脑音箱'],
+        },
+        name: '声音共享',
+        guideAnchor: '#系统音频共享',
+        title: ['一个声源，', '一屋子扬声器。'],
+        lead: '电脑上正在放的声音，不管来自哪个 App，都可以送到另一台电脑或手机上播放。选几台设备一起放，再给它们分好左右声道。',
+        steps: [
+          { title: '连接', desc: '电脑和要播放声音的设备都打开 Whisper，并且已经连接。' },
+          { title: '选择设备', desc: '在电脑的设备工具区选择音频共享，选一台或多台播放设备，给每台定好声道。' },
+          { title: '开始播放', desc: '开始以后，电脑上的声音会同时从这些设备里放出来；可以随时调整或停止。' },
+        ],
+        highlightsTitle: '不止一台扬声器。',
+        highlights: [
+          { icon: 'speaker', title: '整台电脑的声音', desc: '共享的是系统正在播放的声音，音乐、视频、会议都一样，不用为某个 App 单独设置。' },
+          { icon: 'devices', title: '一对多同时播放', desc: '几台设备一起播放时，Whisper 会估算它们之间的时钟偏差来对齐，界面上能看到同步状态。' },
+          { icon: 'stereo', title: '分配左右声道', desc: '每台设备可以设为立体声、左声道、右声道或单声道，两部手机也能临时拼成一对立体声音箱。' },
+          { icon: 'phone', title: '手机当扬声器', desc: 'Android 手机可以做播放端，把电脑的声音放到手边。' },
+          { icon: 'gear', title: '各自调音量', desc: '每台播放设备可以单独调共享扬声器的增益，只影响它自己，不改电脑的音量。' },
+          { icon: 'router', title: '只在局域网', desc: '声音在局域网里设备之间直接传，不经过任何服务器。' },
+        ],
+        platforms: [
+          { platform: 'mac', status: '共享与播放', note: '共享本机声音需要 macOS 13 及以上，并在系统设置里允许「屏幕录制」。' },
+          { platform: 'windows', status: '共享与播放', note: '直接采集系统正在播放的声音。' },
+          { platform: 'linux', status: '共享与播放', note: '需要 PulseAudio 或 PipeWire Pulse。' },
+          { platform: 'android', status: '只播放', note: '不能共享手机自己的声音，可以播放电脑共享过来的声音。' },
+        ],
+        faq: [
+          { q: 'Mac 上为什么要「屏幕录制」权限？', a: 'macOS 把采集系统声音归在「屏幕录制」这一项权限里。Whisper 共享声音时只取声音，不录制屏幕内容。' },
+          { q: '有延迟吗？能用来看视频吗？', a: '声音要经过网络和缓冲，会比电脑本身晚一点，具体取决于 Wi-Fi 质量。听音乐、播客没有问题；看视频、玩游戏这类要求声画同步的场景，可能会觉得声音稍慢。' },
+          { q: '能把手机的声音共享到电脑吗？', a: '目前不能。Android 只能做播放端，共享声音要从电脑上发起。' },
+          { q: '和 AudioRelay 有什么不同？', a: 'AudioRelay 专注声音这一件事，选项更多，比如把手机当成电脑的麦克风。Whisper 的声音共享和传文件、键鼠共享放在同一个应用里，配对一次都能用，也能让几台设备同时播放、分配声道。' },
+        ],
+      },
+      phoneControl: {
+        meta: {
+          title: 'Whisper 手机控制电脑：安卓手机当鼠标、触控板和键盘 | 免费开源',
+          description:
+            '用 Android 手机控制电脑：转动手腕移动指针，或者当触控板和虚拟键盘，用手机输入法直接打中文。被控电脑支持 macOS、Windows 和 Linux（X11），局域网直连，免费开源。',
+          keywords: ['手机控制电脑', '手机当鼠标', '手机当触控板', '手机当键盘', '安卓遥控电脑', '体感鼠标'],
+        },
+        name: '手机控制电脑',
+        guideAnchor: '#用-android-手机控制电脑',
+        title: ['一部手机，', '就是鼠标和键盘。'],
+        lead: '人不在桌前，也能操作电脑。Android 手机可以当体感鼠标，转动手腕就能移动指针；也可以当触控板和键盘，用手机输入法直接打中文。',
+        steps: [
+          { title: '连接', desc: '手机和电脑都打开 Whisper，连接并互相信任；电脑要已登录，并且正在运行 Whisper。' },
+          { title: '打开控制', desc: '在 Android 上进入这台电脑的会话，点「控制电脑」图标。' },
+          { title: '开始', desc: '点顶部的开始按钮，选体感、触控板或键盘，就能操作了。' },
+        ],
+        highlightsTitle: '体感、触控板、键盘，随手切换。',
+        highlights: [
+          { icon: 'rotate', title: '体感鼠标', desc: '点中央区域开启，握住手机转动手腕移动指针，再点一次暂停。需要陀螺仪和重力传感器，没有时自动用触控板。' },
+          { icon: 'touchpad', title: '触控板', desc: '单指移动、轻点左击，双指轻点右击、双指滑动滚动；按住底部的左键再移动就能拖拽。' },
+          { icon: 'keyboard', title: '虚拟键盘', desc: '可以切换数字、符号和功能键；先点修饰键再点普通键，就能发送 Ctrl + C 这样的组合键。' },
+          { icon: 'text', title: '用手机输入法打字', desc: '键盘页的输入框用的是手机自己的输入法，中文、表情和多行内容都能直接发到电脑上。' },
+          { icon: 'gear', title: '手感可以调', desc: '指针速度、滚动速度和体感灵敏度都能调，也可以重新校准。' },
+          { icon: 'devices', title: '切换要控制的电脑', desc: '连着多台电脑时，点顶部的电脑名称切换目标，一次控制一台。' },
+        ],
+        platforms: [
+          { platform: 'android', status: '控制端', note: '手机当鼠标和键盘；体感模式需要陀螺仪和重力传感器。' },
+          { platform: 'mac', status: '被控端', note: '需要在系统设置里授予辅助功能权限。' },
+          { platform: 'windows', status: '被控端', note: '电脑已登录并运行 Whisper 时可用。' },
+          { platform: 'linux', status: '被控端，仅 X11', note: 'Wayland 会话下不可用。' },
+        ],
+        faq: [
+          { q: '手机上能看到电脑的画面吗？', a: '不能。手机只发送鼠标和键盘操作，不传回电脑画面，适合人在电脑附近、看得到屏幕的时候用。' },
+          { q: '能唤醒电脑，或者在锁屏界面登录吗？', a: '不能。这个功能不能唤醒电脑，也不能在锁屏界面登录。' },
+          { q: '手机没有陀螺仪可以用吗？', a: '可以。体感模式需要陀螺仪和重力传感器，没有时会自动使用触控板，键盘照常可用。' },
+          { q: '为什么用着用着就停了？', a: '返回、切到后台、锁屏或断开连接都会停止控制。回到控制页，点开始就能继续。' },
+          { q: 'iPhone 可以吗？', a: '目前不行。控制电脑只在 Android 上提供，iOS 版没有上架，也没有经过真机测试。' },
+        ],
+      },
+    },
   },
 };
 
@@ -222,6 +397,7 @@ const en: Messages = {
       'Free, open-source LAN app for macOS, Windows, Linux and Android: send files, sync the clipboard, share one keyboard and mouse, and stream system audio. End-to-end encrypted.',
     keywords: ['LAN file transfer', 'keyboard and mouse sharing', 'software KVM', 'clipboard sync', 'stream PC audio', 'phone as mouse'],
   },
+  home: '/en',
   nav: { features: 'Features', security: 'Security', download: 'Download', faq: 'FAQ', getApp: 'Download' },
   a11y: {
     theme: 'Toggle light / dark theme',
@@ -303,6 +479,9 @@ const en: Messages = {
     exitHint: 'Ctrl + Alt + Esc to return',
     phoneModes: ['Motion', 'Touchpad', 'Keys'],
     phoneTitle: 'Control computer',
+    motionHint: 'Hold the phone and turn your wrist',
+    note: 'Notes',
+    typed: 'Bring an umbrella',
     source: 'Source',
     sourceSub: 'System audio',
     left: 'Left',
@@ -411,6 +590,7 @@ const en: Messages = {
   footer: {
     tagline: 'Meant for someone near.',
     product: 'Product',
+    features: 'Features',
     resources: 'Resources',
     links: {
       source: 'Source code',
@@ -420,6 +600,173 @@ const en: Messages = {
     },
     disclaimer: "Not affiliated with OpenAI's Whisper speech recognition model.",
     license: 'MIT License',
+  },
+  features: {
+    more: 'Learn more',
+    all: 'All features',
+    guide: 'User guide',
+    home: 'Home',
+    steps: 'Getting started',
+    platforms: 'Platforms and requirements',
+    faq: 'Questions',
+    others: 'What else it does.',
+    items: {
+      keyboardMouse: {
+        meta: {
+          title: 'Share one keyboard and mouse across computers | Whisper',
+          description:
+            'One keyboard and mouse for every computer on your desk. Move the pointer across a screen edge and your typing and clipboard follow. Free for macOS, Windows and Linux (X11).',
+          keywords: ['keyboard and mouse sharing', 'software KVM', 'share mouse between Mac and Windows', 'one keyboard multiple computers'],
+        },
+        name: 'Keyboard & mouse sharing',
+        guideAnchor: '#keyboard-and-mouse-sharing',
+        title: ['One keyboard,', 'every computer.'],
+        lead: 'Two computers on your desk, one keyboard and mouse. Place the other screen beside yours, and the pointer crosses over at the edge, with your typing following it.',
+        steps: [
+          { title: 'Connect', desc: 'Open Whisper on both computers and connect from the device list. The first time, compare the pairing code.' },
+          { title: 'Arrange', desc: 'Open the input workspace in the desktop app and drag the other screen next to yours, the way they sit on your desk.' },
+          { title: 'Start', desc: 'Click Start. Move the pointer off the shared edge and it lands on the other computer.' },
+        ],
+        highlightsTitle: 'More than the pointer moves.',
+        highlights: [
+          { icon: 'keyboard', title: 'Typing follows', desc: 'Keystrokes go to whichever computer the pointer is on. There is nothing else to switch.' },
+          { icon: 'clipboard', title: 'Copy here, paste there', desc: 'With clipboard sync on, copy on one computer and paste on another. Inside the input workspace, images and files travel this way too, within size limits.' },
+          { icon: 'devices', title: 'More than two', desc: 'Arrange several computers in one workspace. The pointer goes to whichever one sits past the edge it crosses.' },
+          { icon: 'undo', title: 'Always a way back', desc: 'If the pointer is stuck elsewhere, press Ctrl + Alt + Esc on the controlling computer (Control + Option + Esc on macOS) and input returns at once. It also returns if the other side disconnects.' },
+          { icon: 'lock', title: 'The Windows lock screen too', desc: 'A system service bundled with the installer lets you type your password on the Windows lock screen. UAC prompts after unlocking are off by default and can be turned on separately.' },
+          { icon: 'phone', title: 'Your phone, too', desc: 'Away from the desk, an Android phone can act as a motion mouse, touchpad, and keyboard for your computer.' },
+        ],
+        platforms: [
+          { platform: 'mac', status: 'Controls and is controlled', note: 'Grant the Accessibility permission in System Settings.' },
+          { platform: 'windows', status: 'Controls and is controlled', note: 'Typing on the lock screen needs the system service from the installer.' },
+          { platform: 'linux', status: 'X11 only', note: 'Not available in Wayland sessions.' },
+          { platform: 'android', status: 'Phone as mouse', note: 'Not part of sharing between screens, but the phone can act as a mouse and keyboard for a computer.' },
+        ],
+        faq: [
+          { q: 'My pointer is stuck on another computer. Now what?', a: 'Press Ctrl + Alt + Esc on the controlling computer (Control + Option + Esc on macOS) and input returns immediately. The shortcut is always shown at the bottom of the screen arrangement in the workspace.' },
+          { q: 'My Linux desktop uses Wayland. Will it work?', a: 'Not yet. Keyboard and mouse sharing, and control from a phone, need an X11 session.' },
+          { q: 'How is this different from remote desktop?', a: 'Only keyboard and mouse input is sent, not the picture: each computer keeps its own display, which suits computers on the same desk. It is meant for your own devices nearby, not for unattended remote control.' },
+          { q: 'How is it different from Synergy or Input Leap?', a: 'It works the same way: arrange the screens and the pointer crosses at the edge. The difference is that Whisper keeps keyboard and mouse sharing in the same app as file transfer, clipboard, and audio sharing, with one pairing for all of them. If you only need keyboard and mouse sharing, or want finer settings, a dedicated tool may suit you better.' },
+          { q: 'Why does the pointer stutter?', a: 'First check that both computers have a steady network connection. On Windows, check Settings → System → Projecting to this PC: while it is on, the wireless adapter keeps a Wi-Fi Direct network alive as well, which adds periodic delay. Set it to Always Off if you do not project to this PC.' },
+        ],
+      },
+      fileTransfer: {
+        meta: {
+          title: 'Send files between computers and phones over LAN | Whisper',
+          description:
+            'Send text, photos, videos, and whole folders between your computers and phones, like a chat. No size limit, resumes after a drop, verified on arrival. Free for macOS, Windows, Linux and Android.',
+          keywords: ['LAN file transfer', 'send files between phone and computer', 'large file transfer', 'resumable transfer', 'send folder over Wi-Fi'],
+        },
+        name: 'File transfer',
+        guideAnchor: '#send-text-and-files',
+        title: ['Send anything,', 'like a chat.'],
+        lead: 'With your computer and phone on the same Wi-Fi, open a conversation and drop files in. Photos, videos, whole folders, any size, and none of it passes through a server.',
+        steps: [
+          { title: 'Connect', desc: 'Open Whisper on both devices and select the other one in the device list. The first time, compare the pairing code.' },
+          { title: 'Send', desc: 'Type a message, or drag files and folders into the conversation. The attachment button works too.' },
+          { title: 'Receive', desc: 'Messages and files appear in the conversation on the other side. Images open full screen, audio plays in place, and other files open in their usual app.' },
+        ],
+        highlightsTitle: 'Big files and whole folders, just the same.',
+        highlights: [
+          { icon: 'folder', title: 'Whole folders', desc: 'The desktop app sends a folder as it is, without zipping it first, and the other side gets the same structure. If a few files fail, the message says which.' },
+          { icon: 'wifi', title: 'Picks up after a drop', desc: 'If the connection drops partway, the transfer resumes from the last confirmed point once you reconnect.' },
+          { icon: 'check', title: 'Verified on arrival', desc: 'Every file is checked with SHA-256 as it arrives. The check runs while the data streams in, so large files are not read a second time.' },
+          { icon: 'share', title: 'Send without opening a chat', desc: 'Use the share menu on Android or the file context menu on desktop. Cmd + Option + V (Ctrl + Alt + V on Windows and Linux) sends what is on your clipboard.' },
+          { icon: 'search', title: 'Easy to find again', desc: 'Search the text in a conversation and favorite what you reuse. When deleting messages, you can keep the files you received.' },
+          { icon: 'devices', title: 'Many devices at once', desc: 'One device can stay connected to several computers and phones, each with its own conversation.' },
+        ],
+        platforms: [
+          { platform: 'mac', status: 'Files and folders', note: 'Send from the Finder context menu; received files can be shown in Finder or dragged out of the message.' },
+          { platform: 'windows', status: 'Files and folders', note: 'Send straight from a file’s context menu.' },
+          { platform: 'linux', status: 'Files and folders', note: 'Discovery relies on Avahi. If mDNS is blocked on your network, connect with a QR code or IP address.' },
+          { platform: 'android', status: 'Files; folders receive only', note: 'Send photos and files from the system share menu.' },
+        ],
+        faq: [
+          { q: 'Is there a size or type limit?', a: 'No. Any type and any size works, as long as there is room on the receiving device.' },
+          { q: 'Does it work without internet?', a: 'Yes. The two devices only need to be on the same local network, such as the same Wi-Fi or router.' },
+          { q: 'Are photos compressed?', a: 'No. The original file is sent and verified on arrival, so what the other side gets is exactly what you sent.' },
+          { q: 'What decides the speed?', a: 'Wi-Fi signal, device performance, and disk speed. Encryption and verification happen while the data streams, not afterwards.' },
+          { q: 'How is it different from LocalSend?', a: 'Both send directly over the local network. Whisper keeps a conversation history, and puts clipboard sync, keyboard and mouse sharing, and audio sharing in the same app, with one pairing for all of them.' },
+        ],
+      },
+      audioSharing: {
+        meta: {
+          title: 'Stream computer audio to phones and other devices | Whisper',
+          description:
+            'Play what your computer is playing on one or more devices at once, and assign left and right channels for a makeshift stereo pair. Shares from macOS, Windows and Linux; Android phones can play.',
+          keywords: ['stream PC audio to phone', 'system audio sharing', 'share computer audio over Wi-Fi', 'multi-device audio sync', 'phone as computer speaker'],
+        },
+        name: 'Audio sharing',
+        guideAnchor: '#system-audio-sharing',
+        title: ['One source,', 'a room of speakers.'],
+        lead: 'Whatever your computer is playing, from any app, can play on another computer or a phone. Pick several devices to play together and give each one its channel.',
+        steps: [
+          { title: 'Connect', desc: 'Open Whisper on the computer and on the devices that will play, and connect them.' },
+          { title: 'Choose devices', desc: 'In the computer’s device tools, choose audio sharing, select one or more playback devices, and set each one’s channel.' },
+          { title: 'Play', desc: 'Sound from the computer now plays on all of them. Adjust or stop at any time.' },
+        ],
+        highlightsTitle: 'More than one speaker.',
+        highlights: [
+          { icon: 'speaker', title: 'Everything the computer plays', desc: 'It shares the system’s output, so music, video, and calls all come through without setting up each app.' },
+          { icon: 'devices', title: 'Several devices at once', desc: 'When devices play together, Whisper estimates the clock offset between them to keep them aligned, and shows how well they are in sync.' },
+          { icon: 'stereo', title: 'Left and right channels', desc: 'Set each device to stereo, left, right, or mono. Two phones can become a makeshift stereo pair.' },
+          { icon: 'phone', title: 'A phone as a speaker', desc: 'An Android phone can be a playback device, bringing the computer’s sound to wherever you are.' },
+          { icon: 'gear', title: 'Volume per device', desc: 'Each playback device has its own gain for shared audio. It only affects that device, not the computer’s volume.' },
+          { icon: 'router', title: 'Local network only', desc: 'Audio travels directly between devices on your network, never through a server.' },
+        ],
+        platforms: [
+          { platform: 'mac', status: 'Shares and plays', note: 'Sharing this Mac’s audio needs macOS 13 or later and the Screen Recording permission in System Settings.' },
+          { platform: 'windows', status: 'Shares and plays', note: 'Captures whatever the system is playing.' },
+          { platform: 'linux', status: 'Shares and plays', note: 'Needs PulseAudio or PipeWire Pulse.' },
+          { platform: 'android', status: 'Plays only', note: 'Cannot share the phone’s own audio, but can play audio shared from a computer.' },
+        ],
+        faq: [
+          { q: 'Why does the Mac ask for Screen Recording?', a: 'macOS puts capturing system audio under the Screen Recording permission. When sharing audio, Whisper takes only the sound and does not record what is on screen.' },
+          { q: 'Is there a delay? Can I watch video with it?', a: 'Audio goes through the network and a buffer, so it plays a little later than on the computer itself, depending on your Wi-Fi. Music and podcasts are fine; where sound must match the picture, as in video or games, you may notice it lagging.' },
+          { q: 'Can I share my phone’s audio to the computer?', a: 'Not at the moment. Android only plays; sharing starts from a computer.' },
+          { q: 'How is it different from AudioRelay?', a: 'AudioRelay focuses on audio alone and has more options, such as using your phone as the computer’s microphone. Whisper keeps audio sharing in the same app as file transfer and keyboard and mouse sharing, with one pairing for all of them, and can play on several devices at once with channels assigned.' },
+        ],
+      },
+      phoneControl: {
+        meta: {
+          title: 'Android phone as mouse, touchpad and keyboard | Whisper',
+          description:
+            'Control your computer from an Android phone: turn your wrist to move the pointer, or use it as a touchpad and keyboard with your phone’s own input method. Works with macOS, Windows and Linux (X11).',
+          keywords: ['phone as mouse', 'control computer from Android', 'phone as touchpad', 'phone as keyboard', 'motion mouse app'],
+        },
+        name: 'Phone as mouse',
+        guideAnchor: '#control-a-computer-from-android',
+        title: ['One phone,', 'mouse and keyboard.'],
+        lead: 'Use your computer without sitting at it. An Android phone becomes a motion mouse that follows your wrist, or a touchpad and keyboard that types with your phone’s own input method.',
+        steps: [
+          { title: 'Connect', desc: 'Open Whisper on the phone and the computer, connect them, and trust each other. The computer must be signed in with Whisper running.' },
+          { title: 'Open control', desc: 'On Android, open the computer’s conversation and tap the Control computer icon.' },
+          { title: 'Start', desc: 'Tap the start button at the top, then choose motion, touchpad, or keys.' },
+        ],
+        highlightsTitle: 'Motion, touchpad, keys: switch any time.',
+        highlights: [
+          { icon: 'rotate', title: 'Motion mouse', desc: 'Tap the centre to start, then hold the phone and turn your wrist to move the pointer; tap again to pause. It needs a gyroscope and gravity sensor and falls back to the touchpad without them.' },
+          { icon: 'touchpad', title: 'Touchpad', desc: 'Move with one finger and tap to click; tap with two fingers to right-click and slide with two to scroll. Hold the left button and move to drag.' },
+          { icon: 'keyboard', title: 'Virtual keyboard', desc: 'Switch to numbers, symbols, and function keys. Tap a modifier and then a key to send combinations like Ctrl + C.' },
+          { icon: 'text', title: 'Type with your phone', desc: 'The text field on the keyboard page uses your phone’s own input method, so other languages, emoji, and multi-line text go straight to the computer.' },
+          { icon: 'gear', title: 'Tuned to your hand', desc: 'Adjust pointer speed, scroll speed, and motion sensitivity, and recalibrate when needed.' },
+          { icon: 'devices', title: 'Switch computers', desc: 'With several computers connected, tap the computer’s name at the top to switch. One is controlled at a time.' },
+        ],
+        platforms: [
+          { platform: 'android', status: 'Controls', note: 'The phone acts as mouse and keyboard; motion mode needs a gyroscope and gravity sensor.' },
+          { platform: 'mac', status: 'Can be controlled', note: 'Grant the Accessibility permission in System Settings.' },
+          { platform: 'windows', status: 'Can be controlled', note: 'Works while the computer is signed in and Whisper is running.' },
+          { platform: 'linux', status: 'Can be controlled, X11 only', note: 'Not available in Wayland sessions.' },
+        ],
+        faq: [
+          { q: 'Can I see the computer’s screen on the phone?', a: 'No. The phone only sends mouse and keyboard input and never receives the picture, so it suits times when you are near the computer and can see its screen.' },
+          { q: 'Can it wake the computer or sign in on the lock screen?', a: 'No. It cannot wake the computer or sign in on the lock screen.' },
+          { q: 'My phone has no gyroscope. Can I still use it?', a: 'Yes. Motion mode needs a gyroscope and gravity sensor; without them the touchpad is used instead, and the keyboard works as usual.' },
+          { q: 'Why did control stop?', a: 'Going back, switching away, locking the phone, or disconnecting all stop control. Return to the control page and tap start to continue.' },
+          { q: 'Does it work on iPhone?', a: 'Not at the moment. Computer control is only available on Android; the iOS version is not on the App Store and has not been tested on a device.' },
+        ],
+      },
+    },
   },
 };
 

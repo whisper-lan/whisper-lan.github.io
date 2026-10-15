@@ -10,17 +10,23 @@ const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf
 const domain = process.env.NEXT_PUBLIC_SITE_DOMAIN || read('lib/constants.ts').match(/NEXT_PUBLIC_SITE_DOMAIN \|\| '([^']+)'/)[1];
 const base = `https://${domain}`;
 
+const slugs = [...read('lib/features.ts').matchAll(/slug: '([^']+)'/g)].map((m) => m[1]);
+const pages = ['zh', 'en'].flatMap((lang) => [`/${lang}`, ...slugs.map((slug) => `/${lang}/${slug}`)]);
+
 const attr = (html, pattern) => [...html.matchAll(pattern)].map((m) => m[1]);
 const sameHost = (url, where) => assert.equal(new URL(url).host, domain, `${where}: ${url} is not on ${domain}`);
 
-for (const [file, lang, page] of [['out/zh.html', 'zh-CN', '/zh'], ['out/en.html', 'en', '/en']]) {
+for (const page of pages) {
+  const file = `out${page}.html`;
+  const lang = page.startsWith('/zh') ? 'zh-CN' : 'en';
+  const home = page === '/zh' || page === '/en';
   const html = read(file);
   const head = html.split('</head>')[0];
   assert.match(html, new RegExp(`<html lang="${lang}"`), `${file}: html lang should be ${lang}`);
   assert.deepEqual(attr(head, /<link rel="canonical" href="([^"]+)"/g), [`${base}${page}`], `${file}: canonical`);
 
   const alternates = attr(head, /<link rel="alternate" hrefLang="([^"]+)"/g).sort();
-  assert.deepEqual(alternates, ['en', 'x-default', 'zh'], `${file}: hreflang set`);
+  assert.deepEqual(alternates, home ? ['en', 'x-default', 'zh'] : ['en', 'zh'], `${file}: hreflang set`);
   for (const url of attr(head, /<link rel="alternate" hrefLang="[^"]+" href="([^"]+)"/g)) sameHost(url, file);
 
   for (const key of ['og:url', 'og:image']) {
@@ -34,15 +40,15 @@ for (const [file, lang, page] of [['out/zh.html', 'zh-CN', '/zh'], ['out/en.html
 
   const [ld] = attr(html, /<script type="application\/ld\+json">(.*?)<\/script>/gs);
   const graph = JSON.parse(ld)['@graph'];
-  assert.deepEqual(graph.map((node) => node['@type']), ['WebSite', 'SoftwareApplication', 'FAQPage'], `${file}: structured data`);
-  sameHost(graph[1].url, `${file} structured data`);
+  assert.deepEqual(graph.map((node) => node['@type']), home ? ['WebSite', 'SoftwareApplication', 'FAQPage'] : ['WebPage', 'BreadcrumbList', 'FAQPage'], `${file}: structured data`);
+  sameHost(graph[home ? 1 : 0].url, `${file} structured data`);
 }
 
 const sitemap = read('out/sitemap.xml');
 const locs = attr(sitemap, /<loc>([^<]+)<\/loc>/g);
-assert.deepEqual(locs, [`${base}/zh`, `${base}/en`], 'sitemap lists only the two pages');
+assert.deepEqual([...locs].sort(), pages.map((page) => `${base}${page}`).sort(), 'sitemap lists exactly the pages');
 for (const url of attr(sitemap, /href="([^"]+)"/g)) sameHost(url, 'sitemap');
 
 assert.match(read('out/robots.txt'), new RegExp(`Sitemap: ${base}/sitemap.xml`), 'robots.txt sitemap');
 
-console.log(`seo: ok for ${base}`);
+console.log(`seo: ok for ${pages.length} pages on ${base}`);

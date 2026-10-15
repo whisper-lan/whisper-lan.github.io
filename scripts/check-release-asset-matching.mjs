@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const page = readFileSync(new URL('../lib/release.ts', import.meta.url), 'utf8');
-const homePage = readFileSync(new URL('../app/components/HomePage.tsx', import.meta.url), 'utf8');
+const siteFrame = readFileSync(new URL('../app/components/site/SiteFrame.tsx', import.meta.url), 'utf8');
 const downloads = readFileSync(new URL('../lib/downloads.ts', import.meta.url), 'utf8');
 
 assert.match(page, /PLATFORM_FILE_SUFFIXES/);
@@ -25,4 +25,4 @@ assert.match(downloads, /mac:\s*buildOptions\(/);
 assert.match(downloads, /android:\s*buildOptions\(/);
 assert.match(downloads, /linux:\s*buildOptions\(/);
 // Platforms with several builds go to the download section instead of guessing.
-assert.match(homePage, /!builds\[detected\]\?\.length/);
+assert.match(siteFrame, /!builds\[detected\]\?\.length/);

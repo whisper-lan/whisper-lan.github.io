@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { SITE_CONFIG } from './constants';
 import { messages, type Language } from './i18n';
+import type { FeatureKey } from './features';
 
 // Search metadata for the two localized pages. Every absolute URL comes from
 // SITE_CONFIG.baseUrl, so moving the site to another domain is one change.
@@ -14,7 +15,7 @@ export const copyLanguage = (lang: SiteLang): Language => (lang === 'zh' ? 'zh-C
 // searcher is pointed at it.
 export const htmlLang = (lang: SiteLang) => (lang === 'zh' ? 'zh-CN' : 'en');
 
-export const pageUrl = (lang?: SiteLang) => `${SITE_CONFIG.baseUrl}/${lang ?? ''}`;
+export const pageUrl = (lang?: SiteLang, slug?: string) => `${SITE_CONFIG.baseUrl}/${lang ?? ''}${slug ? `/${slug}` : ''}`;
 
 // "/" is the edge redirect by browser language, so it is the x-default.
 export const languageAlternates = {
@@ -55,15 +56,28 @@ const baseMetadata: Metadata = {
   },
 };
 
+export const featureAlternates = (slug: string) => ({ zh: pageUrl('zh', slug), en: pageUrl('en', slug) });
+
 export function pageMetadata(lang: SiteLang): Metadata {
-  const { title, description, keywords } = messages[copyLanguage(lang)].meta;
-  const url = pageUrl(lang);
+  return metadataFor(lang, messages[copyLanguage(lang)].meta, pageUrl(lang), languageAlternates);
+}
+
+export function featureMetadata(lang: SiteLang, key: FeatureKey, slug: string): Metadata {
+  return metadataFor(lang, messages[copyLanguage(lang)].features.items[key].meta, pageUrl(lang, slug), featureAlternates(slug));
+}
+
+function metadataFor(
+  lang: SiteLang,
+  { title, description, keywords }: { title: string; description: string; keywords: string[] },
+  url: string,
+  languages: Record<string, string>,
+): Metadata {
   return {
     ...baseMetadata,
     title,
     description,
     keywords,
-    alternates: { canonical: url, languages: languageAlternates },
+    alternates: { canonical: url, languages },
     openGraph: {
       type: 'website',
       siteName: SITE_CONFIG.title,
@@ -118,6 +132,45 @@ export function structuredData(lang: SiteLang) {
         url: pageUrl(lang),
         inLanguage: htmlLang(lang),
         mainEntity: t.faq.items.map((item) => ({
+          '@type': 'Question',
+          name: item.q,
+          acceptedAnswer: { '@type': 'Answer', text: item.a },
+        })),
+      },
+    ],
+  };
+}
+
+// A feature page: where it sits under the home page (search results can show
+// that path), and its own questions.
+export function featureStructuredData(lang: SiteLang, key: FeatureKey, slug: string) {
+  const t = messages[copyLanguage(lang)];
+  const copy = t.features.items[key];
+  const url = pageUrl(lang, slug);
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        url,
+        name: copy.meta.title,
+        description: copy.meta.description,
+        inLanguage: htmlLang(lang),
+        isPartOf: { '@id': `${SITE_CONFIG.baseUrl}/#website` },
+        about: { '@id': `${SITE_CONFIG.baseUrl}/#app` },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: SITE_CONFIG.title, item: pageUrl(lang) },
+          { '@type': 'ListItem', position: 2, name: copy.name, item: url },
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        url,
+        inLanguage: htmlLang(lang),
+        mainEntity: copy.faq.map((item) => ({
           '@type': 'Question',
           name: item.q,
           acceptedAnswer: { '@type': 'Answer', text: item.a },

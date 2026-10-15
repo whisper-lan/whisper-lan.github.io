@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
-import { SITE_LANGS, languageAlternates, pageUrl } from '@/lib/seo';
+import { FEATURES } from '@/lib/features';
+import { SITE_LANGS, featureAlternates, languageAlternates, pageUrl } from '@/lib/seo';
 
 export const dynamic = 'force-static';
 
@@ -7,9 +8,8 @@ export const dynamic = 'force-static';
 // x-default alternate rather than as a page.
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
-  return SITE_LANGS.map((lang) => ({
-    url: pageUrl(lang),
-    lastModified,
-    alternates: { languages: languageAlternates },
-  }));
+  return SITE_LANGS.flatMap((lang) => [
+    { url: pageUrl(lang), lastModified, alternates: { languages: languageAlternates } },
+    ...FEATURES.map((f) => ({ url: pageUrl(lang, f.slug), lastModified, alternates: { languages: featureAlternates(f.slug) } })),
+  ]);
 }

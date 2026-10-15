@@ -58,7 +58,9 @@ export function Reveal({
   const translate = useTransform(progress, [start, 1], [y, 0]);
   const Component = motion[as];
   return (
-    <Component ref={ref as never} className={className} style={reduce ? undefined : { opacity, y: translate }}>
+    // Reduced motion still sets the resting state: the first render assumes motion,
+    // and dropping the style would leave its starting values on the element.
+    <Component ref={ref as never} className={className} style={reduce ? { opacity: 1, y: 0 } : { opacity, y: translate }}>
       {children}
     </Component>
   );
@@ -85,8 +87,14 @@ const iconPaths: Record<string, ReactNode> = {
   download: <path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19.5h14" />,
   arrowRight: <path d="M5 12h14m-5-5 5 5-5 5" />,
   arrowDown: <path d="M12 5v14m-5-5 5 5 5-5" />,
+  chevronDown: <path d="m6.5 9.5 5.5 5.5 5.5-5.5" />,
   arrowUpRight: <path d="M7 17 17 7M8 7h9v9" />,
   check: <path d="m5 12.5 4.2 4.2L19 7" />,
+  undo: <path d="M9 14 4.5 9.5 9 5M4.5 9.5H15a5 5 0 0 1 0 10h-3" />,
+  stereo: <><rect x="3" y="4.5" width="7.5" height="15" rx="2" /><rect x="13.5" y="4.5" width="7.5" height="15" rx="2" /><circle cx="6.75" cy="14" r="2.2" /><circle cx="17.25" cy="14" r="2.2" /><path d="M6.75 8.3h.01M17.25 8.3h.01" /></>,
+  rotate: <><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3" /><path d="M19.6 3.8v3.6H16" /></>,
+  touchpad: <><rect x="3.5" y="4.5" width="17" height="15" rx="2.5" /><path d="M3.5 14.5h17M12 14.5v5" /></>,
+  text: <path d="M5.5 6.5h13M12 6.5v11M9.5 17.5h5" />,
   plus: <path d="M12 5v14M5 12h14" />,
   sun: <><circle cx="12" cy="12" r="4" /><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4" /></>,
   moon: <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" />,

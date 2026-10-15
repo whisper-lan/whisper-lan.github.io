@@ -9,12 +9,13 @@ import { TransferScene } from '../scenes/TransferScene';
 import { InputScene } from '../scenes/InputScene';
 import { AudioScene } from '../scenes/AudioScene';
 import { CastScene } from '../scenes/CastScene';
+import { featureByChapter } from '@/lib/features';
 
 type ChapterKey = keyof Messages['chapters']['items'];
 export type SceneProps = { t: Messages; progress: MotionValue<number> };
 
 // tint: the stage's light for each chapter, as r, g, b
-const CHAPTERS: { key: ChapterKey; Scene: ComponentType<SceneProps>; tint: [number, number, number] }[] = [
+export const CHAPTERS: { key: ChapterKey; Scene: ComponentType<SceneProps>; tint: [number, number, number] }[] = [
   { key: 'transfer', Scene: TransferScene, tint: [42, 143, 224] },
   { key: 'input', Scene: InputScene, tint: [59, 179, 164] },
   { key: 'audio', Scene: AudioScene, tint: [143, 212, 67] },
@@ -27,6 +28,7 @@ const N = CHAPTERS.length;
 function ChapterText({ t, chapter, index, parts = 'all' }: { t: Messages; chapter: ChapterKey; index: number; parts?: 'all' | 'head' | 'body' }) {
   const c = t.chapters.items[chapter];
   const [r, g, b] = CHAPTERS[index].tint;
+  const page = featureByChapter(chapter);
   const head = (
     <>
       {/* the short rule takes the colour of this chapter's light on the stage */}
@@ -54,6 +56,12 @@ function ChapterText({ t, chapter, index, parts = 'all' }: { t: Messages; chapte
           </li>
         ))}
       </ul>
+      {page && (
+        <a href={`${t.home}/${page.slug}`} className="mt-6 inline-flex items-center gap-1.5 text-[15px] font-medium text-accent hover:underline sm:mt-8">
+          {t.features.more}
+          <Icon name="arrowRight" className="h-4 w-4" />
+        </a>
+      )}
     </>
   );
   if (parts === 'head') return head;
@@ -66,7 +74,7 @@ function ChapterText({ t, chapter, index, parts = 'all' }: { t: Messages; chapte
   );
 }
 
-function StageFrame({ background, children }: { background: MotionValue<string> | string; children: ReactNode }) {
+export function StageFrame({ background, children }: { background: MotionValue<string> | string; children: ReactNode }) {
   return (
     <motion.div className="relative overflow-hidden rounded-[32px] border border-hair bg-surface-2" style={{ backgroundImage: background }}>
       <div className="px-[6%] py-[7%]">{children}</div>
@@ -107,7 +115,7 @@ function cushionOffset(d: number, travel: number) {
   return -L;
 }
 
-function useStoryClock(playing: boolean, duration = 2.8) {
+export function useStoryClock(playing: boolean, duration = 2.8) {
   const clock = useMotionValue(0);
   useEffect(() => {
     if (playing) {

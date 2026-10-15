@@ -9,22 +9,22 @@ import { GITHUB } from './links';
 type Platform = Exclude<PlatformType, 'unknown'>;
 const ORDER: Platform[] = ['mac', 'windows', 'linux', 'android', 'ios'];
 
-export function Steps({ t }: { t: Messages }) {
+export function Steps({ title, items }: { title: string; items: { title: string; desc: string }[] }) {
   return (
     <section className="py-16 sm:py-32">
       <div className="shell">
         <Reveal>
           <h2 className="display text-ink" style={{ fontSize: 'clamp(26px, 4vw, 52px)' }}>
-            {t.steps.title}
+            {title}
           </h2>
         </Reveal>
         {/* phones: a short timeline on a rail; wider screens: three columns */}
         <ol className="mt-8 sm:mt-14 sm:grid sm:grid-cols-3 sm:gap-8">
-          {t.steps.items.map((step, i) => (
+          {items.map((step, i) => (
             <Reveal as="li" key={step.title} delay={i * 0.08} className="group relative flex gap-4 sm:block">
               <span className="flex flex-col items-center sm:hidden">
                 <span className="mono grid h-8 w-8 shrink-0 place-items-center rounded-full border border-hair bg-surface text-[12px] text-ink-2">{i + 1}</span>
-                {i < t.steps.items.length - 1 && <span className="w-px flex-1" style={{ background: 'linear-gradient(var(--ring-b), var(--hair))' }} />}
+                {i < items.length - 1 && <span className="w-px flex-1" style={{ background: 'linear-gradient(var(--ring-b), var(--hair))' }} />}
               </span>
               <div className="pb-7 pt-1 group-last:pb-0 sm:pb-0 sm:pt-0">
                 <span className="mono hidden text-[13px] text-faint sm:block">{String(i + 1).padStart(2, '0')}</span>

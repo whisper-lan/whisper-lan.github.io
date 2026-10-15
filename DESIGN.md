@@ -192,6 +192,7 @@ CSS `position: sticky` 会让元素在一帧之内从"随页面移动"变成"静
 - 大块移动的层加 `will-change: transform`。
 - framer-motion 的 transform 会覆盖 Tailwind 的 `translate-*` 类。需要居中定位又要做动画时，外层负责定位，内层负责动画。
 - SVG 的渐变 / 滤镜 ID 用 `useId` 生成。同一组件可能同时渲染两份（比如一份是 `display:none`），ID 重复会导致渐变消失。
+- **"减少动态效果"时要显式给出终态**：`useReducedMotion` 首次渲染先按"有动效"算（为了和服务端一致），元素已经带上了起始的 `opacity: 0`；之后切成减少动效时如果只是把 `style` / `initial` 去掉，起始值会一直留在元素上，整页看不见（踩过的坑：开着这个系统设置时，首页除了导航和页脚全是空白）。所以减少动效分支要写成 `{ opacity: 1, y: 0 }` 或 `animate` 到终态，不能写 `undefined` / `{}`。
 - `useScroll({ target: ref })` 必须写在**挂这个 ref 的组件里**。framer 在 layout effect 里读取 ref，而子组件的 effect 先于父组件的 ref 赋值执行，读到 null 后就会退化成整页进度（踩过的坑：安全区一度让整页一直是黑的）。
 
 ## 7. 文案
@@ -219,6 +220,11 @@ CSS `position: sticky` 会让元素在一帧之内从"随页面移动"变成"静
 
   停靠点、胶片长度、圆点指示都会自动适配。超过 5 章会显得冗长，考虑放进"细节"区。
 - **加一个细节卡片**：在 `Details.tsx` 写一个小插图组件，加进网格。保持 3 列网格的拼合：宽卡占 2 列、窄卡占 1 列，最后一行可以占满整行。
+- **加一个功能页**（`/zh/<slug>`、`/en/<slug>`，给按功能名搜索的人看）：
+  1. 在 `lib/features.ts` 的 `FEATURES` 登记 key、slug、对应的首页章节和光色（`tint`，有对应章节就用那一章的颜色）；slug 就是网址，上线后不要再改；
+  2. 在 `lib/i18n.ts` 的 `features.items` 写中英文案：搜索标题和描述（`meta`）、首屏、三步、细节、平台与要求、常见问题。能力描述照样以使用指南为准，限制写在对应位置；
+  3. 在 `FeaturePage.tsx` 的 `SCENES` 指定首屏场景：有对应章节就用那一章的场景，没有就新画一个（手机控制电脑的 `PhoneScene`，规则同 §4）。页面按同一套结构生成：首屏、三步、细节、平台、问答、其他功能、结尾。导航栏「功能」菜单、页脚、sitemap、hreflang、结构化数据和首页章节里的"了解更多"都会自动带上。
+  4. 首页和功能页共用 `site/SiteFrame.tsx`（语言切换、导航、页脚、下载按钮），功能页里指向首页区段的链接要带语言前缀（`home`）。
 - **新平台或新安装包**：
   1. 在 `lib/release.ts` 的 `PLATFORM_FILE_SUFFIXES` 加文件名后缀（`npm run test:release-assets` 会检查）；
   2. 在 `lib/downloads.ts` 的 `platformBuilds` 加按钮；
@@ -252,11 +258,14 @@ npm run build && npm start        # 静态预览，默认 http://127.0.0.1:3000
 ## 10. 文件地图
 
 ```
-app/components/HomePage.tsx        页面组装：语言、主题、Release 数据、平台识别、提示
+app/components/HomePage.tsx        首页组装
+app/components/FeaturePage.tsx     功能页（结构见 §8）
+app/[lang]/[feature]/page.tsx      功能页路由与元数据
 app/components/site/
+  SiteFrame.tsx                    各页共用：语言、主题、Release 数据、平台识别、导航、页脚、提示
   scroll.tsx                       Lenis + 停靠规则（Shot / Page）
   primitives.tsx                   Reveal、useScrollProgress、Icon、RingMark、平台标志
-  Nav.tsx                          顶栏
+  Nav.tsx                          顶栏；「功能」是功能页菜单（桌面悬停或点击展开，手机在菜单里列出）
   Prologue.tsx                     开场一镜到底（标题、圆环、宣言）
   RingStage.tsx                    圆环、设备、光点、回执
   Chapters.tsx                     功能区（桌面：文字 + 胶片舞台；手机：堆叠）
@@ -265,8 +274,10 @@ app/components/site/
   Download.tsx                     三步开始、下载卡片
   Closing.tsx                      常见问题、结尾圆环、页脚
   links.ts                         外链
-app/components/scenes/             复刻的 App 界面（680×540 画布）
-lib/i18n.ts                        全部文案（中 / 英）
+app/components/scenes/             复刻的 App 界面（680×540 画布）；PhoneScene 只用在功能页
+lib/i18n.ts                        全部文案（中 / 英），含搜索标题与描述（meta）
+lib/features.ts                    功能页登记（slug 与首页章节的对应）
+lib/seo.ts                         canonical、hreflang、分享卡片、结构化数据
 lib/downloads.ts                   各平台的安装包选项
 lib/release.ts                     GitHub Release 读取与文件匹配
 app/globals.css                    设计变量、基础样式、循环动画

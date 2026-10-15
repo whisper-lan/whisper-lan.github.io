@@ -4,21 +4,22 @@ import { motion, useTransform } from 'framer-motion';
 import type { Messages } from '@/lib/i18n';
 import { Icon, Reveal, RingMark, useReducedMotion, useScrollProgress } from './primitives';
 import { GITHUB } from './links';
+import { FEATURES } from '@/lib/features';
 
-export function Faq({ t, isZh }: { t: Messages; isZh: boolean }) {
-  const f = t.faq;
+// The home page's questions by default; a feature page passes its own.
+export function Faq({ t, isZh, title = t.faq.title, items = t.faq.items }: { t: Messages; isZh: boolean; title?: string; items?: { q: string; a: string }[] }) {
   return (
     <section id="faq" className="scroll-mt-16 py-16 sm:py-32">
       <div className="shell grid gap-6 sm:gap-12 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] lg:gap-20">
         <Reveal className="lg:sticky lg:top-28 lg:self-start">
           <h2 className="display text-ink" style={{ fontSize: 'clamp(26px, 4vw, 52px)' }}>
-            {f.title}
+            {title}
           </h2>
           <FaqMore t={t} isZh={isZh} className="mt-6 hidden lg:block" />
         </Reveal>
         <Reveal delay={0.05}>
           <div className="border-t border-hair">
-            {f.items.map((item) => (
+            {items.map((item) => (
               <details key={item.q} className="group border-b border-hair">
                 <summary className="flex cursor-pointer items-center justify-between gap-4 py-4 text-[15.5px] font-medium text-ink transition-colors hover:text-ink-2 sm:gap-6 sm:py-6 sm:text-[17px]">
                   {item.q}
@@ -77,7 +78,7 @@ function LiveIcon() {
   );
   return (
     <motion.div ref={ref} className="relative mx-auto aspect-square w-[min(300px,58vw)]">
-      <motion.div className="absolute inset-0 will-change-transform" style={reduce ? undefined : { scale, opacity: ringOpacity }}>
+      <motion.div className="absolute inset-0 will-change-transform" style={reduce ? { scale: 1, opacity: 1 } : { scale, opacity: ringOpacity }}>
         {/* glow, ripples and line on separate layers, like the opening ring */}
         <div className="breathe absolute inset-0">
           <svg viewBox="-160 -160 320 320" className={svgClass} aria-hidden="true">
@@ -104,7 +105,7 @@ function LiveIcon() {
           <circle r="140" fill="none" stroke={`url(#fi-${id})`} strokeWidth="2.4" />
         </svg>
       </motion.div>
-      <motion.span className="absolute inset-0 grid place-items-center text-[clamp(34px,9vw,46px)] font-light tracking-[0.06em] text-faint" style={reduce ? undefined : { opacity: wordOpacity }}>
+      <motion.span className="absolute inset-0 grid place-items-center text-[clamp(34px,9vw,46px)] font-light tracking-[0.06em] text-faint" style={reduce ? { opacity: 1 } : { opacity: wordOpacity }}>
         whisper
       </motion.span>
     </motion.div>
@@ -140,14 +141,15 @@ export function Finale({ t, ctaHref, ctaLabel, direct, onDirectDownload }: { t: 
   );
 }
 
-export function Footer({ t, isZh }: { t: Messages; isZh: boolean }) {
+export function Footer({ t, isZh, home }: { t: Messages; isZh: boolean; home: string }) {
   const f = t.footer;
   const product: [string, string][] = [
-    ['#features', t.nav.features],
-    ['#security', t.nav.security],
-    ['#download', t.nav.download],
-    ['#faq', t.nav.faq],
+    [`${home}#features`, t.nav.features],
+    [`${home}#security`, t.nav.security],
+    [`${home}#download`, t.nav.download],
+    [`${home}#faq`, t.nav.faq],
   ];
+  const features: [string, string][] = FEATURES.map((p) => [`${t.home}/${p.slug}`, t.features.items[p.key].name]);
   const resources: [string, string][] = [
     [GITHUB.repo, f.links.source],
     [GITHUB.releases, f.links.releases],
@@ -157,9 +159,9 @@ export function Footer({ t, isZh }: { t: Messages; isZh: boolean }) {
   return (
     <footer className="border-t border-hair">
       <div className="shell py-12 sm:py-16">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-[1.6fr_1fr_1fr] sm:gap-12">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-[1.6fr_1fr_1fr_1fr] sm:gap-12">
           <div className="col-span-2 sm:col-span-1">
-            <a href="#top" className="flex items-center gap-2.5">
+            <a href={home || '#top'} className="flex items-center gap-2.5">
               <RingMark className="h-[22px] w-[22px]" strokeWidth={3} />
               <span className="text-[17px] font-semibold tracking-[-0.02em] text-ink">Whisper</span>
             </a>
@@ -169,6 +171,18 @@ export function Footer({ t, isZh }: { t: Messages; isZh: boolean }) {
             <h3 className="text-[13px] font-medium text-faint">{f.product}</h3>
             <ul className="mt-4 space-y-3 text-[14px]">
               {product.map(([href, label]) => (
+                <li key={href}>
+                  <a href={href} className="text-ink-2 transition-colors hover:text-ink">
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-[13px] font-medium text-faint">{f.features}</h3>
+            <ul className="mt-4 space-y-3 text-[14px]">
+              {features.map(([href, label]) => (
                 <li key={href}>
                   <a href={href} className="text-ink-2 transition-colors hover:text-ink">
                     {label}
