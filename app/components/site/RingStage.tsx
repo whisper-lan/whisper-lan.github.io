@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useId, useRef, useState } from 'react';
-import { AnimatePresence, animate, motion, useInView, useMotionValue, useTransform, type MotionValue } from 'framer-motion';
+import { AnimatePresence, animate, cubicBezier, motion, useInView, useMotionValue, useTransform, type MotionValue } from 'framer-motion';
 import type { Messages } from '@/lib/i18n';
 import { Icon, PlatformMark, useReducedMotion } from './primitives';
 
@@ -36,18 +36,12 @@ const EVENTS: { from: DeviceKey; to: DeviceKey; dir: 1 | -1; icon: string }[] = 
 ];
 
 const TRAVEL = 1.75; // seconds a pulse spends on the ring
+const LAG = 0.35; // the tail's tip is where the head was this many seconds ago
+const travelEase = cubicBezier(0.5, 0, 0.2, 1);
 const CYCLE = 3600; // ms between pulses
 
 const rad = (deg: number) => (deg * Math.PI) / 180;
 const point = (deg: number, r = R) => [r * Math.cos(rad(deg)), r * Math.sin(rad(deg))] as const;
-
-function arc(a1: number, a2: number, r = R) {
-  const [x1, y1] = point(a1, r);
-  const [x2, y2] = point(a2, r);
-  const sweep = a2 > a1 ? 1 : 0;
-  const large = Math.abs(a2 - a1) > 180 ? 1 : 0;
-  return `M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 ${large} ${sweep} ${x2.toFixed(2)} ${y2.toFixed(2)}`;
-}
 
 const angleOf = (key: DeviceKey) => DEVICES.find((d) => d.key === key)!.angle;
 
@@ -66,34 +60,68 @@ function RingGradient({ id }: { id: string }) {
   );
 }
 
-// A light pulse with a tapered tail, travelling from one device to the next.
-// The glow is stacked translucent strokes rather than a blur filter.
-function Comet({ from, to, dir, gradient }: { from: number; to: number; dir: 1 | -1; gradient: string }) {
-  const angle = useMotionValue(from);
-  useEffect(() => {
-    const controls = animate(angle, to, { duration: TRAVEL, ease: [0.5, 0, 0.2, 1] });
-    return () => controls.stop();
-  }, [angle, to]);
+// A band along the ring from angle `tip` to angle `head`, widening from nothing
+// at the tip to `width` either side of the ring at the head: one filled shape,
+// so it tapers smoothly instead of in stacked steps.
+function taper(tip: number, head: number, width: number) {
+  if (Math.abs(head - tip) < 0.3) return '';
+  const n = 28;
+  const outer: string[] = [];
+  const inner: string[] = [];
+  for (let i = 0; i <= n; i++) {
+    const u = i / n;
+    const a = tip + (head - tip) * u;
+    const w = width * Math.pow(u, 0.7);
+    const [ox, oy] = point(a, R + w);
+    const [ix, iy] = point(a, R - w);
+    outer.push(`${ox.toFixed(1)} ${oy.toFixed(1)}`);
+    inner.unshift(`${ix.toFixed(1)} ${iy.toFixed(1)}`);
+  }
+  return `M ${outer.join(' L ')} L ${inner.join(' L ')} Z`;
+}
 
-  const tail = (length: number) => (v: number) => {
-    const start = dir > 0 ? Math.max(from, v - length) : Math.min(from, v + length);
-    return arc(Math.min(start, v), Math.max(start, v));
-  };
-  const tailLong = useTransform(angle, tail(46));
-  const tailMid = useTransform(angle, tail(24));
-  const tailShort = useTransform(angle, tail(10));
-  const cx = useTransform(angle, (v) => point(v)[0]);
-  const cy = useTransform(angle, (v) => point(v)[1]);
+// A light pulse with a tapered tail, travelling from one device to the next.
+// The tail's tip trails the head by LAG seconds, so the tail is long at speed,
+// shortens as the pulse slows, and draws into the head when it arrives.
+// It fades along its length through a gradient that follows it, and the glow
+// is gradients too: no blur filter.
+function Comet({ from, to }: { from: number; to: number }) {
+  const uid = useId().replace(/:/g, '');
+  const time = useMotionValue(0);
+  useEffect(() => {
+    const controls = animate(time, TRAVEL + LAG, { duration: TRAVEL + LAG, ease: 'linear' });
+    return () => controls.stop();
+  }, [time]);
+
+  const at = (s: number) => from + (to - from) * travelEase(Math.min(Math.max(s / TRAVEL, 0), 1));
+  const body = useTransform(time, (s) => taper(at(s - LAG), at(s), 2.4));
+  const glow = useTransform(time, (s) => taper(at(s - LAG), at(s), 10));
+  const halo = useTransform(time, (s) => taper(at(s - LAG), at(s), 5.5));
+  const cx = useTransform(time, (s) => point(at(s))[0]);
+  const cy = useTransform(time, (s) => point(at(s))[1]);
+  const tx = useTransform(time, (s) => point(at(s - LAG))[0]);
+  const ty = useTransform(time, (s) => point(at(s - LAG))[1]);
 
   return (
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.6 } }}>
-      <motion.path d={tailMid} fill="none" stroke="var(--comet)" strokeWidth={16} strokeLinecap="round" opacity={0.08} />
-      <motion.path d={tailShort} fill="none" stroke="var(--comet)" strokeWidth={10} strokeLinecap="round" opacity={0.16} />
-      <motion.path d={tailLong} fill="none" stroke={gradient} strokeWidth={2.4} strokeLinecap="round" opacity={0.55} />
-      <motion.path d={tailMid} fill="none" stroke="var(--comet)" strokeWidth={3.2} strokeLinecap="round" opacity={0.6} />
-      <motion.path d={tailShort} fill="none" stroke="var(--comet)" strokeWidth={4.4} strokeLinecap="round" />
-      <motion.circle cx={cx} cy={cy} r={24} fill="var(--comet)" opacity={0.1} />
-      <motion.circle cx={cx} cy={cy} r={14} fill="var(--comet)" opacity={0.2} />
+      <defs>
+        {/* runs from the tail's tip to the head; along a short arc that is close enough to following it */}
+        <motion.linearGradient id={`ct-${uid}`} gradientUnits="userSpaceOnUse" x1={tx} y1={ty} x2={cx} y2={cy}>
+          <stop offset="0" stopColor="var(--comet)" stopOpacity="0" />
+          <stop offset="0.4" stopColor="var(--comet)" stopOpacity="0.35" />
+          <stop offset="1" stopColor="var(--comet)" stopOpacity="1" />
+        </motion.linearGradient>
+        <radialGradient id={`ch-${uid}`}>
+          <stop offset="0" stopColor="var(--comet)" stopOpacity="0.32" />
+          <stop offset="0.4" stopColor="var(--comet)" stopOpacity="0.12" />
+          <stop offset="1" stopColor="var(--comet)" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* two faint widths, so the glow's edge softens rather than stops */}
+      <motion.path d={glow} fill={`url(#ct-${uid})`} opacity={0.08} />
+      <motion.path d={halo} fill={`url(#ct-${uid})`} opacity={0.14} />
+      <motion.path d={body} fill={`url(#ct-${uid})`} />
+      <motion.circle cx={cx} cy={cy} r={26} fill={`url(#ch-${uid})`} />
       <motion.circle cx={cx} cy={cy} r={5.5} fill="var(--comet-core)" stroke="var(--comet)" strokeWidth={2.2} />
     </motion.g>
   );
@@ -185,7 +213,7 @@ export function RingStage({
           <RingGradient id={`ring-${uid}`} />
         </defs>
         <circle r={R} fill="none" stroke={`url(#ring-${uid})`} strokeWidth="1.8" />
-        <AnimatePresence>{running && <Comet key={step} from={fromAngle} to={toAngle} dir={event.dir} gradient={`url(#ring-${uid})`} />}</AnimatePresence>
+        <AnimatePresence>{running && <Comet key={step} from={fromAngle} to={toAngle} />}</AnimatePresence>
       </svg>
 
       {/* devices on the ring */}
