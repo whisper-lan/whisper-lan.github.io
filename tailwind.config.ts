@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
 
+const appColor = (name: string) => `color-mix(in srgb, var(${name}) calc(<alpha-value> * 100%), transparent)`;
+
 export default {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -31,19 +33,20 @@ export default {
         hair: { DEFAULT: "var(--hair)", 2: "var(--hair-2)" },
         accent: { DEFAULT: "var(--accent)", ink: "var(--accent-ink)", soft: "var(--accent-soft)" },
         ok: "var(--ok)",
+        // An alpha slot, so opacity modifiers (bg-app-primary/70) work; a bare var() gets none.
         app: {
-          canvas: "var(--app-canvas)",
-          surface: "var(--app-surface)",
-          muted: "var(--app-muted)",
-          line: "var(--app-line)",
-          text: "var(--app-text)",
-          text2: "var(--app-text-2)",
-          in: "var(--app-in)",
-          out: "var(--app-out)",
-          primary: "var(--app-primary)",
-          connected: "var(--app-connected)",
-          trusted: "var(--app-trusted)",
-          chrome: "var(--app-chrome)",
+          canvas: appColor("--app-canvas"),
+          surface: appColor("--app-surface"),
+          muted: appColor("--app-muted"),
+          line: appColor("--app-line"),
+          text: appColor("--app-text"),
+          text2: appColor("--app-text-2"),
+          in: appColor("--app-in"),
+          out: appColor("--app-out"),
+          primary: appColor("--app-primary"),
+          connected: appColor("--app-connected"),
+          trusted: appColor("--app-trusted"),
+          chrome: appColor("--app-chrome"),
         },
       },
       boxShadow: {
