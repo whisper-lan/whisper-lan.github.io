@@ -30,7 +30,7 @@ export const OG_IMAGE = {
   url: '/og.png',
   width: 1200,
   height: 630,
-  alt: 'Whisper: files, keyboard and mouse, and audio across your local network',
+  alt: 'Whisper: files, clipboard, keyboard and mouse, audio and app windows across your local network',
 };
 
 export const viewport: Viewport = {

@@ -8,7 +8,7 @@ const zh = {
   meta: {
     title: 'Whisper - 局域网传文件、键鼠共享、音频共享 | 免费开源',
     description:
-      '免费开源的局域网协作工具：在 Mac、Windows、Linux 和 Android 之间传文件、浏览彼此的文件、同步剪贴板，共用一套键鼠，把窗口流转到另一台设备上用，电脑声音送到其他设备播放。端到端加密，不经过服务器。',
+      '免费开源的局域网协作工具：在电脑和安卓手机之间传文件、浏览和挂载彼此的文件、同步剪贴板，共用一套键鼠，把窗口流转到另一台设备上用，电脑声音送到其他设备播放。端到端加密，不经过服务器。',
     keywords: ['局域网传文件', '电脑手机互传文件', '电脑浏览手机文件', '键鼠共享', '跨屏键鼠', '窗口流转', '剪贴板同步', '电脑声音共享', '手机控制电脑'],
   },
   // This language's home page; feature pages live under it.
@@ -508,7 +508,7 @@ const en: Messages = {
   meta: {
     title: 'Whisper: share files, keyboard & mouse, and audio over LAN',
     description:
-      'Free, open-source LAN app for macOS, Windows, Linux and Android: send and browse files, sync the clipboard, share a keyboard and mouse, stream audio and windows. Encrypted.',
+      'Free, open-source LAN app for desktop & Android: transfer and mount files, share clipboard, keyboard & mouse, audio and app windows. End-to-end encrypted.',
     keywords: ['LAN file transfer', 'browse phone files from PC', 'keyboard and mouse sharing', 'software KVM', 'window streaming', 'clipboard sync', 'stream PC audio', 'phone as mouse'],
   },
   home: '/en',
