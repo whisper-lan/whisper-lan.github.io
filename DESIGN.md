@@ -276,7 +276,7 @@ app/components/site/
   Download.tsx                     三步开始、下载卡片
   Closing.tsx                      常见问题、结尾圆环、页脚
   links.ts                         外链
-app/components/scenes/             复刻的 App 界面（680×540 画布）；PhoneScene、FilesScene 只用在功能页，FlowScene 是流转一章的场景
+app/components/scenes/             复刻的 App 界面（680×540 画布）；PhoneScene、FilesScene、ClipboardScene、NotifyScene 只用在功能页，FlowScene 是流转一章的场景
 lib/i18n.ts                        全部文案（中 / 英），含搜索标题与描述（meta）
 lib/features.ts                    功能页登记（slug 与首页章节的对应）
 lib/seo.ts                         canonical、hreflang、分享卡片、结构化数据

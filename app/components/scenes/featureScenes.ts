@@ -7,6 +7,8 @@ import { AudioScene } from './AudioScene';
 import { PhoneScene } from './PhoneScene';
 import { FlowScene } from './FlowScene';
 import { FilesScene } from './FilesScene';
+import { ClipboardScene } from './ClipboardScene';
+import { NotifyScene } from './NotifyScene';
 
 // Each feature page's scene: the home page chapter's where there is one. The
 // feature menu in the nav plays the same scenes.
@@ -17,4 +19,6 @@ export const FEATURE_SCENES: Record<FeatureKey, ComponentType<SceneProps>> = {
   keyboardMouse: InputScene,
   audioSharing: AudioScene,
   phoneControl: PhoneScene,
+  clipboardSync: ClipboardScene,
+  notifications: NotifyScene,
 };

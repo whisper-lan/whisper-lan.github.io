@@ -160,11 +160,13 @@ function Others({ t, current }: { t: Messages; current: FeatureKey }) {
           {others.map((f, i) => {
             const copy = t.features.items[f.key];
             const [r, g, b] = f.tint;
+            // a card left alone on the last row takes the whole row, lying flat
+            const wide = others.length % 3 === 1 && i === others.length - 1;
             return (
-              <Reveal key={f.key} delay={i * 0.05}>
+              <Reveal key={f.key} delay={i * 0.05} className={wide ? 'md:col-span-3' : undefined}>
                 <a
                   href={`${t.home}/${f.slug}`}
-                  className="group flex h-full items-center justify-between gap-4 rounded-[24px] border border-hair bg-surface p-5 shadow-card transition-colors hover:border-[var(--hair-2)] md:flex-col md:items-start md:rounded-[28px] md:p-7"
+                  className={`group flex h-full items-center justify-between gap-4 rounded-[24px] border border-hair bg-surface p-5 shadow-card transition-colors hover:border-[var(--hair-2)] md:rounded-[28px] md:p-7 ${wide ? '' : 'md:flex-col md:items-start'}`}
                 >
                   <span>
                     <span className="kicker flex items-center gap-3">
@@ -176,7 +178,7 @@ function Others({ t, current }: { t: Messages; current: FeatureKey }) {
                       <span className="md:block">{copy.title[1]}</span>
                     </span>
                   </span>
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-hair text-ink-2 transition-transform duration-300 group-hover:translate-x-0.5 md:mt-8">
+                  <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full border border-hair text-ink-2 transition-transform duration-300 group-hover:translate-x-0.5 ${wide ? '' : 'md:mt-8'}`}>
                     <Icon name="arrowRight" className="h-4 w-4" />
                   </span>
                 </a>

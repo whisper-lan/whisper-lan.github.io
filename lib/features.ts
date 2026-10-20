@@ -2,7 +2,7 @@
 // closer look at part of the home page. The slug is the URL and stays fixed
 // once published; the copy lives under `features.items` in lib/i18n.ts.
 
-export type FeatureKey = 'fileTransfer' | 'fileBrowser' | 'windowFlow' | 'keyboardMouse' | 'audioSharing' | 'phoneControl';
+export type FeatureKey = 'fileTransfer' | 'fileBrowser' | 'windowFlow' | 'keyboardMouse' | 'audioSharing' | 'phoneControl' | 'clipboardSync' | 'notifications';
 export type ChapterKey = 'transfer' | 'input' | 'flow' | 'audio' | 'cast';
 
 // `chapter`: the home page chapter that links here ("Learn more").
@@ -15,6 +15,8 @@ export const FEATURES: { key: FeatureKey; slug: string; chapter: ChapterKey | nu
   { key: 'keyboardMouse', slug: 'keyboard-mouse-sharing', chapter: 'input', tint: [59, 179, 164] },
   { key: 'audioSharing', slug: 'audio-sharing', chapter: 'audio', tint: [143, 212, 67] },
   { key: 'phoneControl', slug: 'phone-as-mouse', chapter: null, tint: [226, 160, 72] },
+  { key: 'clipboardSync', slug: 'clipboard-sync', chapter: null, tint: [196, 112, 214] },
+  { key: 'notifications', slug: 'notification-forwarding', chapter: null, tint: [232, 102, 92] },
 ];
 
 export const featureBySlug = (slug: string) => FEATURES.find((f) => f.slug === slug);
