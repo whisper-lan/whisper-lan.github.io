@@ -264,7 +264,7 @@ const zh = {
     items: {
       fileBrowser: {
         meta: {
-          title: 'Whisper 浏览文件：电脑直接打开手机里的文件 | 免费开源',
+          title: '电脑无线访问手机文件：直接浏览，或挂载到本机 | Whisper 免费开源',
           description:
             '在电脑上像用访达一样浏览手机和其他电脑的文件，拖出来就拷到本机；也能挂进访达、资源管理器或 Linux 的文件管理器，用任何应用直接打开。没装 Whisper 的设备，用一个局域网链接就能下载。',
           keywords: ['电脑浏览手机文件', '局域网访问手机文件', '手机文件挂载到电脑', '局域网文件共享', '局域网下载链接', '不用数据线传文件'],
@@ -303,7 +303,7 @@ const zh = {
       },
       windowFlow: {
         meta: {
-          title: 'Whisper 窗口流转：电脑的窗口拿到手机上用 | 免费开源',
+          title: '窗口流转：电脑窗口拿到手机上用，安卓应用放到电脑上 | Whisper',
           description:
             '把电脑上的窗口打开到手机、平板或另一台电脑上，直接点、直接打字，声音也一起过来；安卓手机的应用也能放到电脑上用键鼠操作。支持 macOS、Windows 和 Linux（GNOME），局域网直连，端到端加密。',
           keywords: ['窗口流转', '手机操作电脑窗口', '安卓应用投到电脑', '电脑窗口投到手机', '手机投屏到电脑', '跨设备使用应用'],
@@ -343,9 +343,9 @@ const zh = {
       },
       keyboardMouse: {
         meta: {
-          title: 'Whisper 键鼠共享：一套键盘鼠标控制多台电脑 | 免费开源',
+          title: '键鼠共享：一套键鼠控制多台电脑，免费的软件 KVM | Whisper',
           description:
-            '桌上有两台电脑，只用一套键盘鼠标：把另一台的屏幕排在本机旁边，指针移过边缘就切换过去，键盘和剪贴板跟着走。支持 macOS、Windows 和 Linux（X11 或 GNOME），局域网直连，端到端加密。',
+            '免费的软件 KVM：桌上有两台电脑，只用一套键盘鼠标。把另一台的屏幕排在本机旁边，指针移过边缘就切换过去，键盘和剪贴板跟着走。支持 macOS、Windows 和 Linux（X11 或 GNOME），局域网直连，端到端加密。',
           keywords: ['键鼠共享', '跨屏键鼠', '一套键鼠控制多台电脑', 'Mac 和 Windows 共享键鼠', '软件 KVM'],
         },
         name: '键鼠共享',
@@ -376,13 +376,14 @@ const zh = {
         faq: [
           { q: '指针留在另一台电脑上回不来怎么办？', a: '在主控端按 Ctrl + Alt + Esc（macOS 为 Control + Option + Esc），键鼠会立即回到本机。工作区里屏幕排列区域的底部一直显示着这个快捷键。' },
           { q: 'Linux 用的是 Wayland，可以用吗？', a: 'GNOME 可以，不用额外授权，控制期间顶栏会显示远程控制的图标。GNOME 46 以前的版本（如 Ubuntu 22.04）只能被控制，要用它控制别的电脑，请在登录界面选「Ubuntu on Xorg」。KDE 等其他 Wayland 桌面会弹出系统的授权窗口，还没有验证过。' },
+          { q: '这是软件 KVM 吗？', a: '是，只是不切换画面。KVM 切换器是一个硬件盒子，让几台电脑轮流使用同一套键盘、鼠标和显示器；Whisper 通过局域网切换键盘和鼠标，每台电脑仍用自己的屏幕。想在这块屏幕上用另一台电脑的窗口，可以用窗口流转。' },
           { q: '和远程桌面有什么不同？', a: '键鼠共享只把键盘和鼠标的操作发过去，不传画面：每台电脑用自己的显示器，适合摆在同一张桌上的几台电脑。它面向身边的自有设备，不是无人值守的远程控制方案。' },
           { q: '指针移动一顿一顿的？', a: '先确认两台电脑的网络稳定。Windows 上检查「设置 → 系统 → 投影到此电脑」：开启时无线网卡要同时维持一个 Wi-Fi Direct 网络，会带来周期性的延迟；不用无线投屏就设为「始终关闭」。' },
         ],
       },
       fileTransfer: {
         meta: {
-          title: 'Whisper 局域网传文件：电脑和手机互传，不限大小 | 免费开源',
+          title: '局域网传文件：电脑和手机互传，不限大小 | Whisper 免费开源',
           description:
             '像聊天一样在电脑和手机之间传文字、照片、视频和整个文件夹。不限大小，断线后从断点接着传，到达时自动校验。macOS、Windows、Linux 和 Android 互通，局域网直连，端到端加密。',
           keywords: ['局域网传文件', '电脑手机互传文件', '大文件传输', '断点续传', '传文件夹', '没网也能传文件'],
@@ -421,7 +422,7 @@ const zh = {
       },
       audioSharing: {
         meta: {
-          title: 'Whisper 声音共享：电脑的声音放到手机和多台设备上 | 免费开源',
+          title: '电脑声音传到手机：一台或多台设备同时播放 | Whisper 免费开源',
           description:
             '把电脑正在播放的声音送到一台或多台设备同时播放，还能分配左右声道，临时拼出一套立体声。macOS、Windows、Linux 共享，Android 手机也能当扬声器，局域网直连。',
           keywords: ['电脑声音传到手机', '系统音频共享', '电脑声音共享', '多设备同步播放', '手机当电脑音箱'],
@@ -459,7 +460,7 @@ const zh = {
       },
       phoneControl: {
         meta: {
-          title: 'Whisper 手机控制电脑：安卓手机当鼠标、触控板和键盘 | 免费开源',
+          title: '手机控制电脑：安卓手机当鼠标、触控板和键盘 | Whisper 免费开源',
           description:
             '用 Android 手机控制电脑：转动手腕移动指针，或者当触控板和虚拟键盘，用手机输入法直接打中文。被控电脑支持 macOS、Windows 和 Linux（X11 或 GNOME），局域网直连，免费开源。',
           keywords: ['手机控制电脑', '手机当鼠标', '手机当触控板', '手机当键盘', '安卓遥控电脑', '体感鼠标'],
@@ -761,7 +762,7 @@ const en: Messages = {
     items: {
       fileBrowser: {
         meta: {
-          title: 'Browse phone and computer files from your PC | Whisper',
+          title: 'Access Android files from your computer over Wi-Fi | Whisper',
           description:
             'Browse a phone’s or another computer’s files from your PC and drag them out, or mount them in Finder or File Explorer. Share links serve devices without Whisper.',
           keywords: ['browse phone files from PC', 'access Android files over Wi-Fi', 'mount phone storage on computer', 'LAN file sharing', 'LAN download link'],
@@ -800,7 +801,7 @@ const en: Messages = {
       },
       windowFlow: {
         meta: {
-          title: 'Use your computer’s windows on your phone | Whisper',
+          title: 'Use PC apps on your phone, and Android apps on your PC | Whisper',
           description:
             'Open a computer’s windows on your phone, tablet or another computer and use them there, sound included. Android apps open on a PC too. Free and end-to-end encrypted.',
           keywords: ['window streaming', 'use computer apps on phone', 'Android apps on PC', 'stream a window to a phone', 'phone screen on computer'],
@@ -840,9 +841,9 @@ const en: Messages = {
       },
       keyboardMouse: {
         meta: {
-          title: 'Share one keyboard and mouse across computers | Whisper',
+          title: 'Software KVM: share one keyboard and mouse across computers | Whisper',
           description:
-            'One keyboard and mouse for every computer on your desk. Move the pointer across a screen edge and your typing and clipboard follow. Free for macOS, Windows and Linux (X11 or GNOME).',
+            'A free software KVM: one keyboard and mouse for every computer on your desk. Move the pointer across a screen edge and your typing and clipboard follow. Works on macOS, Windows and Linux (X11 or GNOME).',
           keywords: ['keyboard and mouse sharing', 'software KVM', 'share mouse between Mac and Windows', 'one keyboard multiple computers'],
         },
         name: 'Keyboard & mouse sharing',
@@ -873,13 +874,14 @@ const en: Messages = {
         faq: [
           { q: 'My pointer is stuck on another computer. Now what?', a: 'Press Ctrl + Alt + Esc on the controlling computer (Control + Option + Esc on macOS) and input returns immediately. The shortcut is always shown at the bottom of the screen arrangement in the workspace.' },
           { q: 'My Linux desktop uses Wayland. Will it work?', a: 'On GNOME, yes, with no permission prompt; the top bar shows the remote control icon while in use. GNOME before 46 (Ubuntu 22.04, for example) can only be controlled; to control other computers from one, choose “Ubuntu on Xorg” on the login screen. Other Wayland desktops such as KDE ask for permission and have not been verified.' },
+          { q: 'Is this a software KVM?', a: 'Yes, without the video. A KVM switch is a box that moves one keyboard, mouse and monitor between computers; Whisper moves the keyboard and mouse over your network instead, and each computer keeps its own screen. To use another computer’s windows on this screen, see window flow.' },
           { q: 'How is this different from remote desktop?', a: 'Only keyboard and mouse input is sent, not the picture: each computer keeps its own display, which suits computers on the same desk. It is meant for your own devices nearby, not for unattended remote control.' },
           { q: 'Why does the pointer stutter?', a: 'First check that both computers have a steady network connection. On Windows, check Settings → System → Projecting to this PC: while it is on, the wireless adapter keeps a Wi-Fi Direct network alive as well, which adds periodic delay. Set it to Always Off if you do not project to this PC.' },
         ],
       },
       fileTransfer: {
         meta: {
-          title: 'Send files between computers and phones over LAN | Whisper',
+          title: 'Transfer files between Android, Mac and PC over Wi-Fi | Whisper',
           description:
             'Send text, photos, videos, and whole folders between your computers and phones, like a chat. No size limit, resumes after a drop, verified on arrival. Free for macOS, Windows, Linux and Android.',
           keywords: ['LAN file transfer', 'send files between phone and computer', 'large file transfer', 'resumable transfer', 'send folder over Wi-Fi'],
@@ -918,7 +920,7 @@ const en: Messages = {
       },
       audioSharing: {
         meta: {
-          title: 'Stream computer audio to phones and other devices | Whisper',
+          title: 'Stream PC audio to your phone and other devices | Whisper',
           description:
             'Play what your computer is playing on one or more devices at once, and assign left and right channels for a makeshift stereo pair. Shares from macOS, Windows and Linux; Android phones can play.',
           keywords: ['stream PC audio to phone', 'system audio sharing', 'share computer audio over Wi-Fi', 'multi-device audio sync', 'phone as computer speaker'],
