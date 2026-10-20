@@ -55,13 +55,13 @@ const zh = {
         kicker: '键鼠',
         title: ['一套键鼠，', '横跨每一台电脑。'],
         desc: '把其他电脑的屏幕排在本机旁边，指针移过边缘就切换过去，剪贴板随之同步。离开桌前，Android 手机也能当体感鼠标、触控板和键盘。',
-        points: ['macOS、Windows 与 Linux（X11 或 GNOME）互相控制', 'Windows 锁屏界面也能用键鼠操作', '随时按 Ctrl + Alt + Esc 收回键鼠'],
+        points: ['macOS、Windows 与 Linux（X11、GNOME 或 KDE Plasma）互相控制', 'Windows 锁屏界面也能用键鼠操作', '随时按 Ctrl + Alt + Esc 收回键鼠'],
       },
       flow: {
         kicker: '流转',
         title: ['电脑上的窗口，', '拿在手里接着用。'],
         desc: '在手机或平板上打开电脑的窗口，直接点、直接打字，声音也一起过来；窗口留在电脑后台运行，不占它的屏幕。反过来，安卓手机上的应用也能放到电脑上，用键鼠操作。',
-        points: ['macOS、Windows 与 Linux（GNOME）的窗口都能流转', '安卓应用放到电脑上，用键鼠操作', '一个窗口也能直接送到另一台电脑上'],
+        points: ['macOS、Windows 与 Linux（GNOME、KDE Plasma）的窗口都能流转', '安卓应用放到电脑上，用键鼠操作', '一个窗口也能直接送到另一台电脑上'],
       },
       audio: {
         kicker: '声音',
@@ -237,9 +237,9 @@ const zh = {
       { q: '传输速度取决于什么？', a: 'Wi-Fi 信号、设备性能和磁盘速度。加密与 SHA-256 校验都是边传边做，传完不需要再把大文件完整读一遍。' },
       { q: '数据安全吗？', a: '配对会话中的内容端到端加密，界面会显示设备身份与可信状态。局域网发现与连接元数据不加密，本地数据库和收到的文件也不做静态加密。电视投屏和共享链接各自使用独立的服务（DLNA、普通 HTTP），不经过 Whisper 的加密通道。' },
       { q: '指针留在另一台电脑上回不来怎么办？', a: '在主控端按 Ctrl + Alt + Esc（macOS 为 Control + Option + Esc），键鼠会立即回到本机。' },
-      { q: 'Android 手机怎样当鼠标和键盘？', a: '两台设备连接并互相信任后，在手机上打开电脑的会话，点「控制电脑」再点开始。支持体感鼠标、触控板、虚拟键盘、组合键和短文本；没有陀螺仪时仍可使用触控板和键盘。被控电脑支持 macOS（需辅助功能权限）、Windows，以及 Linux 的 X11 或 GNOME（Wayland）。' },
+      { q: 'Android 手机怎样当鼠标和键盘？', a: '两台设备连接并互相信任后，在手机上打开电脑的会话，点「控制电脑」再点开始。支持体感鼠标、触控板、虚拟键盘、组合键和短文本；没有陀螺仪时仍可使用触控板和键盘。被控电脑支持 macOS（需辅助功能权限）、Windows，以及 Linux 的 X11、GNOME 或 KDE Plasma（Wayland）。' },
       { q: '投屏是屏幕镜像吗？', a: '不是。它接收视频 App 通过 DLNA 投过来的媒体，不支持 AirPlay、Miracast 或系统屏幕镜像。能否投屏、清晰度和受保护内容由视频平台决定。功能默认关闭，同一来源第一次请求时会提示确认。' },
-      { q: 'Linux 上需要准备什么？', a: '自动发现依赖 Avahi；声音共享需要 PulseAudio 或 PipeWire Pulse；键鼠共享和手机控制需要 X11 会话或 GNOME 的 Wayland 会话；挂载其他设备的文件需要 fuse3（多数发行版已自带）；把本机窗口流转出去需要 GNOME 45 及以上的 Wayland 会话，FFmpeg 还要带 x264 或 openh264 编码器；视频预览与投屏需要 libmpv，窗口流转需要 FFmpeg。缺了这些，其他功能照常可用。' },
+      { q: 'Linux 上需要准备什么？', a: '自动发现依赖 Avahi；声音共享需要 PulseAudio 或 PipeWire Pulse；键鼠共享和手机控制需要 X11 会话，或 GNOME、KDE Plasma 的 Wayland 会话；挂载其他设备的文件需要 fuse3（多数发行版已自带）；把本机窗口流转出去需要 GNOME 45 及以上或 KDE Plasma 6 的 Wayland 会话，FFmpeg 还要带 x264 或 openh264 编码器；视频预览与投屏需要 libmpv，窗口流转需要 FFmpeg。缺了这些，其他功能照常可用。' },
       { q: '为什么没有 iOS 版？', a: '上架 App Store 需要每年付费的 Apple 开发者账号，所以暂时没有正式的 iOS 版。每次发布都附带一个未签名的 ipa，可以用 AltStore、Sideloadly 等工具以自己的 Apple ID 签名安装；免费 Apple ID 签的应用每 7 天要重新签一次。它没有经过完整的真机测试，不保证可用，遇到问题欢迎反馈。' },
     ],
   },
@@ -317,7 +317,7 @@ const zh = {
         meta: {
           title: '窗口流转：电脑窗口拿到手机上用，安卓应用放到电脑上 | Whisper',
           description:
-            '把电脑上的窗口打开到手机、平板或另一台电脑上，直接点、直接打字，声音也一起过来；安卓手机的应用也能放到电脑上用键鼠操作。支持 macOS、Windows 和 Linux（GNOME），局域网直连，端到端加密。',
+            '把电脑上的窗口打开到手机、平板或另一台电脑上，直接点、直接打字，声音也一起过来；安卓手机的应用也能放到电脑上用键鼠操作。支持 macOS、Windows 和 Linux（GNOME、KDE Plasma），局域网直连，端到端加密。',
           keywords: ['窗口流转', '手机操作电脑窗口', '安卓应用投到电脑', '电脑窗口投到手机', '手机投屏到电脑', '跨设备使用应用'],
         },
         name: '窗口流转',
@@ -342,7 +342,7 @@ const zh = {
         platforms: [
           { platform: 'mac', status: '流转出去与接收', note: '需要 macOS 12.3 及以上，并在系统设置里允许「屏幕与系统录音」和「辅助功能」。' },
           { platform: 'windows', status: '流转出去与接收', note: '需要 Windows 10（1903）及以上；以管理员身份运行的窗口不能流转。' },
-          { platform: 'linux', status: '接收；GNOME 可流转出去', note: '把本机窗口流转出去需要 GNOME 45 及以上的 Wayland 会话，第一次要在设置里装一个组件并重新登录，FFmpeg 还要带 x264 或 openh264 编码器；KDE 和 X11 暂时只能接收。显示画面需要 FFmpeg 4 及以上。' },
+          { platform: 'linux', status: '接收；GNOME、KDE 可流转出去', note: '把本机窗口流转出去需要 Wayland 会话：GNOME 45 及以上第一次要在设置里装一个组件并重新登录，KDE Plasma 6 不用安装，也不弹授权窗口；FFmpeg 还要带 x264 或 openh264 编码器。X11 暂时只能接收。显示画面需要 FFmpeg 4 及以上。' },
           { platform: 'android', status: '接收；应用可流转到电脑', note: '需要 Android 10 及以上。第一次要用数据线连一台装有 adb 的电脑并打开 USB 调试，之后其他电脑不插线也能用；应用的声音需要 Android 13 及以上。' },
         ],
         faq: [
@@ -357,7 +357,7 @@ const zh = {
         meta: {
           title: '键鼠共享：一套键鼠控制多台电脑，免费的软件 KVM | Whisper',
           description:
-            '免费的软件 KVM：桌上有两台电脑，只用一套键盘鼠标。把另一台的屏幕排在本机旁边，指针移过边缘就切换过去，键盘和剪贴板跟着走。支持 macOS、Windows 和 Linux（X11 或 GNOME），局域网直连，端到端加密。',
+            '免费的软件 KVM：桌上有两台电脑，只用一套键盘鼠标。把另一台的屏幕排在本机旁边，指针移过边缘就切换过去，键盘和剪贴板跟着走。支持 macOS、Windows 和 Linux（X11、GNOME 或 KDE Plasma），局域网直连，端到端加密。',
           keywords: ['键鼠共享', '跨屏键鼠', '一套键鼠控制多台电脑', 'Mac 和 Windows 共享键鼠', '软件 KVM'],
         },
         name: '键鼠共享',
@@ -382,12 +382,12 @@ const zh = {
         platforms: [
           { platform: 'mac', status: '控制与被控制', note: '需要在系统设置里授予辅助功能权限。' },
           { platform: 'windows', status: '控制与被控制', note: '锁屏输入需要安装包附带的系统服务。' },
-          { platform: 'linux', status: 'X11 或 GNOME', note: 'Wayland 下只支持 GNOME，不用额外授权；GNOME 46 以前的版本（如 Ubuntu 22.04）只能被控制。KDE 等其他 Wayland 桌面还没有验证。' },
+          { platform: 'linux', status: 'X11、GNOME 或 KDE', note: 'Wayland 下支持 GNOME 和 KDE Plasma。GNOME 不用额外授权，46 以前的版本（如 Ubuntu 22.04）只能被控制；KDE Plasma 第一次被控制时要授权一次，用它控制别的电脑时每次开始都要授权。' },
           { platform: 'android', status: '手机当键鼠', note: '不参与屏幕之间的键鼠共享，但可以把手机当成鼠标和键盘来控制电脑。' },
         ],
         faq: [
           { q: '指针留在另一台电脑上回不来怎么办？', a: '在主控端按 Ctrl + Alt + Esc（macOS 为 Control + Option + Esc），键鼠会立即回到本机。工作区里屏幕排列区域的底部一直显示着这个快捷键。' },
-          { q: 'Linux 用的是 Wayland，可以用吗？', a: 'GNOME 可以，不用额外授权，控制期间顶栏会显示远程控制的图标。GNOME 46 以前的版本（如 Ubuntu 22.04）只能被控制，要用它控制别的电脑，请在登录界面选「Ubuntu on Xorg」。KDE 等其他 Wayland 桌面会弹出系统的授权窗口，还没有验证过。' },
+          { q: 'Linux 用的是 Wayland，可以用吗？', a: 'GNOME 和 KDE Plasma 都可以。GNOME 不用额外授权，控制期间顶栏会显示远程控制的图标；GNOME 46 以前的版本（如 Ubuntu 22.04）只能被控制，要用它控制别的电脑，请在登录界面选「Ubuntu on Xorg」。KDE Plasma 第一次被控制时会弹出系统的授权窗口，勾选记住后不再弹；用它控制别的电脑时，每次开始都要授权一次，这是 KDE 目前的限制。其他 Wayland 桌面还没有验证过。' },
           { q: '这是软件 KVM 吗？', a: '是，只是不切换画面。KVM 切换器是一个硬件盒子，让几台电脑轮流使用同一套键盘、鼠标和显示器；Whisper 通过局域网切换键盘和鼠标，每台电脑仍用自己的屏幕。想在这块屏幕上用另一台电脑的窗口，可以用窗口流转。' },
           { q: '和远程桌面有什么不同？', a: '键鼠共享只把键盘和鼠标的操作发过去，不传画面：每台电脑用自己的显示器，适合摆在同一张桌上的几台电脑。它面向身边的自有设备，不是无人值守的远程控制方案。' },
           { q: '指针移动一顿一顿的？', a: '先确认两台电脑的网络稳定。Windows 上检查「设置 → 系统 → 投影到此电脑」：开启时无线网卡要同时维持一个 Wi-Fi Direct 网络，会带来周期性的延迟；不用无线投屏就设为「始终关闭」。' },
@@ -474,7 +474,7 @@ const zh = {
         meta: {
           title: '手机控制电脑：安卓手机当鼠标、触控板和键盘 | Whisper 免费开源',
           description:
-            '用 Android 手机控制电脑：转动手腕移动指针，或者当触控板和虚拟键盘，用手机输入法直接打中文。被控电脑支持 macOS、Windows 和 Linux（X11 或 GNOME），局域网直连，免费开源。',
+            '用 Android 手机控制电脑：转动手腕移动指针，或者当触控板和虚拟键盘，用手机输入法直接打中文。被控电脑支持 macOS、Windows 和 Linux（X11、GNOME 或 KDE Plasma），局域网直连，免费开源。',
           keywords: ['手机控制电脑', '手机当鼠标', '手机当触控板', '手机当键盘', '安卓遥控电脑', '体感鼠标'],
         },
         name: '手机控制电脑',
@@ -500,7 +500,7 @@ const zh = {
           { platform: 'android', status: '控制端', note: '手机当鼠标和键盘；体感模式需要陀螺仪和重力传感器。' },
           { platform: 'mac', status: '被控端', note: '需要在系统设置里授予辅助功能权限。' },
           { platform: 'windows', status: '被控端', note: '电脑已登录并运行 Whisper 时可用。' },
-          { platform: 'linux', status: '被控端，X11 或 GNOME', note: 'Wayland 下只支持 GNOME；输入中文等键盘布局打不出的字，需要装设置里的窗口流转组件（GNOME 45 及以上）。' },
+          { platform: 'linux', status: '被控端，X11、GNOME 或 KDE', note: 'Wayland 下支持 GNOME 和 KDE Plasma。GNOME 上输入中文等键盘布局打不出的字，需要装设置里的窗口流转组件（GNOME 45 及以上）；KDE Plasma 可以直接输入，第一次被控制时要授权一次。' },
         ],
         faq: [
           { q: '手机上能看到电脑的画面吗？', a: '不能。手机只发送鼠标和键盘操作，不传回电脑画面，适合人在电脑附近、看得到屏幕的时候用。' },
@@ -646,13 +646,13 @@ const en: Messages = {
         kicker: 'Input',
         title: ['One keyboard,', 'every computer.'],
         desc: 'Arrange other screens next to yours and the pointer crosses over at the edge, with the clipboard following along. Away from the desk, your Android phone becomes a motion mouse, touchpad, and keyboard.',
-        points: ['macOS, Windows, and Linux (X11 or GNOME) control each other', 'Works on the Windows lock screen too', 'Ctrl + Alt + Esc brings input back at any time'],
+        points: ['macOS, Windows, and Linux (X11, GNOME or KDE Plasma) control each other', 'Works on the Windows lock screen too', 'Ctrl + Alt + Esc brings input back at any time'],
       },
       flow: {
         kicker: 'Flow',
         title: ['Desktop windows,', 'right in your hand.'],
         desc: 'Open a computer’s windows on your phone or tablet, then tap and type right in them, with the sound coming along. The window keeps running in the background on the computer, off its screen. It works the other way too: an Android phone’s apps open on a computer, for the keyboard and mouse.',
-        points: ['Windows from macOS, Windows, and Linux (GNOME)', 'Android apps on the computer, with keyboard and mouse', 'Send a window straight to another computer'],
+        points: ['Windows from macOS, Windows, and Linux (GNOME, KDE Plasma)', 'Android apps on the computer, with keyboard and mouse', 'Send a window straight to another computer'],
       },
       audio: {
         kicker: 'Sound',
@@ -828,9 +828,9 @@ const en: Messages = {
       { q: 'How fast are transfers?', a: 'That depends on Wi-Fi signal, device performance, and disk speed. Encryption and SHA-256 verification stream with the transfer, so large files are not reread at the end.' },
       { q: 'Is my data secure?', a: "Content in paired sessions is end-to-end encrypted, and the UI shows each device's identity and trust state. LAN discovery and connection metadata are not encrypted, nor are the local database and received files at rest. TV casting and share links use separate services (DLNA and plain HTTP) outside Whisper's encrypted sessions." },
       { q: 'My pointer is stuck on another computer. Now what?', a: 'Press Ctrl + Alt + Esc on the controlling computer (Control + Option + Esc on macOS) and input returns immediately.' },
-      { q: 'How does my Android phone become a mouse and keyboard?', a: 'Once both devices are connected and trust each other, open the computer conversation on your phone, tap Control computer, then start. Motion pointer, touchpad, virtual keyboard, shortcuts, and short text are supported; without a gyroscope the touchpad and keyboard still work. macOS (with Accessibility permission), Windows, and Linux on X11 or GNOME (Wayland) can be controlled.' },
+      { q: 'How does my Android phone become a mouse and keyboard?', a: 'Once both devices are connected and trust each other, open the computer conversation on your phone, tap Control computer, then start. Motion pointer, touchpad, virtual keyboard, shortcuts, and short text are supported; without a gyroscope the touchpad and keyboard still work. macOS (with Accessibility permission), Windows, and Linux on X11, or GNOME or KDE Plasma on Wayland, can be controlled.' },
       { q: 'Is casting screen mirroring?', a: 'No. It receives media that video apps cast over DLNA, without AirPlay, Miracast, or system screen mirroring. Availability, quality, and protected content depend on the video platform. Casting is off by default, and the first request from each source asks for confirmation.' },
-      { q: 'What does Linux need?', a: 'Discovery relies on Avahi; sound sharing needs PulseAudio or PipeWire Pulse; input sharing and phone control need an X11 session or GNOME on Wayland; mounting other devices’ files needs fuse3 (most distributions include it); sharing this computer’s windows needs GNOME 45 or later on Wayland, with an x264 or openh264 encoder in FFmpeg; video preview and casting need libmpv, and window flow needs FFmpeg. Everything else works without them.' },
+      { q: 'What does Linux need?', a: 'Discovery relies on Avahi; sound sharing needs PulseAudio or PipeWire Pulse; input sharing and phone control need an X11 session, or GNOME or KDE Plasma on Wayland; mounting other devices’ files needs fuse3 (most distributions include it); sharing this computer’s windows needs GNOME 45 or later or KDE Plasma 6 on Wayland, with an x264 or openh264 encoder in FFmpeg; video preview and casting need libmpv, and window flow needs FFmpeg. Everything else works without them.' },
       { q: 'Why is there no iOS app?', a: 'Publishing on the App Store requires a paid Apple Developer account, so there is no official iOS release yet. Every release includes an unsigned IPA that you can sign with your own Apple ID using a tool such as AltStore or Sideloadly; apps signed with a free Apple ID must be re-signed every 7 days. It has not been fully tested on a real device and may not work, so please report any problems.' },
     ],
   },
@@ -931,7 +931,7 @@ const en: Messages = {
         platforms: [
           { platform: 'mac', status: 'Shares and views', note: 'Needs macOS 12.3 or later, with Screen & System Audio Recording and Accessibility allowed in System Settings.' },
           { platform: 'windows', status: 'Shares and views', note: 'Needs Windows 10 (1903) or later; windows running as administrator cannot be shared.' },
-          { platform: 'linux', status: 'Views; shares on GNOME', note: 'Sharing this computer’s windows needs GNOME 45 or later on Wayland, a one-time helper install from Settings followed by a fresh login, and an x264 or openh264 encoder in FFmpeg; KDE and X11 can only view for now. Showing windows needs FFmpeg 4 or later.' },
+          { platform: 'linux', status: 'Views; shares on GNOME, KDE', note: 'Sharing this computer’s windows needs a Wayland session: GNOME 45 or later, with a one-time helper install from Settings and a fresh login, or KDE Plasma 6, with nothing to install and no permission prompt. FFmpeg also needs an x264 or openh264 encoder. X11 can only view for now. Showing windows needs FFmpeg 4 or later.' },
           { platform: 'android', status: 'Views; apps flow to computers', note: 'Needs Android 10 or later. The first time, connect the phone by cable to a computer with adb installed, USB debugging on; after that other computers need no cable. App sound needs Android 13 or later.' },
         ],
         faq: [
@@ -946,7 +946,7 @@ const en: Messages = {
         meta: {
           title: 'Software KVM: share one keyboard and mouse across computers | Whisper',
           description:
-            'A free software KVM: one keyboard and mouse for every computer on your desk. Move the pointer across a screen edge and your typing and clipboard follow. Works on macOS, Windows and Linux (X11 or GNOME).',
+            'A free software KVM: one keyboard and mouse for every computer on your desk. Move the pointer across a screen edge and your typing and clipboard follow. Works on macOS, Windows and Linux (X11, GNOME or KDE Plasma).',
           keywords: ['keyboard and mouse sharing', 'software KVM', 'share mouse between Mac and Windows', 'one keyboard multiple computers'],
         },
         name: 'Keyboard & mouse sharing',
@@ -971,12 +971,12 @@ const en: Messages = {
         platforms: [
           { platform: 'mac', status: 'Controls and is controlled', note: 'Grant the Accessibility permission in System Settings.' },
           { platform: 'windows', status: 'Controls and is controlled', note: 'Typing on the lock screen needs the system service from the installer.' },
-          { platform: 'linux', status: 'X11 or GNOME', note: 'On Wayland only GNOME is supported, with no permission prompt; GNOME before 46 (Ubuntu 22.04, for example) can only be controlled. Other Wayland desktops such as KDE have not been verified.' },
+          { platform: 'linux', status: 'X11, GNOME or KDE', note: 'On Wayland, GNOME and KDE Plasma are supported. GNOME asks for no permission, and before 46 (Ubuntu 22.04, for example) can only be controlled; KDE Plasma asks once the first time it is controlled, and each time it starts controlling other computers.' },
           { platform: 'android', status: 'Phone as mouse', note: 'Not part of sharing between screens, but the phone can act as a mouse and keyboard for a computer.' },
         ],
         faq: [
           { q: 'My pointer is stuck on another computer. Now what?', a: 'Press Ctrl + Alt + Esc on the controlling computer (Control + Option + Esc on macOS) and input returns immediately. The shortcut is always shown at the bottom of the screen arrangement in the workspace.' },
-          { q: 'My Linux desktop uses Wayland. Will it work?', a: 'On GNOME, yes, with no permission prompt; the top bar shows the remote control icon while in use. GNOME before 46 (Ubuntu 22.04, for example) can only be controlled; to control other computers from one, choose “Ubuntu on Xorg” on the login screen. Other Wayland desktops such as KDE ask for permission and have not been verified.' },
+          { q: 'My Linux desktop uses Wayland. Will it work?', a: 'On GNOME and KDE Plasma, yes. GNOME asks for no permission, and the top bar shows the remote control icon while in use; GNOME before 46 (Ubuntu 22.04, for example) can only be controlled, so to control other computers from one, choose “Ubuntu on Xorg” on the login screen. KDE Plasma asks for permission the first time it is controlled, and not again once you tick remember; controlling other computers from it asks each time it starts, a current KDE limit. Other Wayland desktops have not been verified.' },
           { q: 'Is this a software KVM?', a: 'Yes, without the video. A KVM switch is a box that moves one keyboard, mouse and monitor between computers; Whisper moves the keyboard and mouse over your network instead, and each computer keeps its own screen. To use another computer’s windows on this screen, see window flow.' },
           { q: 'How is this different from remote desktop?', a: 'Only keyboard and mouse input is sent, not the picture: each computer keeps its own display, which suits computers on the same desk. It is meant for your own devices nearby, not for unattended remote control.' },
           { q: 'Why does the pointer stutter?', a: 'First check that both computers have a steady network connection. On Windows, check Settings → System → Projecting to this PC: while it is on, the wireless adapter keeps a Wi-Fi Direct network alive as well, which adds periodic delay. Set it to Always Off if you do not project to this PC.' },
@@ -1063,7 +1063,7 @@ const en: Messages = {
         meta: {
           title: 'Android phone as mouse, touchpad and keyboard | Whisper',
           description:
-            'Control your computer from an Android phone: turn your wrist to move the pointer, or use it as a touchpad and keyboard with your phone’s own input method. Works with macOS, Windows and Linux (X11 or GNOME).',
+            'Control your computer from an Android phone: turn your wrist to move the pointer, or use it as a touchpad and keyboard with your phone’s own input method. Works with macOS, Windows and Linux (X11, GNOME or KDE Plasma).',
           keywords: ['phone as mouse', 'control computer from Android', 'phone as touchpad', 'phone as keyboard', 'motion mouse app'],
         },
         name: 'Phone as mouse',
@@ -1089,7 +1089,7 @@ const en: Messages = {
           { platform: 'android', status: 'Controls', note: 'The phone acts as mouse and keyboard; motion mode needs a gyroscope and gravity sensor.' },
           { platform: 'mac', status: 'Can be controlled', note: 'Grant the Accessibility permission in System Settings.' },
           { platform: 'windows', status: 'Can be controlled', note: 'Works while the computer is signed in and Whisper is running.' },
-          { platform: 'linux', status: 'Can be controlled, X11 or GNOME', note: 'On Wayland only GNOME is supported; typing text the keyboard layout cannot produce, such as Chinese, needs the window sharing helper from Settings (GNOME 45 or later).' },
+          { platform: 'linux', status: 'Can be controlled, X11, GNOME or KDE', note: 'On Wayland, GNOME and KDE Plasma are supported. On GNOME, typing text the keyboard layout cannot produce, such as Chinese, needs the window sharing helper from Settings (GNOME 45 or later); KDE Plasma types it directly and asks for permission the first time it is controlled.' },
         ],
         faq: [
           { q: 'Can I see the computer’s screen on the phone?', a: 'No. The phone only sends mouse and keyboard input and never receives the picture, so it suits times when you are near the computer and can see its screen.' },
