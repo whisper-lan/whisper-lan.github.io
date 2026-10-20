@@ -9,6 +9,7 @@ import { TransferScene } from '../scenes/TransferScene';
 import { InputScene } from '../scenes/InputScene';
 import { AudioScene } from '../scenes/AudioScene';
 import { CastScene } from '../scenes/CastScene';
+import { FlowScene } from '../scenes/FlowScene';
 import { featureByChapter } from '@/lib/features';
 
 type ChapterKey = keyof Messages['chapters']['items'];
@@ -18,6 +19,7 @@ export type SceneProps = { t: Messages; progress: MotionValue<number> };
 export const CHAPTERS: { key: ChapterKey; Scene: ComponentType<SceneProps>; tint: [number, number, number] }[] = [
   { key: 'transfer', Scene: TransferScene, tint: [42, 143, 224] },
   { key: 'input', Scene: InputScene, tint: [59, 179, 164] },
+  { key: 'flow', Scene: FlowScene, tint: [118, 112, 228] },
   { key: 'audio', Scene: AudioScene, tint: [143, 212, 67] },
   { key: 'cast', Scene: CastScene, tint: [197, 107, 143] },
 ];
@@ -84,7 +86,7 @@ export function StageFrame({ background, children }: { background: MotionValue<s
 
 // ---------------------------------------------------------------------------
 // Large screens: the chapter text scrolls with the page while the stage
-// stays in view beside it. Inside the stage the four scenes sit on one
+// stays in view beside it. Inside the stage the five scenes sit on one
 // vertical strip that slides up — the same direction as the text — whenever
 // one chapter hands over to the next, easing in and out of each move. The
 // stage itself glides into place and away again (see useCushion), so nothing

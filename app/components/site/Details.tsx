@@ -223,6 +223,85 @@ function MultiVisual({ t }: { t: Messages }) {
   );
 }
 
+// Finder with the phone mounted: it sits under Locations with an eject
+// button, and its folders open like any disk's.
+function FilesVisual({ t }: { t: Messages }) {
+  const s = t.scenes;
+  const folders = ['DCIM', 'Download', 'Music', 'Pictures'];
+  const location = (icon: string, name: string, selected = false, eject = true) => (
+    <span className={`flex items-center gap-2 rounded-[6px] px-2 py-[5px] text-[11.5px] ${selected ? 'bg-app-muted font-medium text-app-text' : 'text-app-text'}`}>
+      <Icon name={icon} className="h-3.5 w-3.5 shrink-0 text-app-text2" />
+      <span className="min-w-0 flex-1 truncate">{name}</span>
+      {eject && <Icon name="eject" className="h-3 w-3 shrink-0 text-app-text2" />}
+    </span>
+  );
+  return (
+    <div className="absolute inset-0 grid place-items-center px-5">
+      <div className="flex h-[176px] w-full max-w-[460px] overflow-hidden rounded-[14px] border border-app-line bg-app-surface shadow-float">
+        <div className="flex w-[150px] shrink-0 flex-col border-r border-app-line bg-app-chrome px-1.5 pt-3 md:w-[164px]">
+          <span className="flex gap-[5px] px-2">
+            {['#ff5f57', '#febc2e', '#28c840'].map((c) => (
+              <i key={c} className="h-[9px] w-[9px] rounded-full" style={{ background: c }} />
+            ))}
+          </span>
+          <span className="px-2 pb-1 pt-3 text-[10px] font-semibold text-app-text2">{s.locations}</span>
+          {location('desktop', 'Macintosh HD', false, false)}
+          {location('phone', s.peers[0].name, true)}
+          {location('desktop', s.peers[1].name)}
+        </div>
+        <div className="min-w-0 flex-1 px-4 pt-3">
+          <span className="text-[12px] font-semibold text-app-text">{s.peers[0].name}</span>
+          <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 lg:grid-cols-4">
+            {folders.map((name) => (
+              <span key={name} className="flex flex-col items-center gap-1">
+                <svg viewBox="0 0 48 38" className="h-[30px] w-[38px]" aria-hidden="true">
+                  <path d="M3 8a4 4 0 0 1 4-4h11l4 4h19a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" fill="#5aa9f0" />
+                  <path d="M3 13h42v19a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" fill="#7cc0fa" />
+                </svg>
+                <span className="text-[10px] text-app-text">{name}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// A share link opened in someone's browser: the page Whisper serves.
+function ShareLinkVisual({ t }: { t: Messages }) {
+  const d = t.details;
+  return (
+    <div className="absolute inset-0 grid place-items-center px-5">
+      <div className="w-full max-w-[290px] overflow-hidden rounded-[14px] border border-hair bg-surface shadow-float">
+        <div className="flex items-center gap-2 border-b border-hair bg-surface-2 px-3 py-2">
+          <span className="flex gap-[4px]">
+            {['#ff5f57', '#febc2e', '#28c840'].map((c) => (
+              <i key={c} className="h-[7px] w-[7px] rounded-full" style={{ background: c }} />
+            ))}
+          </span>
+          <span className="mono flex-1 truncate rounded-full bg-surface px-2.5 py-[3px] text-center text-[10.5px] text-muted">192.168.1.20:10003/k7m2</span>
+        </div>
+        <div className="flex items-center gap-3 px-4 pb-3 pt-4">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[11px] bg-accent-soft text-accent">
+            <Icon name="folder" className="h-5 w-5" />
+          </span>
+          <span className="min-w-0 leading-tight">
+            <span className="block truncate text-[14px] font-semibold text-ink">{d.shareFolder}</span>
+            <span className="mt-1 block truncate text-[11px] text-muted">{d.shareMeta}</span>
+          </span>
+        </div>
+        <div className="px-4 pb-4">
+          <span className="flex h-8 items-center justify-center gap-1.5 rounded-full bg-accent text-[12px] font-medium text-accent-ink">
+            <Icon name="download" className="h-3.5 w-3.5" strokeWidth={2} />
+            {d.shareZip}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Details({ t }: { t: Messages }) {
   const d = t.details.items;
   return (
@@ -248,6 +327,12 @@ export function Details({ t }: { t: Messages }) {
           </Card>
           <Card title={d.qr.title} desc={d.qr.desc} delay={0.1}>
             <QrVisual />
+          </Card>
+          <Card title={d.files.title} desc={d.files.desc} className="lg:col-span-2">
+            <FilesVisual t={t} />
+          </Card>
+          <Card title={d.shareLink.title} desc={d.shareLink.desc} delay={0.05}>
+            <ShareLinkVisual t={t} />
           </Card>
           <Card title={d.multi.title} desc={d.multi.desc} className="md:col-span-2 lg:col-span-3">
             <MultiVisual t={t} />

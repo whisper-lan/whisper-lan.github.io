@@ -61,7 +61,9 @@ export const chapterPages = (page) =>
     const frame = document.querySelector('#features [style*="aspect-ratio: 1 / 0.82"]');
     const track = frame.closest('.sticky').parentElement;
     const top = Math.round(track.getBoundingClientRect().top + window.scrollY);
-    return [0, 1, 2, 3].map((i) => top + i * window.innerHeight);
+    // one panel per chapter on the stage's strip
+    const n = frame.firstElementChild.children.length;
+    return Array.from({ length: n }, (_, i) => top + i * window.innerHeight);
   });
 
 // Where the features section title rests (TITLE_AT in Chapters.tsx): the

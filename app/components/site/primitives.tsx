@@ -139,6 +139,9 @@ const iconPaths: Record<string, ReactNode> = {
   laptop: <><rect x="4.5" y="5" width="15" height="10.5" rx="1.5" /><path d="M2.5 18.5h19" /></>,
   phone: <><rect x="7" y="2.8" width="10" height="18.4" rx="2.4" /><path d="M10.8 18.2h2.4" /></>,
   desktop: <><rect x="3" y="4" width="18" height="12" rx="1.8" /><path d="M9 20h6M12 16v4" /></>,
+  window: <><rect x="3" y="4.5" width="18" height="15" rx="2.5" /><path d="M3 9h18M6.5 6.8h.01M9 6.8h.01" /></>,
+  link: <><path d="M10.2 13.8a4 4 0 0 0 5.66 0l3.1-3.1a4 4 0 0 0-5.66-5.66l-1.1 1.1" /><path d="M13.8 10.2a4 4 0 0 0-5.66 0l-3.1 3.1a4 4 0 0 0 5.66 5.66l1.1-1.1" /></>,
+  eject: <><path d="M12 5 5.5 13h13Z" /><path d="M5.5 18h13" /></>,
 };
 
 export function Icon({ name, className = 'h-5 w-5', strokeWidth = 1.7 }: { name: keyof typeof iconPaths | string; className?: string; strokeWidth?: number }) {

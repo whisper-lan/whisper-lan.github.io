@@ -33,7 +33,7 @@ type MenuProps = { t: Messages; home: string; path: string; guide: string; onEnt
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-// Wide screens: the bar opens into a small stage. The four pages are listed
+// Wide screens: the bar opens into a small stage. The feature pages are listed
 // in large type; the one under the pointer lights up, takes its chapter's
 // rule, and its scene plays beside it in that chapter's light. The page
 // behind dims a little.
