@@ -23,7 +23,7 @@ const zh = {
     github: '在 GitHub 上查看源码',
   },
   hero: {
-    title: ['悄悄地说着', '你也不懂的话'],
+    title: ['话在耳边', '听听她的声音'],
     lead: ['在同一个局域网里传文件、同步剪贴板，共享声音、键鼠和窗口。', '端到端加密，不经过任何服务器。'],
     download: '下载',
     downloadFor: '下载 {platform} 版',
@@ -614,7 +614,7 @@ const en: Messages = {
     github: 'View the source on GitHub',
   },
   hero: {
-    title: ['Nothing in the cloud.', 'Just between your devices.'],
+    title: ['Whisper over LAN.', 'Just between your devices.'],
     lead: ['Whisper connects your computers and phones on your local network.', 'Files, clipboard, sound, input, and windows travel encrypted, end to end.'],
     download: 'Download',
     downloadFor: 'Download for {platform}',
