@@ -55,6 +55,13 @@ const rootHtml = read('out/index.html');
 const rootHead = rootHtml.split('</head>')[0];
 assert.match(rootHtml, /<html lang="en"/, 'index.html defaults to en');
 assert.deepEqual(attr(rootHead, /<link rel="canonical" href="([^"]+)"/g), [`${base}/en`], 'index.html canonicalizes to /en');
+for (const h of [rootHead, read('out/en.html').split('</head>')[0], read('out/zh.html').split('</head>')[0]]) {
+  assert.deepEqual(
+    attr(h, /<meta name="google-site-verification" content="([^"]+)"/g),
+    ['gJ0X0mz1HEMkXhsmp1a7cDFbbS88lOGI2RcLJVxDIuo'],
+    'missing google-site-verification meta tag in <head>',
+  );
+}
 for (const iconHref of attr(rootHead, /<link rel="(?:icon|apple-touch-icon)"[^>]*href="([^"]+)"/g)) {
   const iconPath = new URL(iconHref, base).pathname;
   assert.match(iconPath, /\.(?:ico|png)$/, `icon ${iconPath} must have a file extension`);

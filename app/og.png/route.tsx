@@ -45,8 +45,8 @@ export function GET() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 26 }}>
             <div style={{ display: 'flex', flexDirection: 'column', fontSize: 64, lineHeight: 1.08, letterSpacing: -1.5 }}>
-              <span style={{ color: ink }}>No need to shout.</span>
-              <span style={{ color: '#6f747d' }}>Close enough to whisper.</span>
+              <span style={{ color: ink }}>Nothing in the cloud.</span>
+              <span style={{ color: '#6f747d' }}>Just between your devices.</span>
             </div>
             <span style={{ fontSize: 26, color: muted, maxWidth: 600, lineHeight: 1.45 }}>
               Files, clipboard, sound, and input between your own devices — encrypted end to end over the local network.

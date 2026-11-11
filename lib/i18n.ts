@@ -614,7 +614,7 @@ const en: Messages = {
     github: 'View the source on GitHub',
   },
   hero: {
-    title: ['No need to shout.', 'Close enough to whisper.'],
+    title: ['Nothing in the cloud.', 'Just between your devices.'],
     lead: ['Whisper connects your computers and phones on your local network.', 'Files, clipboard, sound, input, and windows travel encrypted, end to end.'],
     download: 'Download',
     downloadFor: 'Download for {platform}',

@@ -49,6 +49,7 @@ const baseMetadata: Metadata = {
   creator: 'lawnvi',
   formatDetection: { email: false, address: false, telephone: false },
   manifest: '/manifest.json',
+  verification: { google: 'gJ0X0mz1HEMkXhsmp1a7cDFbbS88lOGI2RcLJVxDIuo' },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '16x16', type: 'image/x-icon' },
