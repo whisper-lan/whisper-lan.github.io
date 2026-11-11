@@ -1,9 +1,2 @@
 /*
-  X-Robots-Tag: index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1
-
-# Generated images are exported without an extension; without this Pages serves
-# them as application/octet-stream.
-/icon
-  Content-Type: image/png
-/apple-icon
-  Content-Type: image/png
+  X-Robots-Tag: noindex

@@ -2,14 +2,8 @@ import { ImageResponse } from 'next/og'
 
 export const dynamic = 'force-static'
 
-export const size = {
-  width: 32,
-  height: 32,
-}
-export const contentType = 'image/png'
-
-// The app icon's ring, reduced to the mark.
-export default function Icon() {
+// The app icon's ring, reduced to the mark, served with a .png extension for static hosts.
+export function GET() {
   return new ImageResponse(
     (
       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -25,8 +19,6 @@ export default function Icon() {
         </svg>
       </div>
     ),
-    {
-      ...size,
-    }
+    { width: 32, height: 32 }
   )
 }

@@ -51,4 +51,14 @@ for (const url of attr(sitemap, /href="([^"]+)"/g)) sameHost(url, 'sitemap');
 
 assert.match(read('out/robots.txt'), new RegExp(`Sitemap: ${base}/sitemap.xml`), 'robots.txt sitemap');
 
+const rootHtml = read('out/index.html');
+const rootHead = rootHtml.split('</head>')[0];
+assert.match(rootHtml, /<html lang="en"/, 'index.html defaults to en');
+assert.deepEqual(attr(rootHead, /<link rel="canonical" href="([^"]+)"/g), [`${base}/en`], 'index.html canonicalizes to /en');
+for (const iconHref of attr(rootHead, /<link rel="(?:icon|apple-touch-icon)"[^>]*href="([^"]+)"/g)) {
+  const iconPath = new URL(iconHref, base).pathname;
+  assert.match(iconPath, /\.(?:ico|png)$/, `icon ${iconPath} must have a file extension`);
+  assert.ok(existsSync(new URL(`../out${iconPath}`, import.meta.url)), `icon ${iconPath} not exported`);
+}
+
 console.log(`seo: ok for ${pages.length} pages on ${base}`);

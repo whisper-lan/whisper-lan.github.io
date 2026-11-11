@@ -39,8 +39,10 @@ and must be the one that actually serves the site. Search titles and snippets
 live under `meta` in `lib/i18n.ts`; they describe what the app does in the
 words people search with, and are separate from the hero's line.
 
-Cloudflare only runs the small root-language worker for `/`; localized pages,
-icons, and the social image are built ahead of time. GitHub release data is
+GitHub Pages serves the canonical `whisper-lan.github.io` site, while Cloudflare
+Pages serves `whisper.127014.xyz` (`noindex` via `public/_headers`) and runs
+`public/_worker.js` only for `/`, `/api/releases*`, and `/download/*`; localized
+pages, icons, and the social image are built ahead of time. GitHub release data is
 prefetched at build time and refreshed in the browser. Nothing is deployed by
 these commands.
 

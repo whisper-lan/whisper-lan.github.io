@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/hooks/useLanguage';
 import { messages, type Language, type Messages } from '@/lib/i18n';
-import { emptyDownloadInfo, fetchReleaseInfo, type DownloadInfo, type PlatformType, type ReleaseData } from '@/lib/release';
+import { emptyDownloadInfo, fetchReleaseInfo, localizeDownloadInfo, type DownloadInfo, type PlatformType, type ReleaseData } from '@/lib/release';
 import { platformBuilds, PLATFORM_LABEL, type BuildOption } from '@/lib/downloads';
 import { Nav } from './Nav';
 import { SmoothScroll } from './scroll';
@@ -103,7 +103,8 @@ export function SiteFrame({
 
   const [toast, setToast] = useState<string | null>(null);
   const [version, setVersion] = useState<string | null>(initialRelease?.version ?? null);
-  const [info, setInfo] = useState<DownloadInfo>(initialRelease?.info ?? emptyDownloadInfo());
+  const [rawInfo, setInfo] = useState<DownloadInfo>(initialRelease?.info ?? emptyDownloadInfo());
+  const info = mounted ? localizeDownloadInfo(rawInfo, window.location.hostname) : rawInfo;
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const showMessage = (m: string) => {

@@ -17,6 +17,20 @@ export type DownloadInfo = { [key in DownloadKey]: PlatformDownloadInfo };
 export type ReleaseData = { version: string; info: DownloadInfo };
 
 export const RELEASE_API = 'https://api.github.com/repos/lawnvi/whisper/releases/latest';
+const MIRROR_HOST = 'whisper.127014.xyz';
+const GH_DOWNLOAD_PREFIX = 'https://github.com/lawnvi/whisper/releases/download/';
+
+export function localizeDownloadInfo(info: DownloadInfo, hostname?: string): DownloadInfo {
+  if (hostname !== MIRROR_HOST) return info;
+  const next = { ...info };
+  (Object.keys(next) as DownloadKey[]).forEach((key) => {
+    const { url } = next[key];
+    if (url.startsWith(GH_DOWNLOAD_PREFIX)) {
+      next[key] = { ...next[key], url: `/download/${url.slice(GH_DOWNLOAD_PREFIX.length)}` };
+    }
+  });
+  return next;
+}
 
 export const PLATFORM_FILE_SUFFIXES = {
   windows: ['.exe'],
@@ -64,7 +78,11 @@ const formatSize = (bytes: number): string => {
 // show placeholder values like "0.0.0".
 export async function fetchReleaseInfo(): Promise<ReleaseData | null> {
   try {
-    const res = await fetch(RELEASE_API, { next: { revalidate: 3600 } });
+    const host = typeof window !== 'undefined' ? window.location.hostname : undefined;
+    const res = await fetch(
+      host === MIRROR_HOST ? '/api/releases/latest' : RELEASE_API,
+      host ? undefined : { next: { revalidate: 3600 } },
+    );
     if (!res.ok) return null;
     const data = await res.json();
     const version = String(data.tag_name || '').replace(/^(?:dev-|release-)?v/, '');
@@ -82,7 +100,7 @@ export async function fetchReleaseInfo(): Promise<ReleaseData | null> {
     // Prefer the Apple Silicon package for generic macOS metadata while still
     // exposing both architecture-specific downloads to the platform table.
     if (info.macArm64.url) info.mac = info.macArm64;
-    return { version, info };
+    return { version, info: localizeDownloadInfo(info, host) };
   } catch {
     return null;
   }

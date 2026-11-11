@@ -49,6 +49,14 @@ const baseMetadata: Metadata = {
   creator: 'lawnvi',
   formatDetection: { email: false, address: false, telephone: false },
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '16x16', type: 'image/x-icon' },
+      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
   robots: {
     index: true,
     follow: true,
@@ -92,11 +100,11 @@ function metadataFor(
   };
 }
 
-// The edge redirect page: never served on Cloudflare, but static hosts without
-// the worker show the Chinese page here until the browser redirect runs.
+// The root redirect page: static hosts show English and canonicalize to /en
+// until the browser language redirect runs.
 export const rootMetadata: Metadata = {
-  ...pageMetadata('zh'),
-  alternates: { canonical: pageUrl(), languages: languageAlternates },
+  ...pageMetadata('en'),
+  alternates: { canonical: pageUrl('en'), languages: languageAlternates },
 };
 
 // schema.org graph for one localized page. There are no ratings or reviews,
