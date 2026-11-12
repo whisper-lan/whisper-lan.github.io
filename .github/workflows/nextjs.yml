@@ -60,3 +60,10 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+      # Bing and the other IndexNow engines recrawl the changed pages within
+      # hours instead of weeks. A failure here leaves the deploy as it is.
+      - name: Notify IndexNow
+        continue-on-error: true
+        run: node scripts/indexnow.mjs

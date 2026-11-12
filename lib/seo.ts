@@ -17,9 +17,10 @@ export const htmlLang = (lang: SiteLang) => (lang === 'zh' ? 'zh-CN' : 'en');
 
 export const pageUrl = (lang?: SiteLang, slug?: string) => `${SITE_CONFIG.baseUrl}/${lang ?? ''}${slug ? `/${slug}` : ''}`;
 
-// "/" is the edge redirect by browser language, so it is the x-default.
+// x-default is the English page itself, not "/": on GitHub Pages "/" is a copy
+// that canonicalizes to /en, and hreflang should only name canonical pages.
 export const languageAlternates = {
-  'x-default': pageUrl(),
+  'x-default': pageUrl('en'),
   zh: pageUrl('zh'),
   en: pageUrl('en'),
 };

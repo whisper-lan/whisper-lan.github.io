@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 
 // Checks the exported site in out/ (run `npm run build` first). Every absolute
 // URL a crawler or link preview follows must point at the live domain: the site
@@ -28,6 +28,8 @@ for (const page of pages) {
   const alternates = attr(head, /<link rel="alternate" hrefLang="([^"]+)"/g).sort();
   assert.deepEqual(alternates, home ? ['en', 'x-default', 'zh'] : ['en', 'zh'], `${file}: hreflang set`);
   for (const url of attr(head, /<link rel="alternate" hrefLang="[^"]+" href="([^"]+)"/g)) sameHost(url, file);
+  // hreflang may only name canonical pages, and "/" canonicalizes to /en.
+  if (home) assert.deepEqual(attr(head, /<link rel="alternate" hrefLang="x-default" href="([^"]+)"/g), [`${base}/en`], `${file}: x-default`);
 
   for (const key of ['og:url', 'og:image']) {
     const [url] = attr(head, new RegExp(`<meta property="${key}" content="([^"]+)"`, 'g'));
@@ -67,5 +69,11 @@ for (const iconHref of attr(rootHead, /<link rel="(?:icon|apple-touch-icon)"[^>]
   assert.match(iconPath, /\.(?:ico|png)$/, `icon ${iconPath} must have a file extension`);
   assert.ok(existsSync(new URL(`../out${iconPath}`, import.meta.url)), `icon ${iconPath} not exported`);
 }
+
+// Ownership files the search consoles fetch from the site root.
+assert.ok(existsSync(new URL('../out/googlef430202c5259fe77.html', import.meta.url)), 'Google verification file not exported');
+const indexNowKeys = readdirSync(new URL('../out/', import.meta.url)).filter((name) => /^[0-9a-f]{32}\.txt$/.test(name));
+assert.equal(indexNowKeys.length, 1, 'exactly one IndexNow key file at the root');
+assert.equal(read(`out/${indexNowKeys[0]}`).trim(), indexNowKeys[0].slice(0, 32), 'IndexNow key file holds its own name');
 
 console.log(`seo: ok for ${pages.length} pages on ${base}`);
