@@ -142,7 +142,6 @@ const iconPaths: Record<string, ReactNode> = {
   window: <><rect x="3" y="4.5" width="18" height="15" rx="2.5" /><path d="M3 9h18M6.5 6.8h.01M9 6.8h.01" /></>,
   link: <><path d="M10.2 13.8a4 4 0 0 0 5.66 0l3.1-3.1a4 4 0 0 0-5.66-5.66l-1.1 1.1" /><path d="M13.8 10.2a4 4 0 0 0-5.66 0l-3.1 3.1a4 4 0 0 0 5.66 5.66l1.1-1.1" /></>,
   eject: <><path d="M12 5 5.5 13h13Z" /><path d="M5.5 18h13" /></>,
-  power: <><path d="M12 3.5v8" /><path d="M7.2 6.6a7.5 7.5 0 1 0 9.6 0" /></>,
 };
 
 export function Icon({ name, className = 'h-5 w-5', strokeWidth = 1.7 }: { name: keyof typeof iconPaths | string; className?: string; strokeWidth?: number }) {

@@ -237,7 +237,6 @@ const zh = {
       { q: '传输速度取决于什么？', a: 'Wi-Fi 信号、设备性能和磁盘速度。加密与 SHA-256 校验都是边传边做，传完不需要再把大文件完整读一遍。' },
       { q: '数据安全吗？', a: '配对会话中的内容端到端加密，界面会显示设备身份与可信状态。局域网发现与连接元数据不加密，本地数据库和收到的文件也不做静态加密。电视投屏和共享链接各自使用独立的服务（DLNA、普通 HTTP），不经过 Whisper 的加密通道。' },
       { q: '指针留在另一台电脑上回不来怎么办？', a: '在主控端按 Ctrl + Alt + Esc（macOS 为 Control + Option + Esc），键鼠会立即回到本机。' },
-      { q: '电脑睡着了，能远程叫醒吗？', a: '能。连接过一次后，在它的设备卡片上点「唤醒」；开始键鼠共享时，布局里睡着的电脑也会被自动唤醒，醒来后自动连上。被唤醒的电脑最好插着网线，并在系统里打开网络唤醒（Wake on LAN），两台都要 0.0.60 或更新的版本。关机或休眠的电脑叫不醒。' },
       { q: 'Android 手机怎样当鼠标和键盘？', a: '两台设备连接并互相信任后，在手机上打开这台电脑的设备页（会话右上角），点「控制电脑」再点开始。支持体感鼠标、触控板、虚拟键盘、组合键和短文本；没有陀螺仪时仍可使用触控板和键盘。被控电脑支持 macOS（需辅助功能权限）、Windows，以及 Linux 的 X11、GNOME 或 KDE Plasma（Wayland）。' },
       { q: '投屏是屏幕镜像吗？', a: '不是。它接收视频 App 通过 DLNA 投过来的媒体，不支持 AirPlay、Miracast 或系统屏幕镜像。能否投屏、清晰度和受保护内容由视频平台决定。功能默认关闭，同一来源第一次请求时会提示确认。' },
       { q: 'Linux 上需要准备什么？', a: '自动发现依赖 Avahi；声音共享需要 PulseAudio 或 PipeWire Pulse；键鼠共享和手机控制需要 X11 会话，或 GNOME、KDE Plasma 的 Wayland 会话；挂载其他设备的文件需要 fuse3（多数发行版已自带）；把本机窗口流转出去需要 GNOME 45 及以上或 KDE Plasma 6 的 Wayland 会话，FFmpeg 还要带 x264 或 openh264 编码器；视频预览与投屏需要 libmpv，窗口流转需要 FFmpeg。缺了这些，其他功能照常可用。' },
@@ -378,7 +377,7 @@ const zh = {
           { icon: 'devices', title: '不止两台', desc: '可以排进多台电脑，指针从哪条边出去，就到那一边的电脑上。' },
           { icon: 'undo', title: '随时收回', desc: '指针回不来时，在主控端按 Ctrl + Alt + Esc（macOS 为 Control + Option + Esc），键鼠立即回到本机。对方断开时也会自动回来。' },
           { icon: 'lock', title: 'Windows 锁屏也能输入', desc: '安装包附带一个系统服务，锁屏后也能在 Windows 的锁屏界面输入密码。解锁后的 UAC 提示默认不接收，需要时可以单独打开。' },
-          { icon: 'power', title: '睡着的电脑也叫得醒', desc: '开始共享时，布局里睡着的电脑会被自动唤醒，醒来后自动连上；也可以在设备卡片上点「唤醒」。被唤醒的电脑最好插着网线，并在系统里打开网络唤醒。' },
+          { icon: 'phone', title: '手机也能当键鼠', desc: '离开桌前，Android 手机可以当体感鼠标、触控板和键盘来控制电脑。' },
         ],
         platforms: [
           { platform: 'mac', status: '控制与被控制', note: '需要在系统设置里授予辅助功能权限。' },
@@ -392,7 +391,6 @@ const zh = {
           { q: '这是软件 KVM 吗？', a: '是，只是不切换画面。KVM 切换器是一个硬件盒子，让几台电脑轮流使用同一套键盘、鼠标和显示器；Whisper 通过局域网切换键盘和鼠标，每台电脑仍用自己的屏幕。想在这块屏幕上用另一台电脑的窗口，可以用窗口流转。' },
           { q: '和远程桌面有什么不同？', a: '键鼠共享只把键盘和鼠标的操作发过去，不传画面：每台电脑用自己的显示器，适合摆在同一张桌上的几台电脑。它面向身边的自有设备，不是无人值守的远程控制方案。' },
           { q: '指针移动一顿一顿的？', a: '先把两台电脑都更新到 0.0.60 或更新的版本：指针移动会走一条单独的加密 UDP 通道，Wi-Fi 偶尔丢包也不会让指针停住再跳，Windows 防火墙要放行 Whisper。设备卡片里的「网络」一行写着到对方的延迟，点开能看到波动和丢失；换到 5 GHz 的 Wi-Fi、靠近路由器或插网线会好很多。Windows 上还要检查「设置 → 系统 → 投影到此电脑」：开启时无线网卡要同时维持一个 Wi-Fi Direct 网络，会带来周期性的延迟；不用无线投屏就设为「始终关闭」。' },
-          { q: '对面的电脑睡着了怎么办？', a: '开始键鼠共享时，布局里睡着的电脑会被自动唤醒，醒来后自动连上；Windows 醒来停在锁屏界面时，装了安装包附带的系统服务就能直接输入密码。被唤醒的电脑最好插着网线，并在系统里打开网络唤醒（Wake on LAN）；关机或休眠的电脑叫不醒。各系统怎么设置见使用指南。' },
         ],
       },
       fileTransfer: {
@@ -506,7 +504,7 @@ const zh = {
         ],
         faq: [
           { q: '手机上能看到电脑的画面吗？', a: '不能。手机只发送鼠标和键盘操作，不传回电脑画面，适合人在电脑附近、看得到屏幕的时候用。' },
-          { q: '能唤醒电脑，或者在锁屏界面登录吗？', a: '不能。手机不能唤醒电脑，也不能在锁屏界面登录；睡着的电脑可以由另一台电脑在设备卡片上点「唤醒」叫醒。' },
+          { q: '能唤醒电脑，或者在锁屏界面登录吗？', a: '不能。这个功能不能唤醒电脑，也不能在锁屏界面登录。' },
           { q: '手机没有陀螺仪可以用吗？', a: '可以。体感模式需要陀螺仪和重力传感器，没有时会自动使用触控板，键盘照常可用。' },
           { q: '为什么用着用着就停了？', a: '返回、切到后台、锁屏或断开连接都会停止控制。回到控制页，点开始就能继续。' },
           { q: 'iPhone 可以吗？', a: '目前不行。控制电脑只在 Android 上提供。' },
@@ -830,7 +828,6 @@ const en: Messages = {
       { q: 'How fast are transfers?', a: 'That depends on Wi-Fi signal, device performance, and disk speed. Encryption and SHA-256 verification stream with the transfer, so large files are not reread at the end.' },
       { q: 'Is my data secure?', a: "Content in paired sessions is end-to-end encrypted, and the UI shows each device's identity and trust state. LAN discovery and connection metadata are not encrypted, nor are the local database and received files at rest. TV casting and share links use separate services (DLNA and plain HTTP) outside Whisper's encrypted sessions." },
       { q: 'My pointer is stuck on another computer. Now what?', a: 'Press Ctrl + Alt + Esc on the controlling computer (Control + Option + Esc on macOS) and input returns immediately.' },
-      { q: 'Can I wake a sleeping computer?', a: 'Yes. Once a computer has connected, select Wake on its device card; starting keyboard and mouse sharing also wakes computers in the layout that are asleep, and they reconnect once awake. The computer being woken is best on a cable, with Wake-on-LAN turned on in its system, and both need 0.0.60 or later. A computer that is shut down or hibernating cannot be woken.' },
       { q: 'How does my Android phone become a mouse and keyboard?', a: 'Once both devices are connected and trust each other, open that computer’s device page on your phone (top right of the conversation), tap Control computer, then start. Motion pointer, touchpad, virtual keyboard, shortcuts, and short text are supported; without a gyroscope the touchpad and keyboard still work. macOS (with Accessibility permission), Windows, and Linux on X11, or GNOME or KDE Plasma on Wayland, can be controlled.' },
       { q: 'Is casting screen mirroring?', a: 'No. It receives media that video apps cast over DLNA, without AirPlay, Miracast, or system screen mirroring. Availability, quality, and protected content depend on the video platform. Casting is off by default, and the first request from each source asks for confirmation.' },
       { q: 'What does Linux need?', a: 'Discovery relies on Avahi; sound sharing needs PulseAudio or PipeWire Pulse; input sharing and phone control need an X11 session, or GNOME or KDE Plasma on Wayland; mounting other devices’ files needs fuse3 (most distributions include it); sharing this computer’s windows needs GNOME 45 or later or KDE Plasma 6 on Wayland, with an x264 or openh264 encoder in FFmpeg; video preview and casting need libmpv, and window flow needs FFmpeg. Everything else works without them.' },
@@ -969,7 +966,7 @@ const en: Messages = {
           { icon: 'devices', title: 'More than two', desc: 'Arrange several computers side by side. The pointer goes to whichever one sits past the edge it crosses.' },
           { icon: 'undo', title: 'Always a way back', desc: 'If the pointer is stuck elsewhere, press Ctrl + Alt + Esc on the controlling computer (Control + Option + Esc on macOS) and input returns at once. It also returns if the other side disconnects.' },
           { icon: 'lock', title: 'The Windows lock screen too', desc: 'A system service bundled with the installer lets you type your password on the Windows lock screen. UAC prompts after unlocking are off by default and can be turned on separately.' },
-          { icon: 'power', title: 'Wakes sleeping computers', desc: 'Starting sharing wakes computers in the layout that are asleep, and they reconnect once awake; Wake on a device card does it too. The computer being woken is best on a cable, with Wake-on-LAN turned on in its system.' },
+          { icon: 'phone', title: 'Your phone, too', desc: 'Away from the desk, an Android phone can act as a motion mouse, touchpad, and keyboard for your computer.' },
         ],
         platforms: [
           { platform: 'mac', status: 'Controls and is controlled', note: 'Grant the Accessibility permission in System Settings.' },
@@ -983,7 +980,6 @@ const en: Messages = {
           { q: 'Is this a software KVM?', a: 'Yes, without the video. A KVM switch is a box that moves one keyboard, mouse and monitor between computers; Whisper moves the keyboard and mouse over your network instead, and each computer keeps its own screen. To use another computer’s windows on this screen, see window flow.' },
           { q: 'How is this different from remote desktop?', a: 'Only keyboard and mouse input is sent, not the picture: each computer keeps its own display, which suits computers on the same desk. It is meant for your own devices nearby, not for unattended remote control.' },
           { q: 'Why does the pointer stutter?', a: 'First update both computers to 0.0.60 or later: pointer movement then goes over a separate encrypted UDP channel, so a packet lost now and then on Wi-Fi no longer makes the pointer stop and jump; allow Whisper through the Windows firewall. The Network row on the device card shows the latency to the other computer, and jitter and loss when you select it; 5 GHz Wi-Fi, a spot nearer the router, or a cable helps a lot. On Windows, also check Settings → System → Projecting to this PC: while it is on, the wireless adapter keeps a Wi-Fi Direct network alive as well, which adds periodic delay. Set it to Always Off if you do not project to this PC.' },
-          { q: 'What if the other computer is asleep?', a: 'Starting keyboard and mouse sharing wakes computers in the layout that are asleep, and they reconnect once awake; when Windows wakes to its lock screen, the system service from the installer lets you type the password. The computer being woken is best on a cable, with Wake-on-LAN turned on in its system; one that is shut down or hibernating cannot be woken. The user guide shows the setting on each system.' },
         ],
       },
       fileTransfer: {
@@ -1097,7 +1093,7 @@ const en: Messages = {
         ],
         faq: [
           { q: 'Can I see the computer’s screen on the phone?', a: 'No. The phone only sends mouse and keyboard input and never receives the picture, so it suits times when you are near the computer and can see its screen.' },
-          { q: 'Can it wake the computer or sign in on the lock screen?', a: 'No. The phone cannot wake the computer or sign in on the lock screen; another computer can wake a sleeping one with Wake on its device card.' },
+          { q: 'Can it wake the computer or sign in on the lock screen?', a: 'No. It cannot wake the computer or sign in on the lock screen.' },
           { q: 'My phone has no gyroscope. Can I still use it?', a: 'Yes. Motion mode needs a gyroscope and gravity sensor; without them the touchpad is used instead, and the keyboard works as usual.' },
           { q: 'Why did control stop?', a: 'Going back, switching away, locking the phone, or disconnecting all stop control. Return to the control page and tap start to continue.' },
           { q: 'Does it work on iPhone?', a: 'Not at the moment. Computer control is only available on Android.' },
