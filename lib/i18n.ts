@@ -235,7 +235,7 @@ const zh = {
       { q: '列表里看不到对方怎么办？', a: '先确认两台设备在同一个网络，并且都打开了 Whisper。如果网络禁用了 mDNS / Bonjour，就无法自动发现；这时在电脑上点左下角本机的名字，在手机上点加号，扫二维码或输入对方的 IP 和端口（默认 10002）。' },
       { q: '传输有大小或类型限制吗？', a: '没有。任何类型、任何大小都可以，留意本地剩余空间即可。断线后重新连上，大文件会从断点继续。' },
       { q: '传输速度取决于什么？', a: 'Wi-Fi 信号、设备性能和磁盘速度。加密与 SHA-256 校验都是边传边做，传完不需要再把大文件完整读一遍。' },
-      { q: '数据安全吗？', a: '配对会话中的内容端到端加密，界面会显示设备身份与可信状态。局域网发现与连接元数据不加密，本地数据库和收到的文件也不做静态加密。电视投屏和共享链接各自使用独立的服务（DLNA、普通 HTTP），不经过 Whisper 的加密通道。' },
+      { q: '数据安全吗？', a: '配对会话中的内容端到端加密，界面会显示设备身份与可信状态。局域网发现与连接元数据不加密，本地数据库和收到的文件也不做静态加密。电视投屏、共享链接和网页传输各自使用独立的服务（DLNA、普通 HTTP），不经过 Whisper 的加密通道。' },
       { q: '指针留在另一台电脑上回不来怎么办？', a: '在主控端按 Ctrl + Alt + Esc（macOS 为 Control + Option + Esc），键鼠会立即回到本机。' },
       { q: 'Android 手机怎样当鼠标和键盘？', a: '两台设备连接并互相信任后，在手机上打开这台电脑的设备页（会话右上角），点「控制电脑」再点开始。支持体感鼠标、触控板、虚拟键盘、组合键和短文本；没有陀螺仪时仍可使用触控板和键盘。被控电脑支持 macOS（需辅助功能权限）、Windows，以及 Linux 的 X11、GNOME 或 KDE Plasma（Wayland）。' },
       { q: '投屏是屏幕镜像吗？', a: '不是。它接收视频 App 通过 DLNA 投过来的媒体，不支持 AirPlay、Miracast 或系统屏幕镜像。能否投屏、清晰度和受保护内容由视频平台决定。功能默认关闭，同一来源第一次请求时会提示确认。' },
@@ -430,6 +430,7 @@ const zh = {
           { q: '没有网也能传吗？', a: '可以。只要两台设备在同一个局域网（同一个 Wi-Fi 或同一台路由器）里，就不需要连接互联网。' },
           { q: '照片会被压缩吗？', a: '不会。发出去的是原文件，到达时会校验，对方收到的和你发出的一模一样。' },
           { q: '传输速度取决于什么？', a: 'Wi-Fi 信号、设备性能和磁盘速度。加密与校验都是边传边做，不会在传完以后再花时间。' },
+          { q: '对方没装 Whisper，能互传吗？', a: '可以试试网页传输（实验性）：在这台打开网页传输，对方用浏览器扫码或输入地址，核对 4 位数后在这台点允许，两边就能互发文字和文件。走普通 HTTP、不加密，不能发文件夹，传文件时网页要开着。目前只在电脑浏览器上完整试过。' },
         ],
       },
       audioSharing: {
@@ -826,7 +827,7 @@ const en: Messages = {
       { q: 'What if a device does not appear in the list?', a: 'Check that both devices are on the same network with Whisper open. If the network blocks mDNS / Bonjour, discovery cannot work; select this device’s name at the bottom left on a computer, or the plus button on a phone, to scan a QR code or enter the IP and port (10002 by default).' },
       { q: 'Are there size or file type limits?', a: 'None. Any type, any size — just keep an eye on local storage. Large files resume where they left off after reconnecting.' },
       { q: 'How fast are transfers?', a: 'That depends on Wi-Fi signal, device performance, and disk speed. Encryption and SHA-256 verification stream with the transfer, so large files are not reread at the end.' },
-      { q: 'Is my data secure?', a: "Content in paired sessions is end-to-end encrypted, and the UI shows each device's identity and trust state. LAN discovery and connection metadata are not encrypted, nor are the local database and received files at rest. TV casting and share links use separate services (DLNA and plain HTTP) outside Whisper's encrypted sessions." },
+      { q: 'Is my data secure?', a: "Content in paired sessions is end-to-end encrypted, and the UI shows each device's identity and trust state. LAN discovery and connection metadata are not encrypted, nor are the local database and received files at rest. TV casting, share links, and Web Transfer use separate services (DLNA and plain HTTP) outside Whisper's encrypted sessions." },
       { q: 'My pointer is stuck on another computer. Now what?', a: 'Press Ctrl + Alt + Esc on the controlling computer (Control + Option + Esc on macOS) and input returns immediately.' },
       { q: 'How does my Android phone become a mouse and keyboard?', a: 'Once both devices are connected and trust each other, open that computer’s device page on your phone (top right of the conversation), tap Control computer, then start. Motion pointer, touchpad, virtual keyboard, shortcuts, and short text are supported; without a gyroscope the touchpad and keyboard still work. macOS (with Accessibility permission), Windows, and Linux on X11, or GNOME or KDE Plasma on Wayland, can be controlled.' },
       { q: 'Is casting screen mirroring?', a: 'No. It receives media that video apps cast over DLNA, without AirPlay, Miracast, or system screen mirroring. Availability, quality, and protected content depend on the video platform. Casting is off by default, and the first request from each source asks for confirmation.' },
@@ -1019,6 +1020,7 @@ const en: Messages = {
           { q: 'Does it work without internet?', a: 'Yes. The two devices only need to be on the same local network, such as the same Wi-Fi or router.' },
           { q: 'Are photos compressed?', a: 'No. The original file is sent and verified on arrival, so what the other side gets is exactly what you sent.' },
           { q: 'What decides the speed?', a: 'Wi-Fi signal, device performance, and disk speed. Encryption and verification happen while the data streams, not afterwards.' },
+          { q: 'Can a device without Whisper send and receive?', a: 'Try Web Transfer (experimental): open it on this device, the other person scans the code or types the address into a browser, and once you allow it after comparing a 4-digit number, both sides can send texts and files. It uses plain HTTP without encryption, cannot send folders, and the page has to stay open while files are sent. So far it has only been tried end to end in desktop browsers.' },
         ],
       },
       audioSharing: {
